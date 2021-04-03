@@ -33,9 +33,9 @@ class CatalogSecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers("/catalog/accounts/add", "/catalog/accounts/update").permitAll()
-                .antMatchers("/catalog/accounts", "/catalog/accounts/**", "/catalog/accounts/**/roles", "/catalog/roles").hasAnyRole("ADMIN")
-                .anyRequest().hasAnyRole("ADMIN", "USER")
+            .antMatchers("/catalog/accounts/add", "/catalog/accounts/update").permitAll()
+            .antMatchers("/catalog/accounts", "/catalog/accounts/**", "/catalog/accounts/**/roles", "/catalog/roles").hasAnyRole("ADMIN")
+            .anyRequest().hasAnyRole("ADMIN", "USER")
         http.httpBasic()
         http.csrf().disable()
     }

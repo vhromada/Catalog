@@ -1,467 +1,928 @@
 package com.github.vhromada.catalog.validator
 
 import com.github.vhromada.catalog.entity.Genre
-import com.github.vhromada.catalog.entity.Picture
-import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.catalog.utils.GenreUtils
 import com.github.vhromada.catalog.utils.ShowUtils
+import com.github.vhromada.catalog.utils.TestConstants
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
-import com.github.vhromada.common.test.utils.TestConstants
-import com.github.vhromada.common.test.validator.MovableValidatorTest
-import com.github.vhromada.common.validator.AbstractMovableValidator
-import com.github.vhromada.common.validator.MovableValidator
-import com.github.vhromada.common.validator.ValidationType
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.github.vhromada.common.validator.Validator
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import java.util.Optional
 
 /**
  * A class represents test for class [ShowValidator].
  *
  * @author Vladimir Hromada
  */
-class ShowValidatorTest : MovableValidatorTest<Show, com.github.vhromada.catalog.domain.Show>() {
+@ExtendWith(MockitoExtension::class)
+class ShowValidatorTest {
 
     /**
-     * Validator for picture
+     * Instance of [Validator] for genres
      */
     @Mock
-    private lateinit var pictureValidator: MovableValidator<Picture>
+    private lateinit var genreValidator: Validator<Genre, com.github.vhromada.catalog.domain.Genre>
 
     /**
-     * Validator for genre
+     * Instance of [ShowValidator]
      */
-    @Mock
-    private lateinit var genreValidator: MovableValidator<Genre>
+    private lateinit var validator: ShowValidator
 
     /**
-     * Argument captor for picture
-     */
-    private lateinit var pictureArgumentCaptor: KArgumentCaptor<Picture>
-
-    /**
-     * Initializes data.
+     * Initializes validator.
      */
     @BeforeEach
-    override fun setUp() {
-        super.setUp()
-
-        pictureArgumentCaptor = argumentCaptor()
+    fun setUp() {
+        validator = ShowValidator(genreValidator = genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null czech name.
+     * Test method for [ShowValidator.validate] with correct new show.
      */
     @Test
-    fun validateDeepNullCzechName() {
-        val show = getValidatingData(1)
-                .copy(czechName = null)
+    fun validateNew() {
+        val show = ShowUtils.newShow(id = null)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_NULL", "Czech name mustn't be null.")))
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with empty string as czech name.
+     * Test method for [ShowValidator.validate] with null new show.
      */
     @Test
-    fun validateDeepEmptyCzechName() {
-        val show = getValidatingData(1)
-                .copy(czechName = "")
-
-        initDeepMock(show)
-
-        val result = getValidator().validate(show, ValidationType.DEEP)
+    fun validateNewNull() {
+        val result = validator.validate(data = null, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_NULL", message = "Show mustn't be null.")))
         }
 
-        verifyDeepMock(show)
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null original name.
+     * Test method for [ShowValidator.validate] with new show with not null ID.
      */
     @Test
-    fun validateDeepNullOriginalName() {
-        val show = getValidatingData(1)
-                .copy(originalName = null)
+    fun validateNewNotNullId() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(id = Int.MAX_VALUE)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_NULL", "Original name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_ID_NOT_NULL", message = "ID must be null.")))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with empty string as original name.
+     * Test method for [ShowValidator.validate] with new show with not null position.
      */
     @Test
-    fun validateDeepEmptyOriginalName() {
-        val show = getValidatingData(1)
-                .copy(originalName = "")
+    fun validateNewNotNullPosition() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(position = Int.MAX_VALUE)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_POSITION_NOT_NULL", message = "Position must be null.")))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null URL to ČSFD page about show.
+     * Test method for [ShowValidator.validate] with new show with null czech name.
      */
     @Test
-    fun validateDeepNullCsfd() {
-        val show = getValidatingData(1)
-                .copy(csfd = null)
+    fun validateNewNullCzechName() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(czechName = null)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CSFD_NULL", "URL to ČSFD page about show mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_CZECH_NAME_NULL", message = "Czech name mustn't be null.")))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null IMDB code.
+     * Test method for [ShowValidator.validate] with new show with empty string as czech name.
      */
     @Test
-    fun validateDeepNullImdb() {
-        val show = getValidatingData(1)
-                .copy(imdbCode = null)
+    fun validateNewEmptyCzechName() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(czechName = "")
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NULL", "IMDB code mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_CZECH_NAME_EMPTY", message = "Czech name mustn't be empty string.")))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad minimal IMDB code.
+     * Test method for [ShowValidator.validate] with new show with null original name.
      */
     @Test
-    fun validateDeepBadMinimalImdb() {
-        val show = getValidatingData(1)
-                .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
+    fun validateNewNullOriginalName() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(originalName = null)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_IMDB_CODE_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_ORIGINAL_NAME_NULL", message = "Original name mustn't be null.")))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad divider IMDB code.
+     * Test method for [ShowValidator.validate] with new show with empty string as original name.
      */
     @Test
-    fun validateDeepBadDividerImdb() {
-        val show = getValidatingData(1)
-                .copy(imdbCode = 0)
+    fun validateNewEmptyOriginalName() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(originalName = "")
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_IMDB_CODE_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_ORIGINAL_NAME_EMPTY", message = "Original name mustn't be empty string.")))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad maximal IMDB code.
+     * Test method for [ShowValidator.validate] with new show with null URL to ČSFD page about show.
      */
     @Test
-    fun validateDeepBadMaximalImdb() {
-        val show = getValidatingData(1)
-                .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
+    fun validateNewNullCsfd() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(csfd = null)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_IMDB_CODE_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_CSFD_NULL", message = "URL to ČSFD page about show mustn't be null.")))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null URL to english Wikipedia page about show.
+     * Test method for [ShowValidator.validate] with new show with null IMDB code.
      */
     @Test
-    fun validateDeepNullWikiEn() {
-        val show = getValidatingData(1)
-                .copy(wikiEn = null)
+    fun validateNewNullImdb() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(imdbCode = null)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL",
-                    "URL to english Wikipedia page about show mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_IMDB_CODE_NULL", message = "IMDB code mustn't be null.")))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null URL to czech Wikipedia page about show.
+     * Test method for [ShowValidator.validate] with new show with bad minimal IMDB code.
      */
     @Test
-    fun validateDeepNullWikiCz() {
-        val show = getValidatingData(1)
-                .copy(wikiCz = null)
+    fun validateNewBadMinimalImdb() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
-                    "URL to czech Wikipedia page about show mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_SHOW_IMDB_CODE_EVENT))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null note.
+     * Test method for [ShowValidator.validate] with new show with bad divider IMDB code.
      */
     @Test
-    fun validateDeepNullNote() {
-        val show = getValidatingData(1)
-                .copy(note = null)
+    fun validateNewBadDividerImdb() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(imdbCode = 0)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_SHOW_IMDB_CODE_EVENT))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with bad picture.
+     * Test method for [ShowValidator.validate] with new show with bad maximal IMDB code.
      */
     @Test
-    fun validateDeepBadPicture() {
-        val event = Event(Severity.ERROR, "PICTURE_INVALID", "Invalid data")
-        val show = getValidatingData(1)
+    fun validateNewBadMaximalImdb() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
 
-        whenever(pictureValidator.validate(any(), any())).thenReturn(Result.error(event.key, event.message))
-        whenever(genreValidator.validate(any(), any())).thenReturn(Result())
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(event))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_SHOW_IMDB_CODE_EVENT))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null genres.
+     * Test method for [ShowValidator.validate] with new show with null URL to english Wikipedia page about show.
      */
     @Test
-    fun validateDeepNullGenres() {
-        val show = getValidatingData(1)
-                .copy(genres = null)
+    fun validateNewNullWikiEn() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(wikiEn = null)
 
-        whenever(pictureValidator.validate(any(), any())).thenReturn(Result())
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_NULL", "Genres mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_WIKI_EN_NULL", message = "URL to english Wikipedia page about show mustn't be null.")))
         }
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS))
-        verifyNoMoreInteractions(pictureValidator)
-        verifyZeroInteractions(service, genreValidator)
-
-        validatePicture(show, pictureArgumentCaptor.lastValue)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with genres with null value.
+     * Test method for [ShowValidator.validate] with new show with null URL to czech Wikipedia page about show.
      */
     @Test
-    fun validateDeepBadGenres() {
-        val show = getValidatingData(1)
-                .copy(genres = listOf(GenreUtils.newGenre(1), null))
+    fun validateNewNullWikiCz() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(wikiCz = null)
 
-        initDeepMock(show)
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_WIKI_CZ_NULL", message = "URL to czech Wikipedia page about show mustn't be null.")))
         }
 
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS))
-        verify(genreValidator).validate(show.genres!![0], ValidationType.EXISTS, ValidationType.DEEP)
-        verifyNoMoreInteractions(pictureValidator, genreValidator)
-        verifyZeroInteractions(service)
-
-        validatePicture(show, pictureArgumentCaptor.lastValue)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with genres with genre with invalid data.
+     * Test method for [ShowValidator.validate] with new show with null note.
      */
     @Test
-    fun validateDeepGenresWithGenreWithInvalidData() {
-        val event = Event(Severity.ERROR, "GENRE_INVALID", "Invalid data")
-        val show = getValidatingData(1)
-                .copy(genres = listOf(GenreUtils.newGenre(null)))
+    fun validateNewNullNote() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(note = null)
 
-        whenever(pictureValidator.validate(any(), any())).thenReturn(Result())
-        whenever(genreValidator.validate(any(), any())).thenReturn(Result.error(event.key, event.message))
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-        val result = getValidator().validate(show, ValidationType.DEEP)
+        val result = validator.validate(data = show, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(event))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_NOTE_NULL", message = "Note mustn't be null.")))
         }
 
-        verifyDeepMock(show)
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
     }
 
-    override fun initDeepMock(validatingData: Show) {
-        super.initDeepMock(validatingData)
+    /**
+     * Test method for [ShowValidator.validate] with new show with null genres.
+     */
+    @Test
+    fun validateNewNullGenres() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(genres = null)
 
-        whenever(pictureValidator.validate(any(), any())).thenReturn(Result())
-        whenever(genreValidator.validate(any(), any())).thenReturn(Result())
-    }
+        val result = validator.validate(data = show, update = false)
 
-    override fun verifyDeepMock(validatingData: Show) {
-        super.verifyDeepMock(validatingData)
-
-        verify(pictureValidator).validate(pictureArgumentCaptor.capture(), eq(ValidationType.EXISTS))
-        for (genre in validatingData.genres!!) {
-            verify(genreValidator).validate(genre, ValidationType.EXISTS, ValidationType.DEEP)
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_GENRES_NULL", message = "Genres mustn't be null.")))
         }
-        verifyNoMoreInteractions(pictureValidator, genreValidator)
-        verifyZeroInteractions(service)
 
-        validatePicture(validatingData, pictureArgumentCaptor.lastValue)
+        verifyZeroInteractions(genreValidator)
     }
 
-    override fun getValidator(): MovableValidator<Show> {
-        return ShowValidator(service, pictureValidator, genreValidator)
-    }
+    /**
+     * Test method for [ShowValidator.validate] with new show with genres with null value.
+     */
+    @Test
+    fun validateNewBadGenres() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), null))
 
-    override fun getValidatingData(id: Int?): Show {
-        return ShowUtils.newShow(id)
-    }
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
 
-    override fun getValidatingData(id: Int?, position: Int?): Show {
-        return ShowUtils.newShow(id)
-                .copy(position = position)
-    }
+        val result = validator.validate(data = show, update = false)
 
-    override fun getRepositoryData(validatingData: Show): com.github.vhromada.catalog.domain.Show {
-        return ShowUtils.newShowDomain(validatingData.id)
-    }
-
-    override fun getItem1(): com.github.vhromada.catalog.domain.Show {
-        return ShowUtils.newShowDomain(1)
-    }
-
-    override fun getItem2(): com.github.vhromada.catalog.domain.Show {
-        return ShowUtils.newShowDomain(2)
-    }
-
-    override fun getName(): String {
-        return "Show"
-    }
-
-    companion object {
-
-        /**
-         * Event for invalid IMDB code
-         */
-        private val INVALID_IMDB_CODE_EVENT = Event(Severity.ERROR, "SHOW_IMDB_CODE_NOT_VALID", "IMDB code must be between 1 and 9999999 or -1.")
-
-        /**
-         * Validates picture.
-         *
-         * @param show    show
-         * @param picture picture
-         */
-        private fun validatePicture(show: Show, picture: Picture) {
-            assertThat(picture).isNotNull
-            assertThat(picture.id).isEqualTo(show.picture)
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_GENRES_CONTAIN_NULL", message = "Genres mustn't contain null value.")))
         }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with new show with genres with genre with invalid data.
+     */
+    @Test
+    fun validateNewGenresWithGenreWithInvalidData() {
+        val show = ShowUtils.newShow(id = null)
+            .copy(genres = listOf(GenreUtils.newGenre(id = Int.MAX_VALUE)))
+
+        whenever(genreValidator.validate(any(), any())).thenReturn(TestConstants.INVALID_DATA_RESULT)
+
+        val result = validator.validate(data = show, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(TestConstants.INVALID_DATA_RESULT.events())
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with with update correct show.
+     */
+    @Test
+    fun validateUpdate() {
+        val show = ShowUtils.newShow(id = 1)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with null update show.
+     */
+    @Test
+    fun validateUpdateNull() {
+        val result = validator.validate(data = null, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_NULL", message = "Show mustn't be null.")))
+        }
+
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null ID.
+     */
+    @Test
+    fun validateUpdateNullId() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(id = null)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_ID_NULL", message = "ID mustn't be null.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null position.
+     */
+    @Test
+    fun validateUpdateNullPosition() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(position = null)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_POSITION_NULL", message = "Position mustn't be null.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null czech name.
+     */
+    @Test
+    fun validateUpdateNullCzechName() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(czechName = null)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_CZECH_NAME_NULL", message = "Czech name mustn't be null.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with empty string as czech name.
+     */
+    @Test
+    fun validateUpdateEmptyCzechName() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(czechName = "")
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_CZECH_NAME_EMPTY", message = "Czech name mustn't be empty string.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null original name.
+     */
+    @Test
+    fun validateUpdateNullOriginalName() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(originalName = null)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_ORIGINAL_NAME_NULL", message = "Original name mustn't be null.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with empty string as original name.
+     */
+    @Test
+    fun validateUpdateEmptyOriginalName() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(originalName = "")
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_ORIGINAL_NAME_EMPTY", message = "Original name mustn't be empty string.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null URL to ČSFD page about show.
+     */
+    @Test
+    fun validateUpdateNullCsfd() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(csfd = null)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_CSFD_NULL", message = "URL to ČSFD page about show mustn't be null.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null IMDB code.
+     */
+    @Test
+    fun validateUpdateNullImdb() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(imdbCode = null)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_IMDB_CODE_NULL", message = "IMDB code mustn't be null.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with bad minimal IMDB code.
+     */
+    @Test
+    fun validateUpdateBadMinimalImdb() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_SHOW_IMDB_CODE_EVENT))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with bad divider IMDB code.
+     */
+    @Test
+    fun validateUpdateBadDividerImdb() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(imdbCode = 0)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_SHOW_IMDB_CODE_EVENT))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with bad maximal IMDB code.
+     */
+    @Test
+    fun validateUpdateBadMaximalImdb() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_SHOW_IMDB_CODE_EVENT))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null URL to english Wikipedia page about show.
+     */
+    @Test
+    fun validateUpdateNullWikiEn() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(wikiEn = null)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_WIKI_EN_NULL", message = "URL to english Wikipedia page about show mustn't be null.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null URL to czech Wikipedia page about show.
+     */
+    @Test
+    fun validateUpdateNullWikiCz() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(wikiCz = null)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_WIKI_CZ_NULL", message = "URL to czech Wikipedia page about show mustn't be null.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null note.
+     */
+    @Test
+    fun validateUpdateNullNote() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(note = null)
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_NOTE_NULL", message = "Note mustn't be null.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with null genres.
+     */
+    @Test
+    fun validateUpdateNullGenres() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(genres = null)
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_GENRES_NULL", message = "Genres mustn't be null.")))
+        }
+
+        verifyZeroInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with genres with null value.
+     */
+    @Test
+    fun validateUpdateBadGenres() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), null))
+
+        whenever(genreValidator.validate(data = any(), update = any())).thenReturn(Result())
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_GENRES_CONTAIN_NULL", message = "Genres mustn't contain null value.")))
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validate] with update show with genres with genre with invalid data.
+     */
+    @Test
+    fun validateUpdateGenresWithGenreWithInvalidData() {
+        val show = ShowUtils.newShow(id = 1)
+            .copy(genres = listOf(GenreUtils.newGenre(id = Int.MAX_VALUE)))
+
+        whenever(genreValidator.validate(any(), any())).thenReturn(TestConstants.INVALID_DATA_RESULT)
+
+        val result = validator.validate(data = show, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(TestConstants.INVALID_DATA_RESULT.events())
+        }
+
+        show.genres!!.filterNotNull().forEach { verify(genreValidator).validate(data = it, update = true) }
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validateExists] with correct show.
+     */
+    @Test
+    fun validateExists() {
+        val result = validator.validateExists(data = Optional.of(ShowUtils.newShowDomain(id = 1)))
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validateExists] with invalid show.
+     */
+    @Test
+    fun validateExistsInvalid() {
+        val result = validator.validateExists(data = Optional.empty())
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_NOT_EXIST", message = "Show doesn't exist.")))
+        }
+
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validateMovingData] with correct up show.
+     */
+    @Test
+    fun validateMovingDataUp() {
+        val shows = listOf(ShowUtils.newShowDomain(id = 1), ShowUtils.newShowDomain(id = 2))
+
+        val result = validator.validateMovingData(data = shows[1], list = shows, up = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validateMovingData] with with invalid up show.
+     */
+    @Test
+    fun validateMovingDataUpInvalid() {
+        val shows = listOf(ShowUtils.newShowDomain(id = 1), ShowUtils.newShowDomain(id = 2))
+
+        val result = validator.validateMovingData(data = shows[0], list = shows, up = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_NOT_MOVABLE", message = "Show can't be moved up.")))
+        }
+
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validateMovingData] with correct down show.
+     */
+    @Test
+    fun validateMovingDataDown() {
+        val shows = listOf(ShowUtils.newShowDomain(id = 1), ShowUtils.newShowDomain(id = 2))
+
+        val result = validator.validateMovingData(data = shows[0], list = shows, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        verifyNoMoreInteractions(genreValidator)
+    }
+
+    /**
+     * Test method for [ShowValidator.validateMovingData] with with invalid down show.
+     */
+    @Test
+    fun validateMovingDataDownInvalid() {
+        val shows = listOf(ShowUtils.newShowDomain(id = 1), ShowUtils.newShowDomain(id = 2))
+
+        val result = validator.validateMovingData(data = shows[1], list = shows, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SHOW_NOT_MOVABLE", message = "Show can't be moved down.")))
+        }
+
+        verifyNoMoreInteractions(genreValidator)
     }
 
 }

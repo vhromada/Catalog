@@ -12,16 +12,17 @@ import javax.persistence.EntityManager
  * @return updated program
  */
 fun com.github.vhromada.catalog.domain.Program.updated(): com.github.vhromada.catalog.domain.Program {
-    return copy(name = "Name",
-            wikiEn = "enWiki",
-            wikiCz = "czWiki",
-            mediaCount = 1,
-            format = Format.STEAM,
-            crack = true,
-            serialKey = true,
-            otherData = "Other data",
-            note = "Note",
-            audit = AuditUtils.newAudit())
+    return copy(
+        name = "Name",
+        wikiEn = "enWiki",
+        wikiCz = "czWiki",
+        mediaCount = 1,
+        format = Format.STEAM,
+        crack = true,
+        serialKey = true,
+        otherData = "Other data",
+        note = "Note"
+    )
 }
 
 /**
@@ -30,15 +31,17 @@ fun com.github.vhromada.catalog.domain.Program.updated(): com.github.vhromada.ca
  * @return updated program
  */
 fun Program.updated(): Program {
-    return copy(name = "Name",
-            wikiEn = "enWiki",
-            wikiCz = "czWiki",
-            mediaCount = 1,
-            format = Format.STEAM,
-            crack = true,
-            serialKey = true,
-            otherData = "Other data",
-            note = "Note")
+    return copy(
+        name = "Name",
+        wikiEn = "enWiki",
+        wikiCz = "czWiki",
+        mediaCount = 1,
+        format = Format.STEAM,
+        crack = true,
+        serialKey = true,
+        otherData = "Other data",
+        note = "Note"
+    )
 }
 
 /**
@@ -70,8 +73,8 @@ object ProgramUtils {
      */
     fun getPrograms(): List<com.github.vhromada.catalog.domain.Program> {
         val programs = mutableListOf<com.github.vhromada.catalog.domain.Program>()
-        for (i in 0 until PROGRAMS_COUNT) {
-            programs.add(getProgram(i + 1))
+        for (i in 1..PROGRAMS_COUNT) {
+            programs.add(getProgramDomain(index = i))
         }
 
         return programs
@@ -85,19 +88,18 @@ object ProgramUtils {
      */
     fun newProgramDomain(id: Int?): com.github.vhromada.catalog.domain.Program {
         return com.github.vhromada.catalog.domain.Program(
-                id = id,
-                name = "",
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = 0,
-                format = Format.STEAM,
-                crack = false,
-                serialKey = false,
-                otherData = null,
-                note = null,
-                position = if (id == null) null else id - 1,
-                audit = null)
-                .updated()
+            id = id,
+            name = "",
+            wikiEn = null,
+            wikiCz = null,
+            mediaCount = 0,
+            format = Format.STEAM,
+            crack = false,
+            serialKey = false,
+            otherData = null,
+            note = null,
+            position = if (id == null) null else id - 1
+        ).updated()
     }
 
     /**
@@ -108,18 +110,18 @@ object ProgramUtils {
      */
     fun newProgram(id: Int?): Program {
         return Program(
-                id = id,
-                name = "",
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = 0,
-                format = Format.STEAM,
-                crack = false,
-                serialKey = false,
-                otherData = null,
-                note = null,
-                position = if (id == null) null else id - 1)
-                .updated()
+            id = id,
+            name = "",
+            wikiEn = null,
+            wikiCz = null,
+            mediaCount = 0,
+            format = Format.STEAM,
+            crack = false,
+            serialKey = false,
+            otherData = null,
+            note = null,
+            position = if (id == null) null else id - 1
+        ).updated()
     }
 
     /**
@@ -128,22 +130,22 @@ object ProgramUtils {
      * @param index index
      * @return program for index
      */
-    fun getProgram(index: Int): com.github.vhromada.catalog.domain.Program {
+    fun getProgramDomain(index: Int): com.github.vhromada.catalog.domain.Program {
         val mediaCountMultiplier = 100
 
         return com.github.vhromada.catalog.domain.Program(
-                id = index,
-                name = "$PROGRAM$index name",
-                wikiEn = "$PROGRAM$index English Wikipedia",
-                wikiCz = "$PROGRAM$index Czech Wikipedia",
-                mediaCount = index * mediaCountMultiplier,
-                format = getFormat(index),
-                crack = index == 3,
-                serialKey = index != 1,
-                otherData = if (index == 3) PROGRAM + "3 other data" else "",
-                note = if (index == 3) PROGRAM + "3 note" else "",
-                position = index - 1,
-                audit = AuditUtils.getAudit())
+            id = index,
+            name = "$PROGRAM$index name",
+            wikiEn = "$PROGRAM$index English Wikipedia",
+            wikiCz = "$PROGRAM$index Czech Wikipedia",
+            mediaCount = index * mediaCountMultiplier,
+            format = getFormat(index = index),
+            crack = index == 3,
+            serialKey = index != 1,
+            otherData = if (index == 3) PROGRAM + "3 other data" else "",
+            note = if (index == 3) PROGRAM + "3 note" else "",
+            position = index + 9
+        ).fillAudit(audit = AuditUtils.getAudit())
     }
 
     /**
@@ -180,9 +182,11 @@ object ProgramUtils {
      * @return program with updated fields
      */
     fun updateProgram(entityManager: EntityManager, id: Int): com.github.vhromada.catalog.domain.Program {
-        return getProgram(entityManager, id)!!
-                .updated()
-                .copy(position = POSITION)
+        val program = getProgram(entityManager = entityManager, id = id)!!
+        return program
+            .updated()
+            .copy(position = POSITION)
+            .fillAudit(audit = program)
     }
 
     /**
@@ -191,6 +195,7 @@ object ProgramUtils {
      * @param entityManager entity manager
      * @return count of programs
      */
+    @Suppress("JpaQlInspection")
     fun getProgramsCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(p.id) FROM Program p", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -201,15 +206,11 @@ object ProgramUtils {
      * @param expected expected list of programs
      * @param actual   actual list of programs
      */
-    fun assertProgramsDeepEquals(expected: List<com.github.vhromada.catalog.domain.Program?>?, actual: List<com.github.vhromada.catalog.domain.Program?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertDomainProgramsDeepEquals(expected: List<com.github.vhromada.catalog.domain.Program>, actual: List<com.github.vhromada.catalog.domain.Program>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertProgramDeepEquals(expected[i], actual[i])
+                assertProgramDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -220,13 +221,9 @@ object ProgramUtils {
      * @param expected expected program
      * @param actual   actual program
      */
-    fun assertProgramDeepEquals(expected: com.github.vhromada.catalog.domain.Program?, actual: com.github.vhromada.catalog.domain.Program?) {
+    fun assertProgramDeepEquals(expected: com.github.vhromada.catalog.domain.Program, actual: com.github.vhromada.catalog.domain.Program) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.name).isEqualTo(expected.name)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
@@ -237,8 +234,34 @@ object ProgramUtils {
             it.assertThat(actual.otherData).isEqualTo(expected.otherData)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
+            AuditUtils.assertAuditDeepEquals(softly = it, expected = expected, actual = actual)
         }
-        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
+    }
+
+    /**
+     * Asserts program deep equals.
+     *
+     * @param expected expected program
+     * @param actual   actual program
+     */
+    fun assertProgramDeepEquals(expected: Program, actual: com.github.vhromada.catalog.domain.Program) {
+        assertSoftly {
+            it.assertThat(actual.id).isEqualTo(expected.id)
+            it.assertThat(actual.name).isEqualTo(expected.name)
+            it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
+            it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
+            it.assertThat(actual.mediaCount).isEqualTo(expected.mediaCount)
+            it.assertThat(actual.format).isEqualTo(expected.format)
+            it.assertThat(actual.crack).isEqualTo(expected.crack)
+            it.assertThat(actual.serialKey).isEqualTo(expected.serialKey)
+            it.assertThat(actual.otherData).isEqualTo(expected.otherData)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
+            it.assertThat(actual.createdUser).isNull()
+            it.assertThat(actual.createdTime).isNull()
+            it.assertThat(actual.updatedUser).isNull()
+            it.assertThat(actual.updatedTime).isNull()
+        }
     }
 
     /**
@@ -247,15 +270,11 @@ object ProgramUtils {
      * @param expected expected list of programs
      * @param actual   actual list of programs
      */
-    fun assertProgramListDeepEquals(expected: List<Program?>?, actual: List<com.github.vhromada.catalog.domain.Program?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertProgramListDeepEquals(expected: List<com.github.vhromada.catalog.domain.Program>, actual: List<Program>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertProgramDeepEquals(expected[i], actual[i])
+                assertProgramDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -266,13 +285,9 @@ object ProgramUtils {
      * @param expected expected program
      * @param actual   actual program
      */
-    fun assertProgramDeepEquals(expected: Program?, actual: com.github.vhromada.catalog.domain.Program?) {
+    fun assertProgramDeepEquals(expected: com.github.vhromada.catalog.domain.Program, actual: Program) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.name).isEqualTo(expected.name)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)

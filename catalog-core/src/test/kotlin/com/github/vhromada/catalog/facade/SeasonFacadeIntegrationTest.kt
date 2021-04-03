@@ -1,40 +1,44 @@
 package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.CatalogTestConfiguration
-import com.github.vhromada.catalog.entity.Season
-import com.github.vhromada.catalog.entity.Show
+import com.github.vhromada.catalog.utils.AuditUtils
 import com.github.vhromada.catalog.utils.EpisodeUtils
-import com.github.vhromada.catalog.utils.GenreUtils
 import com.github.vhromada.catalog.utils.SeasonUtils
 import com.github.vhromada.catalog.utils.ShowUtils
+import com.github.vhromada.catalog.utils.TestConstants
+import com.github.vhromada.catalog.utils.fillAudit
 import com.github.vhromada.common.entity.Language
-import com.github.vhromada.common.facade.MovableChildFacade
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
-import com.github.vhromada.common.test.facade.MovableChildFacadeIntegrationTest
-import com.github.vhromada.common.test.utils.TestConstants
-import com.github.vhromada.common.utils.Constants
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
 
 /**
  * A class represents integration test for class [SeasonFacade].
  *
  * @author Vladimir Hromada
  */
+@ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, com.github.vhromada.catalog.domain.Season, Show>() {
+@Transactional
+@Rollback
+class SeasonFacadeIntegrationTest {
 
     /**
      * Instance of [EntityManager]
      */
-    @Autowired
-    @Qualifier("containerManagedEntityManager")
+    @PersistenceContext
     private lateinit var entityManager: EntityManager
 
     /**
@@ -44,201 +48,117 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
     private lateinit var facade: SeasonFacade
 
     /**
-     * Test method for [SeasonFacade.add] with season with null number of season.
+     * Test method for [SeasonFacade.get].
      */
     @Test
-    fun addNullNumber() {
-        val season = newChildData(null)
-                .copy(number = null)
+    fun get() {
+        for (i in 1..SeasonUtils.SEASONS_COUNT) {
+            val result = facade.get(id = i)
 
-        val result = facade.add(ShowUtils.newShow(1), season)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NULL", "Number of season mustn't be null.")))
+            assertSoftly {
+                it.assertThat(result.status).isEqualTo(Status.OK)
+                it.assertThat(result.data).isNotNull
+                it.assertThat(result.events()).isEmpty()
+            }
+            SeasonUtils.assertSeasonDeepEquals(expected = SeasonUtils.getSeasonDomain(index = i), actual = result.data!!)
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
-     * Test method for [SeasonFacade.add] with season with not positive number of season.
+     * Test method for [SeasonFacade.get] with bad ID.
      */
     @Test
-    fun addNotPositiveNumber() {
-        val season = newChildData(null)
-                .copy(number = 0)
-
-        val result = facade.add(ShowUtils.newShow(1), season)
+    fun getBadId() {
+        val result = facade.get(id = Int.MAX_VALUE)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(SEASON_NOT_EXIST_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
-     * Test method for [SeasonFacade.add] with season with null starting year.
+     * Test method for [SeasonFacade.update].
      */
     @Test
-    fun addNullStartYear() {
-        val season = newChildData(null)
-                .copy(startYear = null)
+    fun update() {
+        val season = SeasonUtils.newSeason(id = 1)
+        val expectedSeason = SeasonUtils.newSeasonDomain(id = 1)
+            .copy(episodes = EpisodeUtils.getEpisodes(season = 1))
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        expectedSeason.show = ShowUtils.getShow(entityManager = entityManager, id = 1)
 
-        val result = facade.add(ShowUtils.newShow(1), season)
+        val result = facade.update(data = season)
+        entityManager.flush()
 
         assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_START_YEAR_NULL", "Starting year mustn't be null.")))
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
         }
 
-        assertDefaultRepositoryData()
+        SeasonUtils.assertSeasonDeepEquals(expected = expectedSeason, actual = SeasonUtils.getSeason(entityManager = entityManager, id = 1)!!)
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
-     * Test method for [SeasonFacade.add] with season with null ending year.
+     * Test method for [SeasonFacade.update] with season with null ID.
      */
     @Test
-    fun addNullEndYear() {
-        val season = newChildData(null)
-                .copy(endYear = null)
+    fun updateNullId() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(id = null)
 
-        val result = facade.add(ShowUtils.newShow(1), season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_END_YEAR_NULL", "Ending year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_ID_NULL", message = "ID mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
-     * Test method for [SeasonFacade.add] with season with bad minimum starting year and bad minimum ending year.
+     * Test method for [SeasonFacade.update] with season with null position.
      */
     @Test
-    fun addBadMinimumYears() {
-        val season = newChildData(null)
-                .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
+    fun updateNullPosition() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(position = null)
 
-        val result = facade.add(ShowUtils.newShow(1), season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_POSITION_NULL", message = "Position mustn't be null.")))
         }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [SeasonFacade.add] with season with bad maximum starting year and bad maximum ending year.
-     */
-    @Test
-    fun addBadMaximumYears() {
-        val season = newChildData(null)
-                .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
-
-        val result = facade.add(ShowUtils.newShow(1), season)
 
         assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT))
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
         }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [SeasonFacade.add] with season with starting year greater than ending year.
-     */
-    @Test
-    fun addBadYears() {
-        var season = newChildData(null)
-        season = season.copy(startYear = season.endYear!! + 1)
-
-        val result = facade.add(ShowUtils.newShow(1), season)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [SeasonFacade.add] with season with null language.
-     */
-    @Test
-    fun addNullLanguage() {
-        val season = newChildData(null)
-                .copy(language = null)
-
-        val result = facade.add(ShowUtils.newShow(1), season)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LANGUAGE_NULL", "Language mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [SeasonFacade.add] with season with null subtitles.
-     */
-    @Test
-    fun addNullSubtitles() {
-        val season = newChildData(null)
-                .copy(subtitles = null)
-
-        val result = facade.add(ShowUtils.newShow(1), season)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_SUBTITLES_NULL", "Subtitles mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [SeasonFacade.add] with season with subtitles with null value.
-     */
-    @Test
-    fun addBadSubtitles() {
-        val season = newChildData(null)
-                .copy(subtitles = listOf(Language.CZ, null))
-
-        val result = facade.add(ShowUtils.newShow(1), season)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [SeasonFacade.add] with season with null note.
-     */
-    @Test
-    fun addNullNote() {
-        val season = newChildData(null)
-                .copy(note = null)
-
-        val result = facade.add(ShowUtils.newShow(1), season)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOTE_NULL", "Note mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
     }
 
     /**
@@ -246,17 +166,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateNullNumber() {
-        val season = newChildData(1)
-                .copy(number = null)
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(number = null)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NULL", "Number of season mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NUMBER_NULL", message = "Number of season mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -264,17 +188,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateNotPositiveNumber() {
-        val season = newChildData(1)
-                .copy(number = 0)
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(number = 0)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NUMBER_NOT_POSITIVE", message = "Number of season must be positive number.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -282,17 +210,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateNullStartYear() {
-        val season = newChildData(1)
-                .copy(startYear = null)
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(startYear = null)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_START_YEAR_NULL", "Starting year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_START_YEAR_NULL", message = "Starting year mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -300,17 +232,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateNullEndYear() {
-        val season = newChildData(1)
-                .copy(endYear = null)
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(endYear = null)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_END_YEAR_NULL", "Ending year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_END_YEAR_NULL", message = "Ending year mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -318,17 +254,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateBadMinimumYears() {
-        val season = newChildData(1)
-                .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_STARTING_YEAR_EVENT, TestConstants.INVALID_ENDING_YEAR_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -336,17 +276,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateBadMaximumYears() {
-        val season = newChildData(1)
-                .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_STARTING_YEAR_EVENT, TestConstants.INVALID_ENDING_YEAR_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -354,17 +298,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateBadYears() {
-        var season = newChildData(4)
+        var season = SeasonUtils.newSeason(id = 4)
         season = season.copy(startYear = season.endYear!! + 1)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -372,17 +320,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateNullLanguage() {
-        val season = newChildData(1)
-                .copy(language = null)
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(language = null)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_LANGUAGE_NULL", "Language mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_LANGUAGE_NULL", message = "Language mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -390,17 +342,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateNullSubtitles() {
-        val season = newChildData(1)
-                .copy(subtitles = null)
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(subtitles = null)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_SUBTITLES_NULL", "Subtitles mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_SUBTITLES_NULL", message = "Subtitles mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -408,17 +364,21 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateBadSubtitles() {
-        val season = newChildData(1)
-                .copy(subtitles = listOf(Language.CZ, null))
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(subtitles = listOf(Language.CZ, null))
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_SUBTITLES_CONTAIN_NULL", message = "Subtitles mustn't contain null value.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
     }
 
     /**
@@ -426,132 +386,659 @@ class SeasonFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Season, co
      */
     @Test
     fun updateNullNote() {
-        val season = newChildData(1)
-                .copy(note = null)
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(note = null)
 
-        val result = facade.update(season)
+        val result = facade.update(data = season)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NOTE_NULL", message = "Note mustn't be null.")))
         }
-
-        assertDefaultRepositoryData()
-    }
-
-    override fun getFacade(): MovableChildFacade<Season, Show> {
-        return facade
-    }
-
-    override fun getDefaultParentDataCount(): Int {
-        return ShowUtils.SHOWS_COUNT
-    }
-
-    override fun getDefaultChildDataCount(): Int {
-        return SeasonUtils.SEASONS_COUNT
-    }
-
-    override fun getRepositoryParentDataCount(): Int {
-        return ShowUtils.getShowsCount(entityManager)
-    }
-
-    override fun getRepositoryChildDataCount(): Int {
-        return SeasonUtils.getSeasonsCount(entityManager)
-    }
-
-    override fun getDataList(parentId: Int): List<com.github.vhromada.catalog.domain.Season> {
-        return SeasonUtils.getSeasons(parentId)
-    }
-
-    override fun getDomainData(index: Int): com.github.vhromada.catalog.domain.Season {
-        return SeasonUtils.getSeason(index)
-    }
-
-    override fun newParentData(id: Int?): Show {
-        return ShowUtils.newShow(id)
-    }
-
-    override fun newChildData(id: Int?): Season {
-        return SeasonUtils.newSeason(id)
-    }
-
-    override fun newDomainData(id: Int): com.github.vhromada.catalog.domain.Season {
-        return SeasonUtils.newSeasonDomain(id)
-    }
-
-    override fun getRepositoryData(id: Int): com.github.vhromada.catalog.domain.Season? {
-        return SeasonUtils.getSeason(entityManager, id)
-    }
-
-    override fun getParentName(): String {
-        return "Show"
-    }
-
-    override fun getChildName(): String {
-        return "Season"
-    }
-
-    override fun assertDataListDeepEquals(expected: List<Season>, actual: List<com.github.vhromada.catalog.domain.Season>) {
-        SeasonUtils.assertSeasonListDeepEquals(expected, actual)
-    }
-
-    override fun assertDataDeepEquals(expected: Season, actual: com.github.vhromada.catalog.domain.Season) {
-        SeasonUtils.assertSeasonDeepEquals(expected, actual)
-    }
-
-    override fun assertDataDomainDeepEquals(expected: com.github.vhromada.catalog.domain.Season, actual: com.github.vhromada.catalog.domain.Season) {
-        SeasonUtils.assertSeasonDeepEquals(expected, actual)
-    }
-
-    override fun getExpectedDuplicatedData(): com.github.vhromada.catalog.domain.Season {
-        val season = super.getExpectedDuplicatedData()
-        for (episode in season.episodes) {
-            episode.id = EpisodeUtils.EPISODES_COUNT + season.episodes.indexOf(episode) + 1
-        }
-
-        return season
-    }
-
-    override fun assertRemoveRepositoryData() {
-        assertSoftly {
-            it.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount() - 1)
-            it.assertThat(getRepositoryParentDataCount()).isEqualTo(getDefaultParentDataCount())
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SEASON_COUNT)
-            it.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
-        }
-    }
-
-    override fun assertDuplicateRepositoryData() {
-        assertSoftly {
-            it.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount() + 1)
-            it.assertThat(getRepositoryParentDataCount()).isEqualTo(getDefaultParentDataCount())
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SEASON_COUNT)
-            it.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
-        }
-    }
-
-    override fun assertReferences() {
-        super.assertReferences()
 
         assertSoftly {
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
-            it.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.update] with season with bad ID.
+     */
+    @Test
+    fun updateBadId() {
+        val result = facade.update(data = SeasonUtils.newSeason(id = Int.MAX_VALUE))
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(SEASON_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.remove].
+     */
+    @Test
+    fun remove() {
+        val result = facade.remove(id = 1)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        assertThat(SeasonUtils.getSeason(entityManager = entityManager, id = 1)).isNull()
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT - 1)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SEASON_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.remove] with season with bad ID.
+     */
+    @Test
+    fun removeBadId() {
+        val result = facade.remove(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(SEASON_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.duplicate].
+     */
+    @Test
+    @DirtiesContext
+    fun duplicate() {
+        var expectedSeason = SeasonUtils.getSeasonDomain(index = SeasonUtils.SEASONS_COUNT)
+        val expectedEpisodes = expectedSeason.episodes.mapIndexed { index, episode ->
+            episode.copy(id = EpisodeUtils.EPISODES_COUNT + index + 1)
+                .fillAudit(audit = AuditUtils.newAudit())
+        }.toMutableList()
+        expectedSeason = expectedSeason.copy(id = SeasonUtils.SEASONS_COUNT + 1, episodes = expectedEpisodes)
+            .fillAudit(audit = AuditUtils.newAudit())
+        expectedSeason.show = ShowUtils.getShow(entityManager = entityManager, id = ShowUtils.SHOWS_COUNT)
+
+        val result = facade.duplicate(id = SeasonUtils.SEASONS_COUNT)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        SeasonUtils.assertSeasonDeepEquals(expected = expectedSeason, actual = SeasonUtils.getSeason(entityManager = entityManager, id = SeasonUtils.SEASONS_COUNT + 1)!!)
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT + 1)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT + EpisodeUtils.EPISODES_PER_SEASON_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.duplicate] with season with bad ID.
+     */
+    @Test
+    fun duplicateBadId() {
+        val result = facade.duplicate(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(SEASON_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.moveUp].
+     */
+    @Test
+    fun moveUp() {
+        val result = facade.moveUp(id = 2)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        val season1 = SeasonUtils.getSeasonDomain(index = 1)
+            .copy(position = 11)
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        val season2 = SeasonUtils.getSeasonDomain(index = 2)
+            .copy(position = 10)
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        SeasonUtils.assertSeasonDeepEquals(expected = season1, actual = SeasonUtils.getSeason(entityManager = entityManager, id = 1)!!)
+        SeasonUtils.assertSeasonDeepEquals(expected = season2, actual = SeasonUtils.getSeason(entityManager = entityManager, id = 2)!!)
+        for (i in 3..SeasonUtils.SEASONS_COUNT) {
+            SeasonUtils.assertSeasonDeepEquals(expected = SeasonUtils.getSeasonDomain(i), actual = SeasonUtils.getSeason(entityManager = entityManager, id = i)!!)
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.moveUp] with not movable season.
+     */
+    @Test
+    fun moveUpNotMovable() {
+        val result = facade.moveUp(id = 1)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NOT_MOVABLE", message = "Season can't be moved up.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.moveUp] with season with bad ID.
+     */
+    @Test
+    fun moveUpBadId() {
+        val result = facade.moveUp(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(SEASON_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.moveDown].
+     */
+    @Test
+    fun moveDown() {
+        val result = facade.moveDown(id = 1)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        val season1 = SeasonUtils.getSeasonDomain(index = 1)
+            .copy(position = 11)
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        val season2 = SeasonUtils.getSeasonDomain(index = 2)
+            .copy(position = 10)
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        SeasonUtils.assertSeasonDeepEquals(expected = season1, actual = SeasonUtils.getSeason(entityManager = entityManager, id = 1)!!)
+        SeasonUtils.assertSeasonDeepEquals(expected = season2, actual = SeasonUtils.getSeason(entityManager = entityManager, id = 2)!!)
+        for (i in 3..SeasonUtils.SEASONS_COUNT) {
+            SeasonUtils.assertSeasonDeepEquals(expected = SeasonUtils.getSeasonDomain(i), actual = SeasonUtils.getSeason(entityManager = entityManager, id = i)!!)
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.moveDown] with not movable season.
+     */
+    @Test
+    fun moveDownNotMovable() {
+        val result = facade.moveDown(id = SeasonUtils.SEASONS_COUNT)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NOT_MOVABLE", message = "Season can't be moved down.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.moveDown] with season with bad ID.
+     */
+    @Test
+    fun moveDownBadId() {
+        val result = facade.moveDown(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(SEASON_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add].
+     */
+    @Test
+    @DirtiesContext
+    fun add() {
+        val expectedSeason = SeasonUtils.newSeasonDomain(id = SeasonUtils.SEASONS_COUNT + 1)
+            .fillAudit(audit = AuditUtils.newAudit())
+        expectedSeason.show = ShowUtils.getShow(entityManager = entityManager, id = 1)
+
+        val result = facade.add(parent = 1, data = SeasonUtils.newSeason(id = null))
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        SeasonUtils.assertSeasonDeepEquals(expected = expectedSeason, actual = SeasonUtils.getSeason(entityManager = entityManager, id = SeasonUtils.SEASONS_COUNT + 1)!!)
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT + 1)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with bad show ID.
+     */
+    @Test
+    fun addBadShowId() {
+        val result = facade.add(parent = Int.MAX_VALUE, data = SeasonUtils.newSeason(id = null))
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(SHOW_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with not null ID.
+     */
+    @Test
+    fun addNotNullId() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(id = Int.MAX_VALUE)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_ID_NOT_NULL", message = "ID must be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with not null position.
+     */
+    @Test
+    fun addNotNullPosition() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(position = Int.MAX_VALUE)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_POSITION_NOT_NULL", message = "Position must be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with null number of season.
+     */
+    @Test
+    fun addNullNumber() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(number = null)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NUMBER_NULL", message = "Number of season mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with not positive number of season.
+     */
+    @Test
+    fun addNotPositiveNumber() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(number = 0)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NUMBER_NOT_POSITIVE", message = "Number of season must be positive number.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with null starting year.
+     */
+    @Test
+    fun addNullStartYear() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(startYear = null)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_START_YEAR_NULL", message = "Starting year mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with null ending year.
+     */
+    @Test
+    fun addNullEndYear() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(endYear = null)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_END_YEAR_NULL", message = "Ending year mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with bad minimum starting year and bad minimum ending year.
+     */
+    @Test
+    fun addBadMinimumYears() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_STARTING_YEAR_EVENT, TestConstants.INVALID_ENDING_YEAR_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with bad maximum starting year and bad maximum ending year.
+     */
+    @Test
+    fun addBadMaximumYears() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_STARTING_YEAR_EVENT, TestConstants.INVALID_ENDING_YEAR_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with starting year greater than ending year.
+     */
+    @Test
+    fun addBadYears() {
+        var season = SeasonUtils.newSeason(id = null)
+        season = season.copy(startYear = season.endYear!! + 1)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with null language.
+     */
+    @Test
+    fun addNullLanguage() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(language = null)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_LANGUAGE_NULL", message = "Language mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with null subtitles.
+     */
+    @Test
+    fun addNullSubtitles() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(subtitles = null)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_SUBTITLES_NULL", message = "Subtitles mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with subtitles with null value.
+     */
+    @Test
+    fun addBadSubtitles() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(subtitles = listOf(Language.CZ, null))
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_SUBTITLES_CONTAIN_NULL", message = "Subtitles mustn't contain null value.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.add] with season with null note.
+     */
+    @Test
+    fun addNullNote() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(note = null)
+
+        val result = facade.add(parent = 1, data = season)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NOTE_NULL", message = "Note mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.find].
+     */
+    @Test
+    fun find() {
+        for (i in 1..ShowUtils.SHOWS_COUNT) {
+            val result = facade.find(parent = i)
+
+            assertSoftly {
+                it.assertThat(result.status).isEqualTo(Status.OK)
+                it.assertThat(result.data).isNotNull
+                it.assertThat(result.events()).isEmpty()
+            }
+            SeasonUtils.assertSeasonListDeepEquals(expected = SeasonUtils.getSeasons(show = i), actual = result.data!!)
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [SeasonFacade.find] with bad show ID.
+     */
+    @Test
+    fun findBadShowId() {
+        val result = facade.find(parent = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(SHOW_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
         }
     }
 
     companion object {
 
         /**
-         * Event for invalid starting year
+         * Event for not existing season
          */
-        private val INVALID_STARTING_YEAR_EVENT = Event(Severity.ERROR, "SEASON_START_YEAR_NOT_VALID",
-                "Starting year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}.")
+        private val SEASON_NOT_EXIST_EVENT = Event(severity = Severity.ERROR, key = "SEASON_NOT_EXIST", message = "Season doesn't exist.")
 
         /**
-         * Event for invalid ending year
+         * Event for not existing show
          */
-        private val INVALID_ENDING_YEAR_EVENT = Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID",
-                "Ending year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}.")
+        private val SHOW_NOT_EXIST_EVENT = Event(severity = Severity.ERROR, key = "SHOW_NOT_EXIST", message = "Show doesn't exist.")
 
     }
 

@@ -11,43 +11,43 @@ import javax.validation.constraints.NotBlank
  * @author Vladimir Hromada
  */
 data class MusicFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Name
+     */
+    @field:NotBlank
+    val name: String?,
 
-        /**
-         * Name
-         */
-        @field:NotBlank
-        val name: String?,
+    /**
+     * URL to english Wikipedia page about music
+     */
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about music
-         */
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about music
+     */
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about music
-         */
-        val wikiCz: String?,
+    /**
+     * Count of media
+     */
+    @field:Range(min = 1, max = 100)
+    val mediaCount: String?,
 
-        /**
-         * Count of media
-         */
-        @field:Range(min = 1, max = 100)
-        val mediaCount: String?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        val position: Int?) : Serializable {
+    /**
+     * Position
+     */
+    val position: Int?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

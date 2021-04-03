@@ -2,8 +2,8 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.ShowUtils
 import com.github.vhromada.catalog.web.fo.ShowFO
+import com.github.vhromada.catalog.web.utils.ShowUtils
 import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,9 +33,9 @@ class ShowMapperIntegrationTest {
     fun map() {
         val show = ShowUtils.getShow()
 
-        val showFO = mapper.map(show)
+        val showFO = mapper.map(source = show)
 
-        ShowUtils.assertShowDeepEquals(show, showFO)
+        ShowUtils.assertShowDeepEquals(expected = show, actual = showFO)
     }
 
     /**
@@ -45,9 +45,9 @@ class ShowMapperIntegrationTest {
     fun mapBack() {
         val showFO = ShowUtils.getShowFO()
 
-        val show = mapper.mapBack(showFO)
+        val show = mapper.mapBack(source = showFO)
 
-        ShowUtils.assertShowDeepEquals(showFO, show)
+        ShowUtils.assertShowDeepEquals(expected = showFO, actual = show)
     }
 
 }

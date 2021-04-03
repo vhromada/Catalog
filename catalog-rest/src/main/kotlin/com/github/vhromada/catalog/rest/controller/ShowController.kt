@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("showController")
 @RequestMapping("/catalog/shows")
-class ShowController(private val showFacade: ShowFacade) : AbstractController() {
+class ShowController(
+    private val showFacade: ShowFacade
+) : AbstractController() {
 
     /**
      * Returns list of shows.
@@ -30,7 +32,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
      */
     @GetMapping
     fun getShows(): List<Show> {
-        return processResult(showFacade.getAll())!!
+        return processResult(result = showFacade.getAll())!!
     }
 
     /**
@@ -39,18 +41,18 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun newData() {
-        processResult(showFacade.newData())
+        processResult(result = showFacade.newData())
     }
 
     /**
-     * Returns show with ID or null if there isn't such show.
+     * Returns show with ID.
      *
      * @param id ID
-     * @return show with ID or null if there isn't such show
+     * @return show with ID
      */
     @GetMapping("/{id}")
-    fun getShow(@PathVariable("id") id: Int): Show? {
-        return processResult(showFacade.get(id))
+    fun getShow(@PathVariable("id") id: Int): Show {
+        return processResult(result = showFacade.get(id = id))!!
     }
 
     /**
@@ -82,7 +84,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     fun add(@RequestBody show: Show) {
-        processResult(showFacade.add(show))
+        processResult(result = showFacade.add(data = show))
     }
 
     /**
@@ -115,7 +117,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody show: Show) {
-        processResult(showFacade.update(show))
+        processResult(result = showFacade.update(data = show))
     }
 
     /**
@@ -130,8 +132,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun remove(@PathVariable("id") id: Int) {
-        val show = Show(id = id, czechName = null, originalName = null, csfd = null, imdbCode = null, wikiEn = null, wikiCz = null, picture = null, note = null, position = null, genres = null)
-        processResult(showFacade.remove(show))
+        processResult(result = showFacade.remove(id = id))
     }
 
     /**
@@ -139,15 +140,14 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Show doesn't exist in data storage
      *
-     * @param show show
+     * @param id ID
      */
-    @PostMapping("/duplicate")
+    @PostMapping("/duplicate/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun duplicate(@RequestBody show: Show) {
-        processResult(showFacade.duplicate(show))
+    fun duplicate(@PathVariable("id") id: Int) {
+        processResult(result = showFacade.duplicate(id = id))
     }
 
     /**
@@ -155,16 +155,15 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Show can't be moved up
      *  * Show doesn't exist in data storage
      *
-     * @param show show
+     * @param id ID
      */
-    @PostMapping("/moveUp")
+    @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveUp(@RequestBody show: Show) {
-        processResult(showFacade.moveUp(show))
+    fun moveUp(@PathVariable("id") id: Int) {
+        processResult(result = showFacade.moveUp(id = id))
     }
 
     /**
@@ -172,16 +171,15 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Show can't be moved down
      *  * Show doesn't exist in data storage
      *
-     * @param show show
+     * @param id ID
      */
-    @PostMapping("/moveDown")
+    @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveDown(@RequestBody show: Show) {
-        processResult(showFacade.moveDown(show))
+    fun moveDown(@PathVariable("id") id: Int) {
+        processResult(result = showFacade.moveDown(id = id))
     }
 
     /**
@@ -190,7 +188,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
     @PostMapping("/updatePositions")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updatePositions() {
-        processResult(showFacade.updatePositions())
+        processResult(result = showFacade.updatePositions())
     }
 
     /**
@@ -200,7 +198,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
      */
     @GetMapping("/totalLength")
     fun getTotalLength(): Int {
-        return processResult(showFacade.getTotalLength())!!.length
+        return processResult(result = showFacade.getTotalLength())!!.length
     }
 
     /**
@@ -210,7 +208,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
      */
     @GetMapping("/seasonsCount")
     fun getSeasonsCount(): Int {
-        return processResult(showFacade.getSeasonsCount())!!
+        return processResult(result = showFacade.getSeasonsCount())!!
     }
 
     /**
@@ -220,7 +218,7 @@ class ShowController(private val showFacade: ShowFacade) : AbstractController() 
      */
     @GetMapping("/episodesCount")
     fun getEpisodesCount(): Int {
-        return processResult(showFacade.getEpisodesCount())!!
+        return processResult(result = showFacade.getEpisodesCount())!!
     }
 
 }

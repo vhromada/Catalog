@@ -9,41 +9,41 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class Music(
+    /**
+     * ID
+     */
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        override var id: Int?,
+    /**
+     * Name
+     */
+    val name: String?,
 
-        /**
-         * Name
-         */
-        val name: String?,
+    /**
+     * URL to english Wikipedia page about music
+     */
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about music
-         */
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about music
+     */
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about music
-         */
-        val wikiCz: String?,
+    /**
+     * Count of media
+     */
+    val mediaCount: Int?,
 
-        /**
-         * Count of media
-         */
-        val mediaCount: Int?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        override var position: Int?) : Movable {
+    /**
+     * Position
+     */
+    override var position: Int?
+) : Movable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

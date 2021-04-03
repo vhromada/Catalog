@@ -2,8 +2,8 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Genre
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.GenreUtils
 import com.github.vhromada.catalog.web.fo.GenreFO
+import com.github.vhromada.catalog.web.utils.GenreUtils
 import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,9 +33,9 @@ class GenreMapperIntegrationTest {
     fun map() {
         val genre = GenreUtils.getGenre()
 
-        val genreFO = mapper.map(genre)
+        val genreFO = mapper.map(source = genre)
 
-        GenreUtils.assertGenreDeepEquals(genreFO, genre)
+        GenreUtils.assertGenreDeepEquals(expected = genre, actual = genreFO)
     }
 
     /**
@@ -45,9 +45,9 @@ class GenreMapperIntegrationTest {
     fun mapBack() {
         val genreFO = GenreUtils.getGenreFO()
 
-        val genre = mapper.mapBack(genreFO)
+        val genre = mapper.mapBack(source = genreFO)
 
-        GenreUtils.assertGenreDeepEquals(genreFO, genre)
+        GenreUtils.assertGenreDeepEquals(expected = genreFO, actual = genre)
     }
 
 }

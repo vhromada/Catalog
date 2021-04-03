@@ -1,40 +1,46 @@
 package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.CatalogTestConfiguration
-import com.github.vhromada.catalog.entity.Movie
+import com.github.vhromada.catalog.utils.AuditUtils
 import com.github.vhromada.catalog.utils.GenreUtils
 import com.github.vhromada.catalog.utils.MediumUtils
 import com.github.vhromada.catalog.utils.MovieUtils
 import com.github.vhromada.catalog.utils.PictureUtils
+import com.github.vhromada.catalog.utils.TestConstants
+import com.github.vhromada.catalog.utils.fillAudit
 import com.github.vhromada.common.entity.Language
 import com.github.vhromada.common.entity.Time
-import com.github.vhromada.common.facade.MovableParentFacade
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
-import com.github.vhromada.common.test.facade.MovableParentFacadeIntegrationTest
-import com.github.vhromada.common.test.utils.TestConstants
-import com.github.vhromada.common.utils.Constants
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
 
 /**
  * A class represents integration test for class [MovieFacade].
  *
  * @author Vladimir Hromada
  */
+@ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com.github.vhromada.catalog.domain.Movie>() {
+@Transactional
+@Rollback
+class MovieFacadeIntegrationTest {
 
     /**
      * Instance of [EntityManager]
      */
-    @Autowired
-    @Qualifier("containerManagedEntityManager")
+    @PersistenceContext
     private lateinit var entityManager: EntityManager
 
     /**
@@ -44,515 +50,123 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
     private lateinit var facade: MovieFacade
 
     /**
-     * Test method for [MovieFacade.add] with movie with null czech name.
+     * Test method for [MovieFacade.get].
      */
     @Test
-    fun addNullCzechName() {
-        val movie = newData(null)
-                .copy(czechName = null)
+    fun get() {
+        for (i in 1..MovieUtils.MOVIES_COUNT) {
+            val result = facade.get(id = i)
 
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_NULL", "Czech name mustn't be null.")))
+            assertSoftly {
+                it.assertThat(result.status).isEqualTo(Status.OK)
+                it.assertThat(result.data).isNotNull
+                it.assertThat(result.events()).isEmpty()
+            }
+            MovieUtils.assertMovieDeepEquals(expected = MovieUtils.getMovieDomain(index = i), actual = result.data!!)
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
-     * Test method for [MovieFacade.add] with movie with empty string as czech name.
+     * Test method for [MovieFacade.get] with bad ID.
      */
     @Test
-    fun addEmptyCzechName() {
-        val movie = newData(null)
-                .copy(czechName = "")
-
-        val result = facade.add(movie)
+    fun getBadId() {
+        val result = facade.get(id = Int.MAX_VALUE)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(MOVIE_NOT_EXIST_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
-     * Test method for [MovieFacade.add] with movie with null original name.
+     * Test method for [MovieFacade.update].
      */
     @Test
-    fun addNullOriginalName() {
-        val movie = newData(null)
-                .copy(originalName = null)
+    fun update() {
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(genres = listOf(GenreUtils.getGenre(index = 1)))
+        val expectedMovie = MovieUtils.newMovieDomain(id = 1)
+            .copy(genres = listOf(GenreUtils.getGenreDomain(index = 1)))
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        expectedMovie.media.forEach { it.fillAudit(audit = AuditUtils.updatedAudit()) }
 
-        val result = facade.add(movie)
+        val result = facade.update(data = movie)
+        entityManager.flush()
 
         assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_NULL", "Original name mustn't be null.")))
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
         }
 
-        assertDefaultRepositoryData()
+        MovieUtils.assertMovieDeepEquals(expected = expectedMovie, actual = MovieUtils.getMovie(entityManager = entityManager, id = 1)!!)
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
-     * Test method for [MovieFacade.add] with movie with empty string as original name.
+     * Test method for [MovieFacade.update] with movie with null ID.
      */
     @Test
-    fun addEmptyOriginalName() {
-        val movie = newData(null)
-                .copy(originalName = "")
+    fun updateNullId() {
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(id = null)
 
-        val result = facade.add(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_ID_NULL", message = "ID mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
-     * Test method for [MovieFacade.add] with movie with null year.
+     * Test method for [MovieFacade.update] with movie with null position.
      */
     @Test
-    fun addNullYear() {
-        val movie = newData(null)
-                .copy(year = null)
+    fun updateNullPosition() {
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(position = null)
 
-        val result = facade.add(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_YEAR_NULL", "Year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_POSITION_NULL", message = "Position mustn't be null.")))
         }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with bad minimum year.
-     */
-    @Test
-    fun addBadMinimumYear() {
-        val movie = newData(null)
-                .copy(year = TestConstants.BAD_MIN_YEAR)
-
-        val result = facade.add(movie)
 
         assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_YEAR_EVENT))
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
         }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with bad maximum year.
-     */
-    @Test
-    fun addBadMaximumYear() {
-        val movie = newData(null)
-                .copy(year = TestConstants.BAD_MAX_YEAR)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_YEAR_EVENT))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with null language.
-     */
-    @Test
-    fun addNullLanguage() {
-        val movie = newData(null)
-                .copy(language = null)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LANGUAGE_NULL", "Language mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with null subtitles.
-     */
-    @Test
-    fun addNullSubtitles() {
-        val movie = newData(null)
-                .copy(subtitles = null)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_NULL", "Subtitles mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with subtitles with null value.
-     */
-    @Test
-    fun addBadSubtitles() {
-        val movie = newData(null)
-                .copy(subtitles = listOf(Language.CZ, null))
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with null media.
-     */
-    @Test
-    fun addNullMedia() {
-        val movie = newData(null)
-                .copy(media = null)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_NULL", "Media mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with media with null value.
-     */
-    @Test
-    fun addBadMedia() {
-        val movie = newData(null)
-                .copy(media = listOf(MediumUtils.newMedium(1), null))
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with media with negative value as medium.
-     */
-    @Test
-    fun addBadMedium() {
-        val badMedium = MediumUtils.newMedium(Int.MAX_VALUE)
-                .copy(length = -1)
-        val movie = newData(null)
-                .copy(media = listOf(MediumUtils.newMedium(1), badMedium))
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with null URL to ČSFD page about movie.
-     */
-    @Test
-    fun addNullCsfd() {
-        val movie = newData(null)
-                .copy(csfd = null)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with null IMDB code.
-     */
-    @Test
-    fun addNullImdb() {
-        val movie = newData(null)
-                .copy(imdbCode = null)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NULL", "IMDB code mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with bad minimal IMDB code.
-     */
-    @Test
-    fun addBadMinimalImdb() {
-        val movie = newData(null)
-                .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_IMDB_CODE_EVENT))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with bad divider IMDB code.
-     */
-    @Test
-    fun addBadDividerImdb() {
-        val movie = newData(null)
-                .copy(imdbCode = 0)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_IMDB_CODE_EVENT))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with bad maximal IMDB code.
-     */
-    @Test
-    fun addBadMaximalImdb() {
-        val movie = newData(null)
-                .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_IMDB_CODE_EVENT))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with null URL to english Wikipedia page about movie.
-     */
-    @Test
-    fun addNullWikiEn() {
-        val movie = newData(null)
-                .copy(wikiEn = null)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL",
-                    "URL to english Wikipedia page about movie mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with null URL to czech Wikipedia page about movie.
-     */
-    @Test
-    fun addNullWikiCz() {
-        val movie = newData(null)
-                .copy(wikiCz = null)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
-                    "URL to czech Wikipedia page about movie mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with null note.
-     */
-    @Test
-    fun addNullNote() {
-        val movie = newData(null)
-                .copy(note = null)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with not existing picture.
-     */
-    @Test
-    fun addNotExistingPicture() {
-        val movie = newData(null)
-                .copy(picture = Int.MAX_VALUE)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PICTURE_NOT_EXIST", "Picture doesn't exist.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with null genres.
-     */
-    @Test
-    fun addNullGenres() {
-        val movie = newData(null)
-                .copy(genres = null)
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_NULL", "Genres mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with genres with null value.
-     */
-    @Test
-    fun addBadGenres() {
-        val movie = newData(null)
-                .copy(genres = listOf(GenreUtils.newGenre(1), null))
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with genres with genre with null ID.
-     */
-    @Test
-    fun addNullGenreId() {
-        val movie = newData(null)
-                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(null)))
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with genres with genre with null name.
-     */
-    @Test
-    fun addNullGenreName() {
-        val badGenre = GenreUtils.newGenre(1)
-                .copy(name = null)
-        val movie = newData(null)
-                .copy(genres = listOf(GenreUtils.newGenre(1), badGenre))
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with movie with genres with genre with empty string as name.
-     */
-    @Test
-    fun addEmptyGenreName() {
-        val badGenre = GenreUtils.newGenre(1)
-                .copy(name = "")
-        val movie = newData(null)
-                .copy(genres = listOf(GenreUtils.newGenre(1), badGenre))
-
-        val result = facade.add(movie)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [MovieFacade.add] with show with genres with not existing genre.
-     */
-    @Test
-    fun addNotExistingGenre() {
-        val show = newData(null)
-                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Int.MAX_VALUE)))
-
-        val result = facade.add(show)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GENRE_NOT_EXIST", "Genre doesn't exist.")))
-        }
-
-        assertDefaultRepositoryData()
     }
 
     /**
@@ -560,17 +174,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullCzechName() {
-        val movie = newData(1)
-                .copy(czechName = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(czechName = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_NULL", "Czech name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_CZECH_NAME_NULL", message = "Czech name mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -578,17 +197,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateEmptyCzechName() {
-        val movie = newData(1)
-                .copy(czechName = "")
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(czechName = "")
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_EMPTY", "Czech name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_CZECH_NAME_EMPTY", message = "Czech name mustn't be empty string.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -596,17 +220,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullOriginalName() {
-        val movie = newData(1)
-                .copy(originalName = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(originalName = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_NULL", "Original name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_ORIGINAL_NAME_NULL", message = "Original name mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -614,17 +243,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateEmptyOriginalName() {
-        val movie = newData(1)
-                .copy(originalName = "")
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(originalName = "")
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_ORIGINAL_NAME_EMPTY", message = "Original name mustn't be empty string.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -632,17 +266,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullYear() {
-        val movie = newData(1)
-                .copy(year = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(year = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_YEAR_NULL", "Year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_YEAR_NULL", message = "Year mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -650,17 +289,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateBadMinimumYear() {
-        val movie = newData(1)
-                .copy(year = TestConstants.BAD_MIN_YEAR)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(year = TestConstants.BAD_MIN_YEAR)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_YEAR_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_YEAR_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -668,17 +312,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateBadMaximumYear() {
-        val movie = newData(1)
-                .copy(year = TestConstants.BAD_MAX_YEAR)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(year = TestConstants.BAD_MAX_YEAR)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_YEAR_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_YEAR_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -686,17 +335,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullLanguage() {
-        val movie = newData(1)
-                .copy(language = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(language = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LANGUAGE_NULL", "Language mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_LANGUAGE_NULL", message = "Language mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -704,17 +358,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullSubtitles() {
-        val movie = newData(1)
-                .copy(subtitles = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(subtitles = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_NULL", "Subtitles mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_SUBTITLES_NULL", message = "Subtitles mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -722,17 +381,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateBadSubtitles() {
-        val movie = newData(1)
-                .copy(subtitles = listOf(Language.CZ, null))
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(subtitles = listOf(Language.CZ, null))
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_SUBTITLES_CONTAIN_NULL", message = "Subtitles mustn't contain null value.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -740,17 +404,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullMedia() {
-        val movie = newData(1)
-                .copy(media = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(media = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_NULL", "Media mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_MEDIA_NULL", message = "Media mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -758,17 +427,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateBadMedia() {
-        val movie = newData(1)
-                .copy(media = listOf(MediumUtils.newMedium(1), null))
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(media = listOf(MediumUtils.newMedium(1), null))
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_CONTAIN_NULL", "Media mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_MEDIA_CONTAIN_NULL", message = "Media mustn't contain null value.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -777,18 +451,23 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
     @Test
     fun updateBadMedium() {
         val badMedium = MediumUtils.newMedium(Int.MAX_VALUE)
-                .copy(length = -1)
-        val movie = newData(1)
-                .copy(media = listOf(MediumUtils.newMedium(1), badMedium))
+            .copy(length = -1)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(media = listOf(MediumUtils.newMedium(1), badMedium))
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIUM_NOT_POSITIVE", "Length of medium must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_MEDIUM_NOT_POSITIVE", message = "Length of medium must be positive number.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -796,17 +475,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullCsfd() {
-        val movie = newData(1)
-                .copy(csfd = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(csfd = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CSFD_NULL", "URL to ČSFD page about movie mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_CSFD_NULL", message = "URL to ČSFD page about movie mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -814,17 +498,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullImdb() {
-        val movie = newData(1)
-                .copy(imdbCode = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(imdbCode = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NULL", "IMDB code mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_IMDB_CODE_NULL", message = "IMDB code mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -832,17 +521,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateBadMinimalImdb() {
-        val movie = newData(1)
-                .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_IMDB_CODE_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_IMDB_CODE_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -850,17 +544,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateBadDividerImdb() {
-        val movie = newData(1)
-                .copy(imdbCode = 0)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(imdbCode = 0)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_IMDB_CODE_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_IMDB_CODE_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -868,17 +567,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateBadMaximalImdb() {
-        val movie = newData(1)
-                .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_IMDB_CODE_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_IMDB_CODE_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -886,18 +590,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullWikiEn() {
-        val movie = newData(1)
-                .copy(wikiEn = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(wikiEn = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL",
-                    "URL to english Wikipedia page about movie mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_WIKI_EN_NULL", message = "URL to english Wikipedia page about movie mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -905,18 +613,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullWikiCz() {
-        val movie = newData(1)
-                .copy(wikiCz = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(wikiCz = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
-                    "URL to czech Wikipedia page about movie mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_WIKI_CZ_NULL", message = "URL to czech Wikipedia page about movie mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -924,17 +636,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullNote() {
-        val movie = newData(1)
-                .copy(note = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(note = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_NOTE_NULL", message = "Note mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -942,17 +659,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNotExistingPicture() {
-        val movie = newData(1)
-                .copy(picture = Int.MAX_VALUE)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(picture = Int.MAX_VALUE)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "PICTURE_NOT_EXIST", "Picture doesn't exist.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_NOT_EXIST", message = "Picture doesn't exist.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -960,17 +682,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullGenres() {
-        val movie = newData(1)
-                .copy(genres = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(genres = null)
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_NULL", "Genres mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_GENRES_NULL", message = "Genres mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -978,17 +705,22 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateBadGenres() {
-        val movie = newData(1)
-                .copy(genres = listOf(GenreUtils.newGenre(1), null))
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), null))
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_GENRES_CONTAIN_NULL", "Genres mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_GENRES_CONTAIN_NULL", message = "Genres mustn't contain null value.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -996,17 +728,24 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullGenreId() {
-        val movie = newData(1)
-                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(null)))
+        val badGenre = GenreUtils.newGenre(id = 1)
+            .copy(id = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), badGenre))
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GENRE_ID_NULL", "ID mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GENRE_ID_NULL", message = "ID mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -1014,19 +753,24 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNullGenreName() {
-        val badGenre = GenreUtils.newGenre(1)
-                .copy(name = null)
-        val movie = newData(1)
-                .copy(genres = listOf(GenreUtils.newGenre(1), badGenre))
+        val badGenre = GenreUtils.newGenre(id = 1)
+            .copy(name = null)
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), badGenre))
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GENRE_NAME_NULL", "Name mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GENRE_NAME_NULL", message = "Name mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -1034,19 +778,24 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateEmptyGenreName() {
-        val badGenre = GenreUtils.newGenre(1)
-                .copy(name = "")
-        val movie = newData(1)
-                .copy(genres = listOf(GenreUtils.newGenre(1), badGenre))
+        val badGenre = GenreUtils.newGenre(id = 1)
+            .copy(name = "")
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), badGenre))
 
-        val result = facade.update(movie)
+        val result = facade.update(data = movie)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GENRE_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GENRE_NAME_EMPTY", message = "Name mustn't be empty string.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -1054,17 +803,1086 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
      */
     @Test
     fun updateNotExistingGenre() {
-        val show = newData(1)
-                .copy(genres = listOf(GenreUtils.newGenre(1), GenreUtils.newGenre(Int.MAX_VALUE)))
+        val show = MovieUtils.newMovie(id = 1)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), GenreUtils.newGenre(id = Int.MAX_VALUE)))
 
         val result = facade.update(show)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GENRE_NOT_EXIST", "Genre doesn't exist.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GENRE_NOT_EXIST", message = "Genre doesn't exist.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.update] with movie with bad ID.
+     */
+    @Test
+    fun updateBadId() {
+        val movie = MovieUtils.newMovie(id = 1)
+            .copy(id = Int.MAX_VALUE)
+
+        val result = facade.update(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(MOVIE_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.remove].
+     */
+    @Test
+    fun remove() {
+        val result = facade.remove(id = 1)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        assertThat(MovieUtils.getMovie(entityManager = entityManager, id = 1)).isNull()
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT - 1)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - MovieUtils.getMovieDomain(index = 1).media.size)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.remove] with movie with bad ID.
+     */
+    @Test
+    fun removeBadId() {
+        val result = facade.remove(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(MOVIE_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.duplicate].
+     */
+    @Test
+    @DirtiesContext
+    fun duplicate() {
+        var expectedMovie = MovieUtils.getMovieDomain(index = MovieUtils.MOVIES_COUNT)
+        val expectedMedia = expectedMovie.media.mapIndexed { index, medium ->
+            medium.copy(id = MediumUtils.MEDIA_COUNT + index + 1)
+                .fillAudit(audit = AuditUtils.newAudit())
+        }
+        expectedMovie = expectedMovie.copy(id = MovieUtils.MOVIES_COUNT + 1, media = expectedMedia)
+            .fillAudit(audit = AuditUtils.newAudit())
+
+        val result = facade.duplicate(id = MovieUtils.MOVIES_COUNT)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        MovieUtils.assertMovieDeepEquals(expected = expectedMovie, actual = MovieUtils.getMovie(entityManager = entityManager, id = MovieUtils.MOVIES_COUNT + 1)!!)
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT + 1)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + MovieUtils.getMovieDomain(index = MovieUtils.MOVIES_COUNT).media.size)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.duplicate] with movie with bad ID.
+     */
+    @Test
+    fun duplicateBadId() {
+        val result = facade.duplicate(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(MOVIE_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.moveUp].
+     */
+    @Test
+    fun moveUp() {
+        val result = facade.moveUp(id = 2)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        val movie1 = MovieUtils.getMovieDomain(index = 1)
+            .copy(position = 11)
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        val movie2 = MovieUtils.getMovieDomain(index = 2)
+            .copy(position = 10)
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        MovieUtils.assertMovieDeepEquals(expected = movie1, actual = MovieUtils.getMovie(entityManager = entityManager, id = 1)!!)
+        MovieUtils.assertMovieDeepEquals(expected = movie2, actual = MovieUtils.getMovie(entityManager = entityManager, id = 2)!!)
+        for (i in 3..MovieUtils.MOVIES_COUNT) {
+            MovieUtils.assertMovieDeepEquals(expected = MovieUtils.getMovieDomain(i), actual = MovieUtils.getMovie(entityManager = entityManager, id = i)!!)
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.moveUp] with not movable movie.
+     */
+    @Test
+    fun moveUpNotMovable() {
+        val result = facade.moveUp(id = 1)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_NOT_MOVABLE", message = "Movie can't be moved up.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.moveUp] with movie with bad ID.
+     */
+    @Test
+    fun moveUpBadId() {
+        val result = facade.moveUp(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(MOVIE_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.moveDown].
+     */
+    @Test
+    fun moveDown() {
+        val result = facade.moveDown(id = 1)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        val movie1 = MovieUtils.getMovieDomain(index = 1)
+            .copy(position = 11)
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        val movie2 = MovieUtils.getMovieDomain(index = 2)
+            .copy(position = 10)
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        MovieUtils.assertMovieDeepEquals(expected = movie1, actual = MovieUtils.getMovie(entityManager = entityManager, id = 1)!!)
+        MovieUtils.assertMovieDeepEquals(expected = movie2, actual = MovieUtils.getMovie(entityManager = entityManager, id = 2)!!)
+        for (i in 3..MovieUtils.MOVIES_COUNT) {
+            MovieUtils.assertMovieDeepEquals(expected = MovieUtils.getMovieDomain(i), actual = MovieUtils.getMovie(entityManager = entityManager, id = i)!!)
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.moveDown] with not movable movie.
+     */
+    @Test
+    fun moveDownNotMovable() {
+        val result = facade.moveDown(id = MovieUtils.MOVIES_COUNT)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_NOT_MOVABLE", message = "Movie can't be moved down.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.moveDown] with movie with bad ID.
+     */
+    @Test
+    fun moveDownBadId() {
+        val result = facade.moveDown(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(MOVIE_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.newData].
+     */
+    @Test
+    fun newData() {
+        val result = facade.newData()
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(0)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(0)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.getAll].
+     */
+    @Test
+    fun getAll() {
+        val result = facade.getAll()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.data).isNotNull
+            it.assertThat(result.events()).isEmpty()
+        }
+        MovieUtils.assertMovieListDeepEquals(expected = MovieUtils.getMovies(), actual = result.data!!)
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add].
+     */
+    @Test
+    @DirtiesContext
+    fun add() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(genres = listOf(GenreUtils.getGenre(index = 1)))
+        val expectedMovie = MovieUtils.newMovieDomain(id = MovieUtils.MOVIES_COUNT + 1)
+            .copy(media = listOf(MediumUtils.newMediumDomain(id = MediumUtils.MEDIA_COUNT + 1)), picture = null, genres = listOf(GenreUtils.getGenreDomain(index = 1)))
+            .fillAudit(audit = AuditUtils.newAudit())
+        expectedMovie.media.forEach { it.fillAudit(audit = AuditUtils.newAudit()) }
+
+        val result = facade.add(data = movie)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        MovieUtils.assertMovieDeepEquals(expected = expectedMovie, actual = MovieUtils.getMovie(entityManager = entityManager, id = MovieUtils.MOVIES_COUNT + 1)!!)
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT + 1)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 1)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with not null ID.
+     */
+    @Test
+    fun addNotNullId() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(id = Int.MAX_VALUE, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_ID_NOT_NULL", message = "ID must be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with not null position.
+     */
+    @Test
+    fun addNotNullPosition() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(position = Int.MAX_VALUE, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_POSITION_NOT_NULL", message = "Position must be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null czech name.
+     */
+    @Test
+    fun addNullCzechName() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(czechName = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_CZECH_NAME_NULL", message = "Czech name mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with empty string as czech name.
+     */
+    @Test
+    fun addEmptyCzechName() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(czechName = "", genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_CZECH_NAME_EMPTY", message = "Czech name mustn't be empty string.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null original name.
+     */
+    @Test
+    fun addNullOriginalName() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(originalName = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_ORIGINAL_NAME_NULL", message = "Original name mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with empty string as original name.
+     */
+    @Test
+    fun addEmptyOriginalName() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(originalName = "", genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_ORIGINAL_NAME_EMPTY", message = "Original name mustn't be empty string.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null year.
+     */
+    @Test
+    fun addNullYear() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(year = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_YEAR_NULL", message = "Year mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with bad minimum year.
+     */
+    @Test
+    fun addBadMinimumYear() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(year = TestConstants.BAD_MIN_YEAR, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_YEAR_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with bad maximum year.
+     */
+    @Test
+    fun addBadMaximumYear() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(year = TestConstants.BAD_MAX_YEAR, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_YEAR_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null language.
+     */
+    @Test
+    fun addNullLanguage() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(language = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_LANGUAGE_NULL", message = "Language mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null subtitles.
+     */
+    @Test
+    fun addNullSubtitles() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(subtitles = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_SUBTITLES_NULL", message = "Subtitles mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with subtitles with null value.
+     */
+    @Test
+    fun addBadSubtitles() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(subtitles = listOf(Language.CZ, null), genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_SUBTITLES_CONTAIN_NULL", message = "Subtitles mustn't contain null value.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null media.
+     */
+    @Test
+    fun addNullMedia() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(media = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_MEDIA_NULL", message = "Media mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with media with null value.
+     */
+    @Test
+    fun addBadMedia() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(media = listOf(MediumUtils.newMedium(1), null), genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_MEDIA_CONTAIN_NULL", message = "Media mustn't contain null value.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with media with negative value as medium.
+     */
+    @Test
+    fun addBadMedium() {
+        val badMedium = MediumUtils.newMedium(Int.MAX_VALUE)
+            .copy(length = -1)
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(media = listOf(MediumUtils.newMedium(1), badMedium), genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_MEDIUM_NOT_POSITIVE", message = "Length of medium must be positive number.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null URL to ČSFD page about movie.
+     */
+    @Test
+    fun addNullCsfd() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(csfd = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_CSFD_NULL", message = "URL to ČSFD page about movie mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null IMDB code.
+     */
+    @Test
+    fun addNullImdb() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(imdbCode = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_IMDB_CODE_NULL", message = "IMDB code mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with bad minimal IMDB code.
+     */
+    @Test
+    fun addBadMinimalImdb() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(imdbCode = TestConstants.BAD_MIN_IMDB_CODE, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_IMDB_CODE_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with bad divider IMDB code.
+     */
+    @Test
+    fun addBadDividerImdb() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(imdbCode = 0, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_IMDB_CODE_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with bad maximal IMDB code.
+     */
+    @Test
+    fun addBadMaximalImdb() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(imdbCode = TestConstants.BAD_MAX_IMDB_CODE, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_MOVIE_IMDB_CODE_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null URL to english Wikipedia page about movie.
+     */
+    @Test
+    fun addNullWikiEn() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(wikiEn = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_WIKI_EN_NULL", message = "URL to english Wikipedia page about movie mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null URL to czech Wikipedia page about movie.
+     */
+    @Test
+    fun addNullWikiCz() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(wikiCz = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_WIKI_CZ_NULL", message = "URL to czech Wikipedia page about movie mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null note.
+     */
+    @Test
+    fun addNullNote() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(note = null, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_NOTE_NULL", message = "Note mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with not existing picture.
+     */
+    @Test
+    fun addNotExistingPicture() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(picture = Int.MAX_VALUE, genres = listOf(GenreUtils.getGenre(index = 1)))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_NOT_EXIST", message = "Picture doesn't exist.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with null genres.
+     */
+    @Test
+    fun addNullGenres() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(genres = null)
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_GENRES_NULL", message = "Genres mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with genres with null value.
+     */
+    @Test
+    fun addBadGenres() {
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), null))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "MOVIE_GENRES_CONTAIN_NULL", message = "Genres mustn't contain null value.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with genres with genre with null ID.
+     */
+    @Test
+    fun addNullGenreId() {
+        val badGenre = GenreUtils.newGenre(id = 1)
+            .copy(id = null)
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), badGenre))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GENRE_ID_NULL", message = "ID mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with genres with genre with null name.
+     */
+    @Test
+    fun addNullGenreName() {
+        val badGenre = GenreUtils.newGenre(id = 1)
+            .copy(name = null)
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), badGenre))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GENRE_NAME_NULL", message = "Name mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with movie with genres with genre with empty string as name.
+     */
+    @Test
+    fun addEmptyGenreName() {
+        val badGenre = GenreUtils.newGenre(id = 1)
+            .copy(name = "")
+        val movie = MovieUtils.newMovie(id = null)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), badGenre))
+
+        val result = facade.add(data = movie)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GENRE_NAME_EMPTY", message = "Name mustn't be empty string.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.add] with show with genres with not existing genre.
+     */
+    @Test
+    fun addNotExistingGenre() {
+        val show = MovieUtils.newMovie(id = null)
+            .copy(genres = listOf(GenreUtils.newGenre(id = 1), GenreUtils.newGenre(id = Int.MAX_VALUE)))
+
+        val result = facade.add(show)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GENRE_NOT_EXIST", message = "Genre doesn't exist.")))
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [MovieFacade.updatePositions].
+     */
+    @Test
+    fun updatePositions() {
+        val result = facade.updatePositions()
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        for (i in 1..MovieUtils.MOVIES_COUNT) {
+            val expectedMovie = MovieUtils.getMovieDomain(index = i)
+                .copy(position = i - 1)
+                .fillAudit(audit = AuditUtils.updatedAudit())
+            MovieUtils.assertMovieDeepEquals(expected = expectedMovie, actual = MovieUtils.getMovie(entityManager = entityManager, id = i)!!)
+        }
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -1080,7 +1898,12 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
             it.assertThat(result.events()).isEmpty()
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+        }
     }
 
     /**
@@ -1092,168 +1915,24 @@ class MovieFacadeIntegrationTest : MovableParentFacadeIntegrationTest<Movie, com
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.OK)
-            it.assertThat(result.data).isEqualTo(Time(1000))
+            it.assertThat(result.data).isEqualTo(Time(length = 1000))
             it.assertThat(result.events()).isEmpty()
         }
 
-        assertDefaultRepositoryData()
-    }
-
-    override fun getFacade(): MovableParentFacade<Movie> {
-        return facade
-    }
-
-    override fun getDefaultDataCount(): Int {
-        return MovieUtils.MOVIES_COUNT
-    }
-
-    override fun getRepositoryDataCount(): Int {
-        return MovieUtils.getMoviesCount(entityManager)
-    }
-
-    override fun getDataList(): List<com.github.vhromada.catalog.domain.Movie> {
-        return MovieUtils.getMovies()
-    }
-
-    override fun getDomainData(index: Int): com.github.vhromada.catalog.domain.Movie {
-        return MovieUtils.getMovie(index)
-    }
-
-    override fun newData(id: Int?): Movie {
-        var movie = MovieUtils.newMovie(id)
-        if (id == null || Int.MAX_VALUE == id) {
-            movie = movie.copy(picture = 1, genres = listOf(GenreUtils.newGenre(1)))
-        }
-        return movie
-    }
-
-    override fun newDomainData(id: Int): com.github.vhromada.catalog.domain.Movie {
-        return MovieUtils.newMovieDomain(id)
-    }
-
-    override fun getRepositoryData(id: Int): com.github.vhromada.catalog.domain.Movie? {
-        return MovieUtils.getMovie(entityManager, id)
-    }
-
-    override fun getName(): String {
-        return "Movie"
-    }
-
-    override fun clearReferencedData() {}
-
-    override fun assertDataListDeepEquals(expected: List<Movie>, actual: List<com.github.vhromada.catalog.domain.Movie>) {
-        MovieUtils.assertMovieListDeepEquals(expected, actual)
-    }
-
-    override fun assertDataDeepEquals(expected: Movie, actual: com.github.vhromada.catalog.domain.Movie) {
-        MovieUtils.assertMovieDeepEquals(expected, actual)
-    }
-
-    override fun assertDataDomainDeepEquals(expected: com.github.vhromada.catalog.domain.Movie, actual: com.github.vhromada.catalog.domain.Movie) {
-        MovieUtils.assertMovieDeepEquals(expected, actual)
-    }
-
-    override fun assertDefaultRepositoryData() {
-        super.assertDefaultRepositoryData()
-
-        assertReferences()
-    }
-
-    override fun assertNewRepositoryData() {
-        super.assertNewRepositoryData()
-
         assertSoftly {
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(0)
-            it.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
-            it.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
-        }
-    }
-
-    override fun assertAddRepositoryData() {
-        super.assertAddRepositoryData()
-
-        assertSoftly {
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 1)
-            it.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
-            it.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
-        }
-    }
-
-    override fun assertUpdateRepositoryData() {
-        super.assertUpdateRepositoryData()
-
-        assertReferences()
-    }
-
-    override fun assertRemoveRepositoryData() {
-        super.assertRemoveRepositoryData()
-
-        assertSoftly {
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - MovieUtils.getMovie(1).media.size)
-            it.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
-            it.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
-        }
-    }
-
-    override fun assertDuplicateRepositoryData() {
-        super.assertDuplicateRepositoryData()
-
-        assertSoftly {
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 2)
-            it.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
-            it.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
-        }
-    }
-
-    override fun getUpdateData(id: Int?): Movie {
-        return super.getUpdateData(id)
-                .copy(genres = listOf(GenreUtils.getGenre(1)))
-    }
-
-    override fun getExpectedAddData(): com.github.vhromada.catalog.domain.Movie {
-        val medium = MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1)
-        medium.audit = getUpdatedAudit()
-
-        return super.getExpectedAddData()
-                .copy(media = listOf(medium),
-                        picture = 1,
-                        genres = listOf(GenreUtils.getGenreDomain(1)))
-    }
-
-    override fun getExpectedDuplicatedData(): com.github.vhromada.catalog.domain.Movie {
-        val medium1 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT - 1)
-        medium1.id = MediumUtils.MEDIA_COUNT + 1
-        val medium2 = MediumUtils.getMedium(MediumUtils.MEDIA_COUNT)
-        medium2.id = MediumUtils.MEDIA_COUNT + 2
-
-        return super.getExpectedDuplicatedData()
-                .copy(media = listOf(medium1, medium2),
-                        genres = listOf(GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT - 1), GenreUtils.getGenreDomain(GenreUtils.GENRES_COUNT)))
-    }
-
-    /**
-     * Asserts references.
-     */
-    private fun assertReferences() {
-        assertSoftly {
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
-            it.assertThat(PictureUtils.getPicturesCount(entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
-            it.assertThat(GenreUtils.getGenresCount(entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(PictureUtils.getPicturesCount(entityManager = entityManager)).isEqualTo(PictureUtils.PICTURES_COUNT)
+            it.assertThat(GenreUtils.getGenresCount(entityManager = entityManager)).isEqualTo(GenreUtils.GENRES_COUNT)
         }
     }
 
     companion object {
 
         /**
-         * Event for invalid year
+         * Event for not existing movie
          */
-        private val INVALID_YEAR_EVENT = Event(Severity.ERROR, "MOVIE_YEAR_NOT_VALID",
-                "Year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}.")
-
-        /**
-         * Event for invalid IMDB code
-         */
-        private val INVALID_IMDB_CODE_EVENT = Event(Severity.ERROR, "MOVIE_IMDB_CODE_NOT_VALID", "IMDB code must be between 1 and 9999999 or -1.")
+        private val MOVIE_NOT_EXIST_EVENT = Event(severity = Severity.ERROR, key = "MOVIE_NOT_EXIST", message = "Movie doesn't exist.")
 
     }
 

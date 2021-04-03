@@ -2,7 +2,7 @@ package com.github.vhromada.catalog.domain
 
 import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.common.domain.Audit
-import com.github.vhromada.common.domain.AuditEntity
+import com.github.vhromada.common.entity.Movable
 import java.util.Objects
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -22,75 +22,71 @@ import javax.persistence.Table
 @Entity
 @Table(name = "programs")
 data class Program(
-        /**
-         * ID
-         */
-        @Id
-        @SequenceGenerator(name = "program_generator", sequenceName = "programs_sq", allocationSize = 1)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "program_generator")
-        override var id: Int?,
+    /**
+     * ID
+     */
+    @Id
+    @SequenceGenerator(name = "program_generator", sequenceName = "programs_sq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "program_generator")
+    override var id: Int?,
 
-        /**
-         * Name
-         */
-        @Column(name = "program_name")
-        val name: String,
+    /**
+     * Name
+     */
+    @Column(name = "program_name")
+    val name: String,
 
-        /**
-         * URL to english Wikipedia page about program
-         */
-        @Column(name = "wiki_en")
-        val wikiEn: String?,
+    /**
+     * URL to english Wikipedia page about program
+     */
+    @Column(name = "wiki_en")
+    val wikiEn: String?,
 
-        /**
-         * URL to czech Wikipedia page about program
-         */
-        @Column(name = "wiki_cz")
-        val wikiCz: String?,
+    /**
+     * URL to czech Wikipedia page about program
+     */
+    @Column(name = "wiki_cz")
+    val wikiCz: String?,
 
-        /**
-         * Count of media
-         */
-        @Column(name = "media_count")
-        val mediaCount: Int,
+    /**
+     * Count of media
+     */
+    @Column(name = "media_count")
+    val mediaCount: Int,
 
-        /**
-         * Format
-         */
-        @Enumerated(EnumType.STRING)
-        val format: Format,
+    /**
+     * Format
+     */
+    @Enumerated(EnumType.STRING)
+    val format: Format,
 
-        /**
-         * True if there is crack
-         */
-        val crack: Boolean,
+    /**
+     * True if there is crack
+     */
+    val crack: Boolean,
 
-        /**
-         * True if there is serial key
-         */
-        @Column(name = "serial_key")
-        val serialKey: Boolean,
+    /**
+     * True if there is serial key
+     */
+    @Column(name = "serial_key")
+    val serialKey: Boolean,
 
-        /**
-         * Other data
-         */
-        @Column(name = "other_data")
-        val otherData: String?,
+    /**
+     * Other data
+     */
+    @Column(name = "other_data")
+    val otherData: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Position
-         */
-        override var position: Int?,
-
-        /**
-         * Audit
-         */
-        override var audit: Audit?) : AuditEntity(audit) {
+    /**
+     * Position
+     */
+    override var position: Int?
+) : Audit(), Movable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

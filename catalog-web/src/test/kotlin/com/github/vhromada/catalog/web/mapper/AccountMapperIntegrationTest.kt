@@ -1,8 +1,8 @@
 package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.AccountUtils
 import com.github.vhromada.catalog.web.fo.AccountFO
+import com.github.vhromada.catalog.web.utils.AccountUtils
 import com.github.vhromada.common.account.entity.Credentials
 import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
@@ -33,9 +33,9 @@ class AccountMapperIntegrationTest {
     fun map() {
         val account = AccountUtils.getAccount()
 
-        val credentials = mapper.map(account)
+        val credentials = mapper.map(source = account)
 
-        AccountUtils.assertAccountDeepEquals(account, credentials)
+        AccountUtils.assertAccountDeepEquals(expected = account, actual = credentials)
     }
 
 }

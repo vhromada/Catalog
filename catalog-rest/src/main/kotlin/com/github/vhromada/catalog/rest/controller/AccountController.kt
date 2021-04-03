@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("accountController")
 @RequestMapping("/catalog/accounts")
-class AccountController(private val accountFacade: AccountFacade) : AbstractController() {
+class AccountController(
+    private val accountFacade: AccountFacade
+) : AbstractController() {
 
     /**
      * Returns list of accounts.
@@ -30,18 +32,18 @@ class AccountController(private val accountFacade: AccountFacade) : AbstractCont
      */
     @GetMapping
     fun getAccounts(): List<Account> {
-        return processResult(accountFacade.getAll())!!
+        return processResult(result = accountFacade.getAll())!!
     }
 
     /**
-     * Returns account with ID or null if there isn't such account.
+     * Returns account with ID.
      *
      * @param id ID
-     * @return account with ID or null if there isn't such account
+     * @return account with ID
      */
     @GetMapping("/{id}")
     fun getAccount(@PathVariable("id") id: Int): Account? {
-        return processResult(accountFacade.get(id))
+        return processResult(result = accountFacade.get(id = id))
     }
 
     /**
@@ -57,7 +59,7 @@ class AccountController(private val accountFacade: AccountFacade) : AbstractCont
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     fun add(@RequestBody credentials: Credentials) {
-        processResult(accountFacade.add(credentials))
+        processResult(result = accountFacade.add(credentials = credentials))
     }
 
     /**
@@ -73,7 +75,7 @@ class AccountController(private val accountFacade: AccountFacade) : AbstractCont
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody credentials: Credentials) {
-        processResult(accountFacade.update(credentials))
+        processResult(result = accountFacade.update(credentials = credentials))
     }
 
 }

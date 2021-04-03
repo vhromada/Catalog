@@ -1,11 +1,22 @@
 package com.github.vhromada.catalog.rest
 
-import com.github.vhromada.common.test.AppContextTest
+import mu.KotlinLogging
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
+import org.springframework.context.ApplicationContext
 import org.springframework.test.context.web.WebAppConfiguration
 
 @SpringBootTest
 @WebAppConfiguration
-@ActiveProfiles("test")
-class CatalogContextTest : AppContextTest()
+class CatalogContextTest {
+
+    @Autowired
+    private lateinit var context: ApplicationContext
+
+    @Test
+    fun app() {
+        KotlinLogging.logger {}.info { "Spring context test - OK [beans=${context.beanDefinitionNames.size}]" }
+    }
+
+}

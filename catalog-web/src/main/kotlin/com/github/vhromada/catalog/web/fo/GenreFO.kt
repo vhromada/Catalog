@@ -10,22 +10,22 @@ import javax.validation.constraints.NotBlank
  * @author Vladimir Hromada
  */
 data class GenreFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Name
+     */
+    @field:NotBlank
+    val name: String?,
 
-        /**
-         * Name
-         */
-        @field:NotBlank
-        val name: String?,
-
-        /**
-         * Position
-         */
-        val position: Int?) : Serializable {
+    /**
+     * Position
+     */
+    val position: Int?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -9,21 +9,21 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class CheatData(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Action
+     */
+    val action: String?,
 
-        /**
-         * Action
-         */
-        val action: String?,
-
-        /**
-         * Description
-         */
-        val description: String?) : Serializable {
+    /**
+     * Description
+     */
+    val description: String?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

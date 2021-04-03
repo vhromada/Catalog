@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("roleController")
 @RequestMapping("/catalog")
-class RoleController(private val roleFacade: RoleFacade) : AbstractController() {
+class RoleController(
+    private val roleFacade: RoleFacade
+) : AbstractController() {
 
     /**
      * Returns list of roles.
@@ -29,7 +31,7 @@ class RoleController(private val roleFacade: RoleFacade) : AbstractController() 
      */
     @GetMapping("/roles")
     fun getRoles(): List<String> {
-        return processResult(roleFacade.getAll())!!
+        return processResult(result = roleFacade.getAll())!!
     }
 
     /**
@@ -46,10 +48,12 @@ class RoleController(private val roleFacade: RoleFacade) : AbstractController() 
      */
     @PostMapping("/accounts/{accountId}/roles")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun updateRoles(@PathVariable("accountId") accountId: Int,
-                    @RequestBody roles: UpdateRoles) {
+    fun updateRoles(
+        @PathVariable("accountId") accountId: Int,
+        @RequestBody roles: UpdateRoles
+    ) {
         val account = Account(id = accountId, uuid = null, username = null, password = null, roles = null)
-        processResult(roleFacade.updateRoles(account, roles))
+        processResult(result = roleFacade.updateRoles(account = account, roles = roles))
     }
 
 }

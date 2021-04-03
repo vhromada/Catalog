@@ -1,9 +1,10 @@
 package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.TimeUtils
 import com.github.vhromada.catalog.web.fo.TimeFO
+import com.github.vhromada.catalog.web.utils.TimeUtils
 import com.github.vhromada.common.mapper.Mapper
+import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,9 +33,11 @@ class TimeMapperIntegrationTest {
     fun map() {
         val length = 100
 
-        val time = mapper.map(length)
+        val time = mapper.map(source = length)
 
-        TimeUtils.assertTimeDeepEquals(time, length)
+        assertSoftly {
+            TimeUtils.assertTimeDeepEquals(softly = it, expected = length, actual = time)
+        }
     }
 
     /**
@@ -44,9 +47,11 @@ class TimeMapperIntegrationTest {
     fun mapBack() {
         val time = TimeUtils.getTimeFO()
 
-        val length = mapper.mapBack(time)
+        val length = mapper.mapBack(source = time)
 
-        TimeUtils.assertTimeDeepEquals(time, length)
+        assertSoftly {
+            TimeUtils.assertTimeDeepEquals(softly = it, expected = time, actual = length)
+        }
     }
 
 }

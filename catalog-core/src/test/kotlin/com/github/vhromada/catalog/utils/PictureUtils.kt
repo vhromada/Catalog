@@ -11,7 +11,7 @@ import javax.persistence.EntityManager
  * @return updated picture
  */
 fun com.github.vhromada.catalog.domain.Picture.updated(): com.github.vhromada.catalog.domain.Picture {
-    return copy(content = PictureUtils.CONTENT.toByteArray(), audit = AuditUtils.newAudit())
+    return copy(content = PictureUtils.CONTENT.toByteArray())
 }
 
 /**
@@ -52,8 +52,8 @@ object PictureUtils {
      */
     fun getPictures(): List<com.github.vhromada.catalog.domain.Picture> {
         val pictures = mutableListOf<com.github.vhromada.catalog.domain.Picture>()
-        for (i in 0 until PICTURES_COUNT) {
-            pictures.add(getPicture(i + 1))
+        for (i in 1..PICTURES_COUNT) {
+            pictures.add(getPictureDomain(index = i))
         }
 
         return pictures
@@ -66,8 +66,8 @@ object PictureUtils {
      * @return picture
      */
     fun newPictureDomain(id: Int?): com.github.vhromada.catalog.domain.Picture {
-        return com.github.vhromada.catalog.domain.Picture(id = id, content = ByteArray(0), position = if (id == null) null else id - 1, audit = null)
-                .updated()
+        return com.github.vhromada.catalog.domain.Picture(id = id, content = ByteArray(0), position = if (id == null) null else id - 1)
+            .updated()
     }
 
     /**
@@ -78,7 +78,7 @@ object PictureUtils {
      */
     fun newPicture(id: Int?): Picture {
         return Picture(id = id, content = null, position = if (id == null) null else id - 1)
-                .updated()
+            .updated()
     }
 
     /**
@@ -87,10 +87,11 @@ object PictureUtils {
      * @param index index
      * @return picture for index
      */
-    fun getPicture(index: Int): com.github.vhromada.catalog.domain.Picture {
+    fun getPictureDomain(index: Int): com.github.vhromada.catalog.domain.Picture {
         val value = (16 + index).toString().toInt(16)
 
-        return com.github.vhromada.catalog.domain.Picture(id = index, content = byteArrayOf(value.toByte()), position = index - 1, audit = AuditUtils.getAudit())
+        return com.github.vhromada.catalog.domain.Picture(id = index, content = byteArrayOf(value.toByte()), position = index + 9)
+            .fillAudit(audit = AuditUtils.getAudit())
     }
 
     /**
@@ -112,9 +113,11 @@ object PictureUtils {
      * @return picture with updated fields
      */
     fun updatePicture(entityManager: EntityManager, id: Int): com.github.vhromada.catalog.domain.Picture {
-        return getPicture(entityManager, id)!!
-                .updated()
-                .copy(position = POSITION)
+        val picture = getPicture(entityManager = entityManager, id = id)!!
+        return picture
+            .updated()
+            .copy(position = POSITION)
+            .fillAudit(audit = picture)
     }
 
     /**
@@ -123,6 +126,7 @@ object PictureUtils {
      * @param entityManager entity manager
      * @return count of pictures
      */
+    @Suppress("JpaQlInspection")
     fun getPicturesCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(p.id) FROM Picture p", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -133,15 +137,11 @@ object PictureUtils {
      * @param expected expected list of pictures
      * @param actual   actual list of pictures
      */
-    fun assertPicturesDeepEquals(expected: List<com.github.vhromada.catalog.domain.Picture?>?, actual: List<com.github.vhromada.catalog.domain.Picture?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertDomainPicturesDeepEquals(expected: List<com.github.vhromada.catalog.domain.Picture>, actual: List<com.github.vhromada.catalog.domain.Picture>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertPictureDeepEquals(expected[i], actual[i])
+                assertPictureDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -152,17 +152,13 @@ object PictureUtils {
      * @param expected expected picture
      * @param actual   actual picture
      */
-    fun assertPictureDeepEquals(expected: com.github.vhromada.catalog.domain.Picture?, actual: com.github.vhromada.catalog.domain.Picture?) {
+    fun assertPictureDeepEquals(expected: com.github.vhromada.catalog.domain.Picture, actual: com.github.vhromada.catalog.domain.Picture) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.content).isEqualTo(expected.content)
             it.assertThat(actual.position).isEqualTo(expected.position)
+            AuditUtils.assertAuditDeepEquals(softly = it, expected = expected, actual = actual)
         }
-        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
@@ -171,15 +167,11 @@ object PictureUtils {
      * @param expected expected list of pictures
      * @param actual   actual list of pictures
      */
-    fun assertPictureListDeepEquals(expected: List<Picture?>?, actual: List<com.github.vhromada.catalog.domain.Picture?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertPicturesDeepEquals(expected: List<Picture>, actual: List<com.github.vhromada.catalog.domain.Picture>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertPictureDeepEquals(expected[i], actual[i])
+                assertPictureDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -190,13 +182,42 @@ object PictureUtils {
      * @param expected expected picture
      * @param actual   actual picture
      */
-    fun assertPictureDeepEquals(expected: Picture?, actual: com.github.vhromada.catalog.domain.Picture?) {
+    fun assertPictureDeepEquals(expected: Picture, actual: com.github.vhromada.catalog.domain.Picture) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
+            it.assertThat(actual.id).isEqualTo(expected.id)
+            it.assertThat(actual.content).isEqualTo(expected.content)
+            it.assertThat(actual.position).isEqualTo(expected.position)
+            it.assertThat(actual.createdUser).isNull()
+            it.assertThat(actual.createdTime).isNull()
+            it.assertThat(actual.updatedUser).isNull()
+            it.assertThat(actual.updatedTime).isNull()
         }
+    }
+
+    /**
+     * Asserts pictures deep equals.
+     *
+     * @param expected expected list of pictures
+     * @param actual   actual list of pictures
+     */
+    fun assertPictureListDeepEquals(expected: List<com.github.vhromada.catalog.domain.Picture>, actual: List<Picture>) {
+        assertThat(expected.size).isEqualTo(actual.size)
+        if (expected.isNotEmpty()) {
+            for (i in expected.indices) {
+                assertPictureDeepEquals(expected = expected[i], actual = actual[i])
+            }
+        }
+    }
+
+    /**
+     * Asserts picture deep equals.
+     *
+     * @param expected expected picture
+     * @param actual   actual picture
+     */
+    fun assertPictureDeepEquals(expected: com.github.vhromada.catalog.domain.Picture, actual: Picture) {
         assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.content).isEqualTo(expected.content)
             it.assertThat(actual.position).isEqualTo(expected.position)
         }

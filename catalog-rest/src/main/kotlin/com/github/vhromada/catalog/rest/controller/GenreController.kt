@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("genreController")
 @RequestMapping("/catalog/genres")
-class GenreController(private val genreFacade: GenreFacade) : AbstractController() {
+class GenreController(
+    private val genreFacade: GenreFacade
+) : AbstractController() {
 
     /**
      * Returns list of genres.
@@ -30,7 +32,7 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
      */
     @GetMapping
     fun getGenres(): List<Genre> {
-        return processResult(genreFacade.getAll())!!
+        return processResult(result = genreFacade.getAll())!!
     }
 
     /**
@@ -39,18 +41,18 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun newData() {
-        processResult(genreFacade.newData())
+        processResult(result = genreFacade.newData())
     }
 
     /**
-     * Returns genre with ID or null if there isn't such genre.
+     * Returns genre with ID.
      *
      * @param id ID
-     * @return genre with ID or null if there isn't such genre
+     * @return genre with ID
      */
     @GetMapping("/{id}")
-    fun getGenre(@PathVariable("id") id: Int): Genre? {
-        return processResult(genreFacade.get(id))
+    fun getGenre(@PathVariable("id") id: Int): Genre {
+        return processResult(result = genreFacade.get(id = id))!!
     }
 
     /**
@@ -68,7 +70,7 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     fun add(@RequestBody genre: Genre) {
-        processResult(genreFacade.add(genre))
+        processResult(result = genreFacade.add(data = genre))
     }
 
     /**
@@ -87,7 +89,7 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody genre: Genre) {
-        processResult(genreFacade.update(genre))
+        processResult(result = genreFacade.update(data = genre))
     }
 
     /**
@@ -102,8 +104,7 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun remove(@PathVariable("id") id: Int) {
-        val genre = Genre(id = id, name = null, position = null)
-        processResult(genreFacade.remove(genre))
+        processResult(result = genreFacade.remove(id = id))
     }
 
     /**
@@ -111,15 +112,14 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Genre doesn't exist in data storage
      *
-     * @param genre genre
+     * @param id ID
      */
-    @PostMapping("/duplicate")
+    @PostMapping("/duplicate/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun duplicate(@RequestBody genre: Genre) {
-        processResult(genreFacade.duplicate(genre))
+    fun duplicate(@PathVariable("id") id: Int) {
+        processResult(result = genreFacade.duplicate(id = id))
     }
 
     /**
@@ -127,16 +127,15 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Genre can't be moved up
      *  * Genre doesn't exist in data storage
      *
-     * @param genre genre
+     * @param id ID
      */
-    @PostMapping("/moveUp")
+    @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveUp(@RequestBody genre: Genre) {
-        processResult(genreFacade.moveUp(genre))
+    fun moveUp(@PathVariable("id") id: Int) {
+        processResult(result = genreFacade.moveUp(id = id))
     }
 
     /**
@@ -144,16 +143,15 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Genre can't be moved down
      *  * Genre doesn't exist in data storage
      *
-     * @param genre genre
+     * @param id ID
      */
-    @PostMapping("/moveDown")
+    @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveDown(@RequestBody genre: Genre) {
-        processResult(genreFacade.moveDown(genre))
+    fun moveDown(@PathVariable("id") id: Int) {
+        processResult(result = genreFacade.moveDown(id = id))
     }
 
     /**
@@ -162,7 +160,7 @@ class GenreController(private val genreFacade: GenreFacade) : AbstractController
     @PostMapping("/updatePositions")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updatePositions() {
-        processResult(genreFacade.updatePositions())
+        processResult(result = genreFacade.updatePositions())
     }
 
 }

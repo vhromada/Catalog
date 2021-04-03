@@ -14,33 +14,34 @@ class ProgramMapper : Mapper<Program, com.github.vhromada.catalog.domain.Program
 
     override fun map(source: Program): com.github.vhromada.catalog.domain.Program {
         return com.github.vhromada.catalog.domain.Program(
-                id = source.id,
-                name = source.name!!,
-                wikiEn = source.wikiEn,
-                wikiCz = source.wikiCz,
-                mediaCount = source.mediaCount!!,
-                format = source.format!!,
-                crack = source.crack!!,
-                serialKey = source.serialKey!!,
-                otherData = source.otherData,
-                note = source.note,
-                position = source.position,
-                audit = null)
+            id = source.id,
+            name = source.name!!,
+            wikiEn = source.wikiEn,
+            wikiCz = source.wikiCz,
+            mediaCount = source.mediaCount!!,
+            format = source.format!!,
+            crack = source.crack!!,
+            serialKey = source.serialKey!!,
+            otherData = source.otherData,
+            note = source.note,
+            position = source.position
+        )
     }
 
     override fun mapBack(source: com.github.vhromada.catalog.domain.Program): Program {
         return Program(
-                id = source.id,
-                name = source.name,
-                wikiEn = source.wikiEn,
-                wikiCz = source.wikiCz,
-                mediaCount = source.mediaCount,
-                format = source.format,
-                crack = source.crack,
-                serialKey = source.serialKey,
-                otherData = source.otherData,
-                note = source.note,
-                position = source.position)
+            id = source.id,
+            name = source.name,
+            wikiEn = source.wikiEn,
+            wikiCz = source.wikiCz,
+            mediaCount = source.mediaCount,
+            format = source.format,
+            crack = source.crack,
+            serialKey = source.serialKey,
+            otherData = source.otherData,
+            note = source.note,
+            position = source.position
+        )
     }
 
 }

@@ -8,13 +8,11 @@ import com.github.vhromada.catalog.facade.PictureFacade
 import com.github.vhromada.catalog.facade.SeasonFacade
 import com.github.vhromada.catalog.facade.ShowFacade
 import com.github.vhromada.catalog.web.domain.ShowData
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.ShowFO
 import com.github.vhromada.common.entity.Time
 import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.util.Assert
 import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -32,12 +30,13 @@ import javax.validation.Valid
 @Controller("showController")
 @RequestMapping("/shows")
 class ShowController(
-        private val showFacade: ShowFacade,
-        private val seasonFacade: SeasonFacade,
-        private val episodeFacade: EpisodeFacade,
-        private val pictureFacade: PictureFacade,
-        private val genreFacade: GenreFacade,
-        private val showMapper: Mapper<Show, ShowFO>) : AbstractResultController() {
+    private val showFacade: ShowFacade,
+    private val seasonFacade: SeasonFacade,
+    private val episodeFacade: EpisodeFacade,
+    private val pictureFacade: PictureFacade,
+    private val genreFacade: GenreFacade,
+    private val showMapper: Mapper<Show, ShowFO>
+) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -80,34 +79,27 @@ class ShowController(
      * @param model model
      * @param id    ID of showing show
      * @return view for page with detail of show
-     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("/{id}/detail")
     fun showDetail(model: Model, @PathVariable("id") id: Int): String {
-        val result = showFacade.get(id)
-        processResults(result)
+        val showResult = showFacade.get(id = id)
+        val seasonsResult = seasonFacade.find(parent = id)
+        processResults(showResult, seasonsResult)
 
-        val show = result.data
-        if (show != null) {
-            val seasonsResult = seasonFacade.find(show)
-            processResults(seasonsResult)
-            val seasonsCount = seasonsResult.data!!.size
-            var episodesCount = 0
-            var length = 0
-            for (season in seasonsResult.data!!) {
-                val episodesResult = episodeFacade.find(season)
-                processResults(episodesResult)
-                episodesCount += episodesResult.data!!.size
-                length += episodesResult.data!!.sumBy { it.length!! }
-            }
-
-            model.addAttribute("show", ShowData(show = show, seasonsCount = seasonsCount, episodesCount = episodesCount, totalLength = Time(length)))
-            model.addAttribute("title", "Show detail")
-
-            return "show/detail"
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
+        val seasonsCount = seasonsResult.data!!.size
+        var episodesCount = 0
+        var length = 0
+        for (season in seasonsResult.data!!) {
+            val episodesResult = episodeFacade.find(parent = season.id!!)
+            processResults(episodesResult)
+            episodesCount += episodesResult.data!!.size
+            length += episodesResult.data!!.sumBy { it.length!! }
         }
+
+        model.addAttribute("show", ShowData(show = showResult.data!!, seasonsCount = seasonsCount, episodesCount = episodesCount, totalLength = Time(length = length)))
+        model.addAttribute("title", "Show detail")
+
+        return "show/detail"
     }
 
     /**
@@ -118,19 +110,21 @@ class ShowController(
      */
     @GetMapping("/add")
     fun showAdd(model: Model): String {
-        val show = ShowFO(id = null,
-                czechName = null,
-                originalName = null,
-                csfd = null,
-                imdb = false,
-                wikiEn = null,
-                imdbCode = null,
-                wikiCz = null,
-                picture = null,
-                note = null,
-                position = null,
-                genres = null)
-        return createAddFormView(model, show)
+        val show = ShowFO(
+            id = null,
+            czechName = null,
+            originalName = null,
+            csfd = null,
+            imdb = false,
+            wikiEn = null,
+            imdbCode = null,
+            wikiCz = null,
+            picture = null,
+            note = null,
+            position = null,
+            genres = null
+        )
+        return createAddFormView(model = model, show = show)
     }
 
     /**
@@ -145,21 +139,21 @@ class ShowController(
      */
     @PostMapping("/add")
     fun processAdd(model: Model, @ModelAttribute("show") @Valid show: ShowFO, errors: Errors, request: HttpServletRequest): String {
-        Assert.isNull(show.id, "ID must be null.")
+        require(show.id == null) { "ID must be null." }
 
         if (request.getParameter("create") != null) {
             if (errors.hasErrors()) {
-                return createAddFormView(model, show)
+                return createAddFormView(model = model, show = show)
             }
-            processResults(showFacade.add(showMapper.mapBack(show).copy(genres = getGenres(show.genres!!))))
+            processResults(showFacade.add(data = showMapper.mapBack(source = show).copy(genres = getGenres(source = show.genres!!))))
         }
 
         if (request.getParameter("choosePicture") != null) {
-            return createAddFormView(model, show)
+            return createAddFormView(model = model, show = show)
         }
 
         if (request.getParameter("removePicture") != null) {
-            return createAddFormView(model, show.copy(picture = null))
+            return createAddFormView(model = model, show = show.copy(picture = null))
         }
 
         return LIST_REDIRECT_URL
@@ -171,19 +165,13 @@ class ShowController(
      * @param model model
      * @param id    ID of editing show
      * @return view for page for editing show
-     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("id") id: Int): String {
-        val result = showFacade.get(id)
+        val result = showFacade.get(id = id)
         processResults(result)
 
-        val show = result.data
-        return if (show != null) {
-            createEditFormView(model, showMapper.map(show))
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return createEditFormView(model = model, show = showMapper.map(source = result.data!!))
     }
 
     /**
@@ -195,25 +183,24 @@ class ShowController(
      * @param request HTTP request
      * @return view for redirect to page with list of shows (no errors) or view for page for editing show (errors)
      * @throws IllegalArgumentException if ID is null
-     * @throws IllegalRequestException  if show doesn't exist
      */
     @PostMapping("/edit")
     fun processEdit(model: Model, @ModelAttribute("show") @Valid show: ShowFO, errors: Errors, request: HttpServletRequest): String {
-        Assert.notNull(show.id, "ID mustn't be null.")
+        require(show.id != null) { "ID mustn't be null." }
 
         if (request.getParameter("update") != null) {
             if (errors.hasErrors()) {
-                return createEditFormView(model, show)
+                return createEditFormView(model = model, show = show)
             }
-            processResults(showFacade.update(processShow(showMapper.mapBack(show).copy(genres = getGenres(show.genres!!)))))
+            processResults(showFacade.update(data = showMapper.mapBack(source = show).copy(genres = getGenres(source = show.genres!!))))
         }
 
         if (request.getParameter("choosePicture") != null) {
-            return createEditFormView(model, show)
+            return createEditFormView(model = model, show = show)
         }
 
         if (request.getParameter("removePicture") != null) {
-            return createEditFormView(model, show.copy(picture = null))
+            return createEditFormView(model = model, show = show.copy(picture = null))
         }
 
         return LIST_REDIRECT_URL
@@ -224,11 +211,10 @@ class ShowController(
      *
      * @param id ID of duplicating show
      * @return view for redirect to page with list of shows
-     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("id") id: Int): String {
-        processResults(showFacade.duplicate(getShow(id)))
+        processResults(showFacade.duplicate(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -238,11 +224,10 @@ class ShowController(
      *
      * @param id ID of removing show
      * @return view for redirect to page with list of shows
-     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
-        processResults(showFacade.remove(getShow(id)))
+        processResults(showFacade.remove(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -252,11 +237,10 @@ class ShowController(
      *
      * @param id ID of moving show
      * @return view for redirect to page with list of shows
-     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
-        processResults(showFacade.moveUp(getShow(id)))
+        processResults(showFacade.moveUp(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -266,11 +250,10 @@ class ShowController(
      *
      * @param id ID of moving show
      * @return view for redirect to page with list of shows
-     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
-        processResults(showFacade.moveDown(getShow(id)))
+        processResults(showFacade.moveDown(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -297,15 +280,14 @@ class ShowController(
      * @return page's view with form
      */
     private fun createFormView(model: Model, show: ShowFO, title: String, action: String): String {
-        val pictures = pictureFacade.getAll()
-        processResults(pictures)
-        val genres = genreFacade.getAll()
-        processResults(genres)
+        val picturesResult = pictureFacade.getAll()
+        val genresResult = genreFacade.getAll()
+        processResults(picturesResult, genresResult)
 
         model.addAttribute("show", show)
         model.addAttribute("title", title)
-        model.addAttribute("pictures", pictures.data!!.map { it.id })
-        model.addAttribute("genres", genres.data)
+        model.addAttribute("pictures", picturesResult.data!!.map { it.id })
+        model.addAttribute("genres", genresResult.data)
         model.addAttribute("action", action)
 
         return "show/form"
@@ -319,7 +301,7 @@ class ShowController(
      * @return page's view with form for adding show
      */
     private fun createAddFormView(model: Model, show: ShowFO): String {
-        return createFormView(model, show, "Add show", "add")
+        return createFormView(model = model, show = show, title = "Add show", action = "add")
     }
 
     /**
@@ -330,48 +312,7 @@ class ShowController(
      * @return page's view with form for editing show
      */
     private fun createEditFormView(model: Model, show: ShowFO): String {
-        return createFormView(model, show, "Edit show", "edit")
-    }
-
-    /**
-     * Returns show with ID.
-     *
-     * @param id ID
-     * @return show with ID
-     * @throws IllegalRequestException if show doesn't exist
-     */
-    private fun getShow(id: Int): Show {
-        val show = Show(id = id,
-                czechName = null,
-                originalName = null,
-                csfd = null,
-                imdbCode = null,
-                wikiEn = null,
-                wikiCz = null,
-                picture = null,
-                note = null,
-                position = null,
-                genres = null)
-
-        return processShow(show)
-    }
-
-    /**
-     * Returns processed show.
-     *
-     * @param show for processing
-     * @return processed show
-     * @throws IllegalRequestException if show doesn't exist
-     */
-    private fun processShow(show: Show): Show {
-        val showResult = showFacade.get(show.id!!)
-        processResults(showResult)
-
-        if (showResult.data != null) {
-            return show
-        }
-
-        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
+        return createFormView(model = model, show = show, title = "Edit show", action = "edit")
     }
 
     /**
@@ -382,7 +323,7 @@ class ShowController(
      */
     private fun getGenres(source: List<Int?>): List<Genre> {
         return source.map {
-            val result = genreFacade.get(it!!)
+            val result = genreFacade.get(id = it!!)
             processResults(result)
 
             result.data!!
@@ -396,10 +337,6 @@ class ShowController(
          */
         private const val LIST_REDIRECT_URL = "redirect:/shows/list"
 
-        /**
-         * Message for illegal request
-         */
-        private const val ILLEGAL_REQUEST_MESSAGE = "Show doesn't exist."
     }
 
 }

@@ -1,8 +1,8 @@
 package com.github.vhromada.catalog.rest.controller
 
 import com.github.vhromada.catalog.entity.Season
-import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.catalog.facade.SeasonFacade
+import com.github.vhromada.catalog.facade.ShowFacade
 import com.github.vhromada.common.web.controller.AbstractController
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -22,19 +22,30 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("seasonController")
 @RequestMapping("/catalog/shows/{showId}/seasons")
-class SeasonController(private val seasonFacade: SeasonFacade) : AbstractController() {
+class SeasonController(
+    private val seasonFacade: SeasonFacade,
+    private val showFacade: ShowFacade
+) : AbstractController() {
 
     /**
-     * Returns season with ID or null if there isn't such season.
+     * Returns season with ID.
+     * <br></br>
+     * Validation errors:
+     *
+     *  * Show doesn't exist in data storage
+     *  * Season doesn't exist in data storage
      *
      * @param showId   show ID
      * @param seasonId season ID
-     * @return season with ID or null if there isn't such season
+     * @return season with ID
      */
     @GetMapping("/{seasonId}")
-    fun getSeason(@PathVariable("showId") showId: Int,
-                  @PathVariable("seasonId") seasonId: Int): Season? {
-        return processResult(seasonFacade.get(seasonId))
+    fun getSeason(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("seasonId") seasonId: Int
+    ): Season {
+        processResult(result = showFacade.get(id = showId))
+        return processResult(result = seasonFacade.get(id = seasonId))!!
     }
 
     /**
@@ -42,7 +53,6 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * <br></br>
      * Validation errors:
      *
-     *  * Show ID is null
      *  * Show doesn't exist in season storage
      *  * Season ID isn't null
      *  * Season position isn't null
@@ -60,10 +70,11 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      */
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    fun add(@PathVariable("showId") showId: Int,
-            @RequestBody season: Season) {
-        val show = Show(id = showId, czechName = null, originalName = null, csfd = null, imdbCode = null, wikiEn = null, wikiCz = null, picture = null, note = null, position = null, genres = null)
-        processResult(seasonFacade.add(show, season))
+    fun add(
+        @PathVariable("showId") showId: Int,
+        @RequestBody season: Season
+    ) {
+        processResult(result = seasonFacade.add(parent = showId, data = season))
     }
 
     /**
@@ -71,6 +82,7 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * <br></br>
      * Validation errors:
      *
+     *  * Show doesn't exist in data storage
      *  * ID is null
      *  * Position is null
      *  * Number of season isn't positive number
@@ -88,9 +100,12 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      */
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun update(@PathVariable("showId") showId: Int,
-               @RequestBody season: Season) {
-        processResult(seasonFacade.update(season))
+    fun update(
+        @PathVariable("showId") showId: Int,
+        @RequestBody season: Season
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.update(data = season))
     }
 
     /**
@@ -98,6 +113,7 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * <br></br>
      * Validation errors:
      *
+     *  * Show doesn't exist in data storage
      *  * Season doesn't exist in data storage
      *
      * @param showId show ID
@@ -105,10 +121,12 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      */
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun remove(@PathVariable("showId") showId: Int,
-               @PathVariable("id") id: Int) {
-        val season = Season(id = id, number = null, startYear = null, endYear = null, language = null, subtitles = null, note = null, position = null)
-        processResult(seasonFacade.remove(season))
+    fun remove(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.remove(id = id))
     }
 
     /**
@@ -116,17 +134,20 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Show doesn't exist in data storage
      *  * Season doesn't exist in data storage
      *
      * @param showId show ID
-     * @param season season
+     * @param id     ID
      */
-    @PostMapping("/duplicate")
+    @PostMapping("/duplicate/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun duplicate(@PathVariable("showId") showId: Int,
-                  @RequestBody season: Season) {
-        processResult(seasonFacade.duplicate(season))
+    fun duplicate(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.duplicate(id = id))
     }
 
     /**
@@ -134,18 +155,21 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Show doesn't exist in data storage
      *  * Season can't be moved up
      *  * Season doesn't exist in data storage
      *
      * @param showId show ID
-     * @param season season
+     * @param id     ID
      */
-    @PostMapping("/moveUp")
+    @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveUp(@PathVariable("showId") showId: Int,
-               @RequestBody season: Season) {
-        processResult(seasonFacade.moveUp(season))
+    fun moveUp(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.moveUp(id = id))
     }
 
     /**
@@ -153,18 +177,21 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Show doesn't exist in data storage
      *  * Season can't be moved down
      *  * Season doesn't exist in data storage
      *
      * @param showId show ID
-     * @param season season
+     * @param id     ID
      */
-    @PostMapping("/moveDown")
+    @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveDown(@PathVariable("showId") showId: Int,
-                 @RequestBody season: Season) {
-        processResult(seasonFacade.moveDown(season))
+    fun moveDown(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.moveDown(id = id))
     }
 
     /**
@@ -172,7 +199,6 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Show doesn't exist in data storage
      *
      * @param showId show ID
@@ -180,8 +206,7 @@ class SeasonController(private val seasonFacade: SeasonFacade) : AbstractControl
      */
     @GetMapping
     fun findSeasonsByShow(@PathVariable("showId") showId: Int): List<Season> {
-        val show = Show(id = showId, czechName = null, originalName = null, csfd = null, imdbCode = null, wikiEn = null, wikiCz = null, picture = null, note = null, position = null, genres = null)
-        return processResult(seasonFacade.find(show))!!
+        return processResult(result = seasonFacade.find(parent = showId))!!
     }
 
 }

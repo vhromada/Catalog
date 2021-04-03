@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "2.4.0"
+    id("org.springframework.boot") version "2.4.4"
     kotlin("jvm")
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
@@ -18,7 +18,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("io.springfox:springfox-boot-starter")
     runtimeOnly("com.h2database:h2")
-    testImplementation("com.github.vhromada.common:common-test:$commonVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
     testImplementation(kotlin("test-junit5"))
 }
 

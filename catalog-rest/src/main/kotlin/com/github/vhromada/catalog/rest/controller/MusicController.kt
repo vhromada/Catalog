@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("musicController")
 @RequestMapping("/catalog/music")
-class MusicController(private val musicFacade: MusicFacade) : AbstractController() {
+class MusicController(
+    private val musicFacade: MusicFacade
+) : AbstractController() {
 
     /**
      * Returns list of music.
@@ -30,7 +32,7 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
      */
     @GetMapping
     fun getMusic(): List<Music> {
-        return processResult(musicFacade.getAll())!!
+        return processResult(result = musicFacade.getAll())!!
     }
 
     /**
@@ -39,18 +41,18 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun newData() {
-        processResult(musicFacade.newData())
+        processResult(result = musicFacade.newData())
     }
 
     /**
-     * Returns music with ID or null if there isn't such music.
+     * Returns music with ID.
      *
      * @param id ID
-     * @return music with ID or null if there isn't such music
+     * @return music with ID
      */
     @GetMapping("/{id}")
     fun getMusic(@PathVariable("id") id: Int): Music {
-        return processResult(musicFacade.get(id))!!
+        return processResult(result = musicFacade.get(id = id))!!
     }
 
     /**
@@ -73,7 +75,7 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     fun add(@RequestBody music: Music) {
-        processResult(musicFacade.add(music))
+        processResult(result = musicFacade.add(data = music))
     }
 
     /**
@@ -97,7 +99,7 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody music: Music) {
-        processResult(musicFacade.update(music))
+        processResult(result = musicFacade.update(data = music))
     }
 
     /**
@@ -112,8 +114,7 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun remove(@PathVariable("id") id: Int) {
-        val music = Music(id = id, name = null, wikiEn = null, wikiCz = null, mediaCount = null, note = null, position = null)
-        processResult(musicFacade.remove(music))
+        processResult(result = musicFacade.remove(id = id))
     }
 
     /**
@@ -121,15 +122,14 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Music doesn't exist in data storage
      *
-     * @param music music
+     * @param id ID
      */
-    @PostMapping("/duplicate")
+    @PostMapping("/duplicate/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun duplicate(@RequestBody music: Music) {
-        processResult(musicFacade.duplicate(music))
+    fun duplicate(@PathVariable("id") id: Int) {
+        processResult(result = musicFacade.duplicate(id = id))
     }
 
     /**
@@ -137,16 +137,15 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Music can't be moved up
      *  * Music doesn't exist in data storage
      *
-     * @param music music
+     * @param id ID
      */
-    @PostMapping("/moveUp")
+    @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveUp(@RequestBody music: Music) {
-        processResult(musicFacade.moveUp(music))
+    fun moveUp(@PathVariable("id") id: Int) {
+        processResult(result = musicFacade.moveUp(id = id))
     }
 
     /**
@@ -154,16 +153,15 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Music can't be moved down
      *  * Music doesn't exist in data storage
      *
-     * @param music music
+     * @param id ID
      */
-    @PostMapping("/moveDown")
+    @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveDown(@RequestBody music: Music) {
-        processResult(musicFacade.moveDown(music))
+    fun moveDown(@PathVariable("id") id: Int) {
+        processResult(result = musicFacade.moveDown(id = id))
     }
 
     /**
@@ -172,7 +170,7 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
     @PostMapping("/updatePositions")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updatePositions() {
-        processResult(musicFacade.updatePositions())
+        processResult(result = musicFacade.updatePositions())
     }
 
     /**
@@ -182,7 +180,7 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
      */
     @GetMapping("/totalMedia")
     fun getTotalMediaCount(): Int {
-        return processResult(musicFacade.getTotalMediaCount())!!
+        return processResult(result = musicFacade.getTotalMediaCount())!!
     }
 
     /**
@@ -192,7 +190,7 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
      */
     @GetMapping("/totalLength")
     fun getTotalLength(): Int {
-        return processResult(musicFacade.getTotalLength())!!.length
+        return processResult(result = musicFacade.getTotalLength())!!.length
     }
 
     /**
@@ -202,7 +200,7 @@ class MusicController(private val musicFacade: MusicFacade) : AbstractController
      */
     @GetMapping("/songsCount")
     fun geSongsCount(): Int {
-        return processResult(musicFacade.getSongsCount())!!
+        return processResult(result = musicFacade.getSongsCount())!!
     }
 
 }

@@ -3,7 +3,6 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Song
 import com.github.vhromada.catalog.utils.SongUtils
-import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,17 +22,17 @@ class SongMapperIntegrationTest {
      * Instance of [SongMapper]
      */
     @Autowired
-    private lateinit var mapper: Mapper<Song, com.github.vhromada.catalog.domain.Song>
+    private lateinit var mapper: SongMapper
 
     /**
      * Test method for [SongMapper.map].
      */
     @Test
     fun map() {
-        val song = SongUtils.newSong(1)
+        val song = SongUtils.newSong(id = 1)
         val songDomain = mapper.map(song)
 
-        SongUtils.assertSongDeepEquals(song, songDomain)
+        SongUtils.assertSongDeepEquals(expected = song, actual = songDomain)
     }
 
     /**
@@ -41,10 +40,10 @@ class SongMapperIntegrationTest {
      */
     @Test
     fun mapBack() {
-        val songDomain = SongUtils.newSongDomain(1)
+        val songDomain = SongUtils.newSongDomain(id = 1)
         val song = mapper.mapBack(songDomain)
 
-        SongUtils.assertSongDeepEquals(song, songDomain)
+        SongUtils.assertSongDeepEquals(expected = songDomain, actual = song)
     }
 
 }

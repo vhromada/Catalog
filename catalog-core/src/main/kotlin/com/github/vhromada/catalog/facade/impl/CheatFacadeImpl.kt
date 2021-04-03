@@ -4,15 +4,12 @@ import com.github.vhromada.catalog.entity.Cheat
 import com.github.vhromada.catalog.entity.CheatData
 import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.facade.CheatFacade
-import com.github.vhromada.common.facade.AbstractMovableChildFacade
+import com.github.vhromada.common.facade.AbstractChildFacade
 import com.github.vhromada.common.mapper.Mapper
-import com.github.vhromada.common.provider.AccountProvider
-import com.github.vhromada.common.provider.TimeProvider
-import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
-import com.github.vhromada.common.result.Severity
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.validator.MovableValidator
+import com.github.vhromada.common.service.ChildService
+import com.github.vhromada.common.service.ParentService
+import com.github.vhromada.common.validator.Validator
 import org.springframework.stereotype.Component
 import kotlin.math.min
 
@@ -23,102 +20,57 @@ import kotlin.math.min
  */
 @Component("cheatFacade")
 class CheatFacadeImpl(
-        gameService: MovableService<com.github.vhromada.catalog.domain.Game>,
-        accountProvider: AccountProvider,
-        timeProvider: TimeProvider,
-        mapper: Mapper<Cheat, com.github.vhromada.catalog.domain.Cheat>,
-        gameValidator: MovableValidator<Game>,
-        cheatValidator: MovableValidator<Cheat>
-) : AbstractMovableChildFacade<Cheat, com.github.vhromada.catalog.domain.Cheat, Game, com.github.vhromada.catalog.domain.Game>(gameService, accountProvider, timeProvider, mapper, gameValidator,
-        cheatValidator), CheatFacade {
+    cheatService: ChildService<com.github.vhromada.catalog.domain.Cheat>,
+    gameService: ParentService<com.github.vhromada.catalog.domain.Game>,
+    mapper: Mapper<Cheat, com.github.vhromada.catalog.domain.Cheat>,
+    cheatValidator: Validator<Cheat, com.github.vhromada.catalog.domain.Cheat>,
+    gameValidator: Validator<Game, com.github.vhromada.catalog.domain.Game>
+) : AbstractChildFacade<Cheat, com.github.vhromada.catalog.domain.Cheat, Game, com.github.vhromada.catalog.domain.Game>(
+    childService = cheatService,
+    parentService = gameService,
+    mapper = mapper,
+    childValidator = cheatValidator,
+    parentValidator = gameValidator
+), CheatFacade {
 
-    override fun add(parent: Game, data: Cheat): Result<Unit> {
-        return super.add(parent, data.copy(position = null))
-    }
-
-    override fun update(data: Cheat): Result<Unit> {
-        return super.update(data.copy(position = -1))
-    }
-
-    override fun duplicate(data: Cheat): Result<Unit> {
+    override fun duplicate(id: Int): Result<Unit> {
         return Result.error("CHEAT_NOT_DUPLICABLE", "Cheat can't be duplicated.")
     }
 
-    override fun moveUp(data: Cheat): Result<Unit> {
+    override fun moveUp(id: Int): Result<Unit> {
         return Result.error("CHEAT_NOT_MOVABLE", "Cheat can't be moved up.")
     }
 
-    override fun moveDown(data: Cheat): Result<Unit> {
+    override fun moveDown(id: Int): Result<Unit> {
         return Result.error("CHEAT_NOT_MOVABLE", "Cheat can't be moved down.")
     }
 
-    override fun customAddDataValidation(parentValidator: MovableValidator<Game>, dataValidator: MovableValidator<Cheat>, parent: Game, data: Cheat, result: Result<Unit>) {
-        if (parent.id != null) {
-            val cheat = service.get(parent.id!!)
-                    .map { it.cheat }
-            if (cheat.isPresent) {
-                result.addEvent(Event(Severity.ERROR, "GAME_CHEAT_EXIST", "Game already has cheat."))
-            }
+    override fun updateData(data: Cheat): Result<Unit> {
+        val storedCheat = service.get(data.id!!)
+        val validationResult = validator.validateExists(storedCheat)
+        if (validationResult.isOk()) {
+            val cheat = mapper.map(data)
+                .copy(data = getUpdatedCheatData(originalData = storedCheat.get().data, updatedData = data.data!!))
+            cheat.createdUser = storedCheat.get().createdUser
+            cheat.createdTime = storedCheat.get().createdTime
+            cheat.game = storedCheat.get().game
+            service.update(cheat)
         }
+        return validationResult
     }
 
-    override fun getDomainData(id: Int): com.github.vhromada.catalog.domain.Cheat? {
-        return service.getAll()
-                .map { it.cheat }
-                .find { it?.id == id }
-    }
-
-    override fun getDomainList(parent: Game): List<com.github.vhromada.catalog.domain.Cheat> {
-        val cheat = service.get(parent.id!!).get().cheat
-        return if (cheat == null) emptyList() else listOf(cheat)
-    }
-
-    override fun getForAdd(parent: Game, data: com.github.vhromada.catalog.domain.Cheat): com.github.vhromada.catalog.domain.Game {
-        for (cheatData in data.data) {
-            cheatData.audit = getAudit()
+    override fun addData(parent: com.github.vhromada.catalog.domain.Game, data: Cheat): Result<Unit> {
+        if (parent.cheat != null) {
+            return Result.error(key = "GAME_CHEAT_EXIST", "Game already has cheat.")
         }
-        return service.get(parent.id!!).get()
-                .copy(cheat = data)
+
+        parent.cheat = mapper.map(data)
+        parentService.update(parent)
+        return Result()
     }
 
-    override fun getForUpdate(data: Cheat): com.github.vhromada.catalog.domain.Game {
-        val game = getGame(data)
-        val audit = getAudit()
-        val cheat = getDataForUpdate(data)
-        cheat.audit = game.cheat!!.audit!!.copy(updatedUser = audit.updatedUser, updatedTime = audit.updatedTime)
-        return game.copy(cheat = cheat)
-    }
-
-    override fun getDataForUpdate(data: Cheat): com.github.vhromada.catalog.domain.Cheat {
-        val cheat = super.getDataForUpdate(data)
-        val cheatData = getUpdatedCheatData(getDomainData(data.id!!)!!.data, data.data!!)
-
-        return cheat.copy(data = cheatData)
-    }
-
-    override fun getForRemove(data: Cheat): com.github.vhromada.catalog.domain.Game {
-        return getGame(data)
-                .copy(cheat = null)
-    }
-
-    override fun getForDuplicate(data: Cheat): com.github.vhromada.catalog.domain.Game {
-        throw UnsupportedOperationException("Not supported")
-    }
-
-    override fun getForMove(data: Cheat, up: Boolean): com.github.vhromada.catalog.domain.Game {
-        throw UnsupportedOperationException("Not supported")
-    }
-
-    /**
-     * Returns game for specified cheat.
-     *
-     * @param cheat cheat
-     * @return game for specified cheat
-     */
-    private fun getGame(cheat: Cheat): com.github.vhromada.catalog.domain.Game {
-        val game = service.getAll()
-                .find { it.cheat?.id == cheat.id }
-        return game ?: throw IllegalStateException("Unknown cheat.")
+    override fun getParent(data: com.github.vhromada.catalog.domain.Cheat): com.github.vhromada.catalog.domain.Game {
+        return data.game!!
     }
 
     /**
@@ -128,39 +80,28 @@ class CheatFacadeImpl(
      * @param updatedData  updated cheat's data
      * @return updated cheat's data
      */
-    @Suppress("DuplicatedCode")
     private fun getUpdatedCheatData(originalData: List<com.github.vhromada.catalog.domain.CheatData>, updatedData: List<CheatData?>): List<com.github.vhromada.catalog.domain.CheatData> {
         val result = mutableListOf<com.github.vhromada.catalog.domain.CheatData>()
-        val audit = getAudit()
 
         var index = 0
         val max = min(originalData.size, updatedData.size)
         while (index < max) {
-            val cheatData = getUpdatedMedium(updatedData, index)
-            cheatData.id = originalData[index].id
-            cheatData.audit = originalData[index].audit
-            cheatData.modify(audit)
+            val originalCheatData = originalData[index]
+            val updatedCheatData = updatedData[index]!!
+            val cheatData = com.github.vhromada.catalog.domain.CheatData(id = originalCheatData.id, action = updatedCheatData.action!!, description = updatedCheatData.description!!)
+            cheatData.createdUser = originalCheatData.createdUser
+            cheatData.createdTime = originalCheatData.createdTime
             result.add(cheatData)
             index++
         }
         while (index < updatedData.size) {
-            val cheatData = getUpdatedMedium(updatedData, index)
-            cheatData.audit = audit
+            val updatedCheatData = updatedData[index]!!
+            val cheatData = com.github.vhromada.catalog.domain.CheatData(id = null, action = updatedCheatData.action!!, description = updatedCheatData.description!!)
             result.add(cheatData)
             index++
         }
 
         return result
-    }
-
-    /**
-     * Returns updated cheat's data.
-     *
-     * @param updatedData list of updated cheat's data
-     * @return updated cheat's data
-     */
-    private fun getUpdatedMedium(updatedData: List<CheatData?>, index: Int): com.github.vhromada.catalog.domain.CheatData {
-        return com.github.vhromada.catalog.domain.CheatData(id = null, action = updatedData[index]!!.action!!, description = updatedData[index]!!.description!!, audit = null)
     }
 
 }

@@ -1,10 +1,8 @@
 package com.github.vhromada.catalog.web.controller
 
 import com.github.vhromada.catalog.entity.Cheat
-import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.facade.CheatFacade
 import com.github.vhromada.catalog.facade.GameFacade
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.CheatDataFO
 import com.github.vhromada.catalog.web.fo.CheatFO
 import com.github.vhromada.common.mapper.Mapper
@@ -27,9 +25,9 @@ import javax.validation.Valid
 @Controller("cheatController")
 @RequestMapping("/games/{gameId}/cheats")
 class CheatController(
-        private val gameFacade: GameFacade,
-        private val cheatFacade: CheatFacade,
-        private val cheatMapper: Mapper<Cheat, CheatFO>
+    private val gameFacade: GameFacade,
+    private val cheatFacade: CheatFacade,
+    private val cheatMapper: Mapper<Cheat, CheatFO>
 ) : AbstractResultController() {
 
     /**
@@ -38,16 +36,13 @@ class CheatController(
      * @param model  model
      * @param gameId game ID
      * @return view for page with cheat
-     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping
     fun showList(model: Model, @PathVariable("gameId") gameId: Int): String {
-        val game = getGame(gameId)
+        val result = cheatFacade.find(parent = gameId)
+        processResults(result)
 
-        val cheatResult = cheatFacade.find(game)
-        processResults(cheatResult)
-
-        model.addAttribute("cheat", cheatResult.data?.firstOrNull())
+        model.addAttribute("cheat", result.data?.firstOrNull())
         model.addAttribute("game", gameId)
         model.addAttribute("title", "Cheats")
 
@@ -60,18 +55,18 @@ class CheatController(
      * @param model  model
      * @param gameId game ID
      * @return view for page for adding cheat
-     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/add")
     fun showAdd(model: Model, @PathVariable("gameId") gameId: Int): String {
-        getGame(gameId)
+        processResults(gameFacade.get(id = gameId))
 
-        val cheat = CheatFO(id = null,
-                gameSetting = null,
-                cheatSetting = null,
-                data = null,
-                position = null)
-        return createAddFormView(model, cheat, gameId)
+        val cheat = CheatFO(
+            id = null,
+            gameSetting = null,
+            cheatSetting = null,
+            data = null
+        )
+        return createAddFormView(model = model, cheat = cheat, gameId = gameId)
     }
 
     /**
@@ -84,7 +79,6 @@ class CheatController(
      * @param request  HTTP request
      * @return view for redirect to page with cheats (no errors) or view for page for adding cheat (errors)
      * @throws IllegalArgumentException if ID isn't null
-     * @throws IllegalRequestException  if game doesn't exist
      */
     @PostMapping("/add")
     fun processAdd(model: Model, @PathVariable("gameId") gameId: Int, @ModelAttribute("cheat") @Valid cheat: CheatFO, errors: Errors, request: HttpServletRequest): String {
@@ -92,32 +86,31 @@ class CheatController(
 
         if (request.getParameter("create") != null) {
             if (errors.hasErrors()) {
-                return createAddFormView(model, cheat, gameId)
+                return createAddFormView(model = model, cheat = cheat, gameId = gameId)
             }
 
-            val game = getGame(gameId)
-            processResults(cheatFacade.add(game, cheatMapper.mapBack(cheat)))
+            processResults(cheatFacade.add(parent = gameId, data = cheatMapper.mapBack(source = cheat)))
 
-            return getCheatsRedirectUrl(gameId)
+            return getCheatsRedirectUrl(gameId = gameId)
         }
 
         if (request.getParameter("addCheat") != null) {
             val cheatData = if (cheat.data == null) mutableListOf() else cheat.data!!.toMutableList()
             cheatData.add(CheatDataFO())
 
-            return createAddFormView(model, cheat.copy(data = cheatData), gameId)
+            return createAddFormView(model = model, cheat = cheat.copy(data = cheatData), gameId = gameId)
         }
 
-        val index = getRemoveIndex(request)
+        val index = getRemoveIndex(request = request)
         if (index != null) {
             val cheatData = cheat.data!!.toMutableList()
             cheatData.removeAt(index)
 
-            return createAddFormView(model, cheat.copy(data = cheatData), gameId)
+            return createAddFormView(model = model, cheat = cheat.copy(data = cheatData), gameId = gameId)
         }
 
-        getGame(gameId)
-        return getCheatsRedirectUrl(gameId)
+        processResults(gameFacade.get(id = gameId))
+        return getCheatsRedirectUrl(gameId = gameId)
     }
 
     /**
@@ -126,12 +119,13 @@ class CheatController(
      * @param model  model
      * @param gameId game ID
      * @return view for page for editing cheat
-     * @throws IllegalRequestException if game doesn't exist
-     * or cheat doesn't exist
      */
     @GetMapping("/edit")
     fun showEdit(model: Model, @PathVariable("gameId") gameId: Int): String {
-        return createEditFormView(model, cheatMapper.map(getCheat(gameId)), gameId)
+        val cheatResult = cheatFacade.find(parent = gameId)
+        processResults(cheatResult)
+
+        return createEditFormView(model = model, cheat = cheatMapper.map(source = cheatResult.data!!.first()), gameId = gameId)
     }
 
     /**
@@ -144,8 +138,6 @@ class CheatController(
      * @param request HTTP request
      * @return view for redirect to page with cheats (no errors) or view for page for editing cheat (errors)
      * @throws IllegalArgumentException if ID is null
-     * @throws IllegalRequestException if game doesn't exist
-     * or cheat doesn't exist
      */
     @PostMapping("/edit")
     fun processEdit(model: Model, @PathVariable("gameId") gameId: Int, @ModelAttribute("cheat") @Valid cheat: CheatFO, errors: Errors, request: HttpServletRequest): String {
@@ -153,19 +145,19 @@ class CheatController(
 
         if (request.getParameter("update") != null) {
             if (errors.hasErrors()) {
-                return createEditFormView(model, cheat, gameId)
+                return createEditFormView(model = model, cheat = cheat, gameId = gameId)
             }
 
-            getGame(gameId)
-            processResults(cheatFacade.update(processCheat(cheatMapper.mapBack(cheat))))
-            return getCheatsRedirectUrl(gameId)
+            processResults(gameFacade.get(id = gameId))
+            processResults(cheatFacade.update(data = cheatMapper.mapBack(source = cheat)))
+            return getCheatsRedirectUrl(gameId = gameId)
         }
 
         if (request.getParameter("addCheat") != null) {
             val cheatData = cheat.data!!.toMutableList()
             cheatData.add(CheatDataFO())
 
-            return createEditFormView(model, cheat.copy(data = cheatData), gameId)
+            return createEditFormView(model = model, cheat = cheat.copy(data = cheatData), gameId = gameId)
         }
 
         val index = getRemoveIndex(request)
@@ -173,11 +165,11 @@ class CheatController(
             val cheatData = cheat.data!!.toMutableList()
             cheatData.removeAt(index)
 
-            return createEditFormView(model, cheat.copy(data = cheatData), gameId)
+            return createEditFormView(model = model, cheat = cheat.copy(data = cheatData), gameId = gameId)
         }
 
-        getGame(gameId)
-        return getCheatsRedirectUrl(gameId)
+        processResults(gameFacade.get(id = gameId))
+        return getCheatsRedirectUrl(gameId = gameId)
     }
 
     /**
@@ -185,61 +177,14 @@ class CheatController(
      *
      * @param gameId game ID
      * @return view for redirect to page with cheats
-     * @throws IllegalRequestException if game doesn't exist
-     * or cheat doesn't exist
      */
     @GetMapping("/remove")
     fun processRemove(@PathVariable("gameId") gameId: Int): String {
-        cheatFacade.remove(getCheat(gameId))
+        val cheatsResult = cheatFacade.find(parent = gameId)
+        processResults(cheatsResult)
+        processResults(cheatFacade.remove(id = cheatsResult.data!!.first().id!!))
 
-        return getCheatsRedirectUrl(gameId)
-    }
-
-    /**
-     * Returns game.
-     *
-     * @param id game ID
-     * @return game
-     * @throws IllegalRequestException if game doesn't exist
-     */
-    private fun getGame(id: Int): Game {
-        val gameResult = gameFacade.get(id)
-        processResults(gameResult)
-
-        return gameResult.data ?: throw IllegalRequestException("Game doesn't exist.")
-    }
-
-    /**
-     * Returns cheat.
-     *
-     * @param id game ID
-     * @return cheat
-     * @throws IllegalRequestException if game doesn't exist
-     * or cheat doesn't exist
-     */
-    private fun getCheat(id: Int): Cheat {
-        val cheatResult = cheatFacade.find(getGame(id))
-        processResults(cheatResult)
-
-        return cheatResult.data?.firstOrNull() ?: throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-    }
-
-    /**
-     * Returns processed cheat.
-     *
-     * @param cheat cheat for processing
-     * @return processed cheat
-     * @throws IllegalRequestException if cheat doesn't exist
-     */
-    private fun processCheat(cheat: Cheat): Cheat {
-        val cheatResult = cheatFacade.get(cheat.id!!)
-        processResults(cheatResult)
-
-        if (cheatResult.data != null) {
-            return cheat
-        }
-
-        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
+        return "redirect:/games/list"
     }
 
     /**
@@ -251,7 +196,7 @@ class CheatController(
      * @return page's view with form for adding cheat
      */
     private fun createAddFormView(model: Model, cheat: CheatFO, gameId: Int): String {
-        return createFormView(model, cheat, gameId, "Add cheat", "add")
+        return createFormView(model = model, cheat = cheat, gameId = gameId, title = "Add cheat", action = "add")
     }
 
     /**
@@ -263,7 +208,7 @@ class CheatController(
      * @return page's view with form for editing cheat
      */
     private fun createEditFormView(model: Model, cheat: CheatFO, gameId: Int): String {
-        return createFormView(model, cheat, gameId, "Edit cheat", "edit")
+        return createFormView(model = model, cheat = cheat, gameId = gameId, title = "Edit cheat", action = "edit")
     }
 
     /**
@@ -312,15 +257,6 @@ class CheatController(
         }
 
         return index
-    }
-
-    companion object {
-
-        /**
-         * Message for illegal request
-         */
-        private const val ILLEGAL_REQUEST_MESSAGE = "Cheat doesn't exist."
-
     }
 
 }

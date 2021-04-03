@@ -1,8 +1,8 @@
 package com.github.vhromada.catalog.rest.controller
 
 import com.github.vhromada.catalog.entity.Cheat
-import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.facade.CheatFacade
+import com.github.vhromada.catalog.facade.GameFacade
 import com.github.vhromada.common.web.controller.AbstractController
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -22,19 +22,30 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("cheatController")
 @RequestMapping("/catalog/games/{gameId}/cheats")
-class CheatController(private val cheatFacade: CheatFacade) : AbstractController() {
+class CheatController(
+    private val cheatFacade: CheatFacade,
+    private val gameFacade: GameFacade
+) : AbstractController() {
 
     /**
-     * Returns cheat with ID or null if there isn't such cheat.
+     * Returns cheat with ID.
+     * <br></br>
+     * Validation errors:
+     *
+     *  * Game doesn't exist in data storage
+     *  * Cheat doesn't exist in data storage
      *
      * @param gameId   game ID
      * @param cheatId  cheat ID
-     * @return cheat with ID or null if there isn't such cheat
+     * @return cheat with ID
      */
     @GetMapping("/{cheatId}")
-    fun getCheat(@PathVariable("gameId") gameId: Int,
-                 @PathVariable("cheatId") cheatId: Int): Cheat? {
-        return processResult(cheatFacade.get(cheatId))
+    fun getCheat(
+        @PathVariable("gameId") gameId: Int,
+        @PathVariable("cheatId") cheatId: Int
+    ): Cheat {
+        processResult(result = gameFacade.get(id = gameId))
+        return processResult(result = cheatFacade.get(id = cheatId))!!
     }
 
     /**
@@ -42,8 +53,7 @@ class CheatController(private val cheatFacade: CheatFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * Game ID is null
-     *  * Game doesn't exist in cheat storage
+     *  * Game doesn't exist in data storage
      *  * Cheat ID isn't null
      *  * Setting for game is null
      *  * Setting for cheat is null
@@ -60,25 +70,11 @@ class CheatController(private val cheatFacade: CheatFacade) : AbstractController
      */
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    fun add(@PathVariable("gameId") gameId: Int,
-            @RequestBody cheat: Cheat) {
-        val game = Game(id = gameId,
-                name = null,
-                mediaCount = null,
-                wikiEn = null,
-                wikiCz = null,
-                format = null,
-                crack = null,
-                serialKey = null,
-                patch = null,
-                trainer = null,
-                trainerData = null,
-                editor = null,
-                saves = null,
-                otherData = null,
-                note = null,
-                position = null)
-        processResult(cheatFacade.add(game, cheat))
+    fun add(
+        @PathVariable("gameId") gameId: Int,
+        @RequestBody cheat: Cheat
+    ) {
+        processResult(result = cheatFacade.add(parent = gameId, data = cheat))
     }
 
     /**
@@ -86,6 +82,7 @@ class CheatController(private val cheatFacade: CheatFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
+     *  * Game doesn't exist in data storage
      *  * ID is null
      *  * Setting for game is null
      *  * Setting for cheat is null
@@ -102,9 +99,12 @@ class CheatController(private val cheatFacade: CheatFacade) : AbstractController
      */
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun update(@PathVariable("gameId") gameId: Int,
-               @RequestBody cheat: Cheat) {
-        processResult(cheatFacade.update(cheat))
+    fun update(
+        @PathVariable("gameId") gameId: Int,
+        @RequestBody cheat: Cheat
+    ) {
+        processResult(result = gameFacade.get(id = gameId))
+        processResult(result = cheatFacade.update(data = cheat))
     }
 
     /**
@@ -112,6 +112,7 @@ class CheatController(private val cheatFacade: CheatFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
+     *  * Game doesn't exist in data storage
      *  * Cheat doesn't exist in data storage
      *
      * @param gameId game ID
@@ -119,10 +120,12 @@ class CheatController(private val cheatFacade: CheatFacade) : AbstractController
      */
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun remove(@PathVariable("gameId") gameId: Int,
-               @PathVariable("id") id: Int) {
-        val cheat = Cheat(id = id, gameSetting = null, cheatSetting = null, position = null, data = null)
-        processResult(cheatFacade.remove(cheat))
+    fun remove(
+        @PathVariable("gameId") gameId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = gameFacade.get(id = gameId))
+        processResult(result = cheatFacade.remove(id = id))
     }
 
     /**
@@ -130,7 +133,6 @@ class CheatController(private val cheatFacade: CheatFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Game doesn't exist in data storage
      *
      * @param gameId game ID
@@ -138,23 +140,7 @@ class CheatController(private val cheatFacade: CheatFacade) : AbstractController
      */
     @GetMapping
     fun findCheatByGame(@PathVariable("gameId") gameId: Int): Cheat? {
-        val game = Game(id = gameId,
-                name = null,
-                mediaCount = null,
-                wikiEn = null,
-                wikiCz = null,
-                format = null,
-                crack = null,
-                serialKey = null,
-                patch = null,
-                trainer = null,
-                trainerData = null,
-                editor = null,
-                saves = null,
-                otherData = null,
-                note = null,
-                position = null)
-        return processResult(cheatFacade.find(game))?.firstOrNull()
+        return processResult(result = cheatFacade.find(parent = gameId))?.firstOrNull()
     }
 
 }

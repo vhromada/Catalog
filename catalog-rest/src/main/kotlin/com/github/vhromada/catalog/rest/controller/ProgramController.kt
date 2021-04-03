@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("programController")
 @RequestMapping("/catalog/programs")
-class ProgramController(private val programFacade: ProgramFacade) : AbstractController() {
+class ProgramController(
+    private val programFacade: ProgramFacade
+) : AbstractController() {
 
     /**
      * Returns list of programs.
@@ -30,7 +32,7 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
      */
     @GetMapping
     fun getPrograms(): List<Program> {
-        return processResult(programFacade.getAll())!!
+        return processResult(result = programFacade.getAll())!!
     }
 
     /**
@@ -39,18 +41,18 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun newData() {
-        processResult(programFacade.newData())
+        processResult(result = programFacade.newData())
     }
 
     /**
-     * Returns program with ID or null if there isn't such program.
+     * Returns program with ID.
      *
      * @param id ID
-     * @return program with ID or null if there isn't such program
+     * @return program with ID
      */
     @GetMapping("/{id}")
-    fun getProgram(@PathVariable("id") id: Int): Program? {
-        return processResult(programFacade.get(id))
+    fun getProgram(@PathVariable("id") id: Int): Program {
+        return processResult(result = programFacade.get(id = id))!!
     }
 
     /**
@@ -74,7 +76,7 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     fun add(@RequestBody program: Program) {
-        processResult(programFacade.add(program))
+        processResult(result = programFacade.add(data = program))
     }
 
     /**
@@ -99,7 +101,7 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody program: Program) {
-        processResult(programFacade.update(program))
+        processResult(result = programFacade.update(data = program))
     }
 
     /**
@@ -114,18 +116,7 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun remove(@PathVariable("id") id: Int) {
-        val program = Program(id = id,
-                name = null,
-                mediaCount = null,
-                wikiEn = null,
-                wikiCz = null,
-                format = null,
-                crack = null,
-                serialKey = null,
-                otherData = null,
-                note = null,
-                position = null)
-        processResult(programFacade.remove(program))
+        processResult(result = programFacade.remove(id = id))
     }
 
     /**
@@ -133,15 +124,14 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Program doesn't exist in data storage
      *
-     * @param program program
+     * @param id ID
      */
-    @PostMapping("/duplicate")
+    @PostMapping("/duplicate/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun duplicate(@RequestBody program: Program) {
-        processResult(programFacade.duplicate(program))
+    fun duplicate(@PathVariable("id") id: Int) {
+        processResult(result = programFacade.duplicate(id = id))
     }
 
     /**
@@ -149,16 +139,15 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Program can't be moved up
      *  * Program doesn't exist in data storage
      *
-     * @param program program
+     * @param id ID
      */
-    @PostMapping("/moveUp")
+    @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveUp(@RequestBody program: Program) {
-        processResult(programFacade.moveUp(program))
+    fun moveUp(@PathVariable("id") id: Int) {
+        processResult(result = programFacade.moveUp(id = id))
     }
 
     /**
@@ -166,16 +155,15 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Program can't be moved down
      *  * Program doesn't exist in data storage
      *
-     * @param program program
+     * @param id ID
      */
-    @PostMapping("/moveDown")
+    @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveDown(@RequestBody program: Program) {
-        processResult(programFacade.moveDown(program))
+    fun moveDown(@PathVariable("id") id: Int) {
+        processResult(result = programFacade.moveDown(id = id))
     }
 
     /**
@@ -184,7 +172,7 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
     @PostMapping("/updatePositions")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updatePositions() {
-        processResult(programFacade.updatePositions())
+        processResult(result = programFacade.updatePositions())
     }
 
     /**
@@ -194,7 +182,7 @@ class ProgramController(private val programFacade: ProgramFacade) : AbstractCont
      */
     @GetMapping("/totalMedia")
     fun totalMediaCount(): Int {
-        return processResult(programFacade.getTotalMediaCount())!!
+        return processResult(result = programFacade.getTotalMediaCount())!!
     }
 
 }

@@ -5,20 +5,21 @@ import com.github.vhromada.catalog.utils.AuditUtils
 import com.github.vhromada.catalog.utils.GenreUtils
 import com.github.vhromada.catalog.utils.MediumUtils
 import com.github.vhromada.catalog.utils.MovieUtils
+import com.github.vhromada.catalog.utils.TestConstants
+import com.github.vhromada.catalog.utils.fillAudit
 import com.github.vhromada.catalog.utils.updated
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.data.domain.Sort
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
 
 /**
  * A class represents integration test for class [MovieRepository].
@@ -34,28 +35,27 @@ class MovieRepositoryIntegrationTest {
     /**
      * Instance of [EntityManager]
      */
-    @Autowired
-    @Qualifier("containerManagedEntityManager")
+    @PersistenceContext
     private lateinit var entityManager: EntityManager
 
     /**
      * Instance of [MovieRepository]
      */
     @Autowired
-    private lateinit var movieRepository: MovieRepository
+    private lateinit var repository: MovieRepository
 
     /**
      * Test method for get movies.
      */
     @Test
     fun getMovies() {
-        val movies = movieRepository.findAll(Sort.by("position", "id"))
+        val movies = repository.findAll()
 
-        MovieUtils.assertMoviesDeepEquals(MovieUtils.getMovies(), movies)
+        MovieUtils.assertDomainMoviesDeepEquals(expected = MovieUtils.getMovies(), actual = movies)
 
         assertSoftly {
-            it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
         }
     }
 
@@ -63,19 +63,18 @@ class MovieRepositoryIntegrationTest {
      * Test method for get movie.
      */
     @Test
-    @Suppress("UsePropertyAccessSyntax")
     fun getMovie() {
         for (i in 1..MovieUtils.MOVIES_COUNT) {
-            val movie = movieRepository.findById(i).orElse(null)
+            val movie = repository.findById(i).orElse(null)
 
-            MovieUtils.assertMovieDeepEquals(MovieUtils.getMovie(i), movie)
+            MovieUtils.assertMovieDeepEquals(expected = MovieUtils.getMovieDomain(index = i), actual = movie)
         }
 
-        assertThat(movieRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
+        assertThat(repository.findById(Int.MAX_VALUE)).isNotPresent
 
         assertSoftly {
-            it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
         }
     }
 
@@ -84,50 +83,55 @@ class MovieRepositoryIntegrationTest {
      */
     @Test
     fun add() {
-        val audit = AuditUtils.getAudit()
-        val movie = MovieUtils.newMovieDomain(null)
-                .copy(media = listOf(MediumUtils.newMediumDomain(null).copy(audit = audit)),
-                        position = MovieUtils.MOVIES_COUNT,
-                        genres = listOf(GenreUtils.getGenre(entityManager, 1)!!),
-                        audit = audit)
+        val movie = MovieUtils.newMovieDomain(id = null)
+            .copy(position = MovieUtils.MOVIES_COUNT, genres = listOf(GenreUtils.getGenre(entityManager = entityManager, id = 1)!!))
+        val expectedMovie = MovieUtils.newMovieDomain(id = MovieUtils.MOVIES_COUNT + 1)
+            .copy(
+                media = listOf(MediumUtils.newMediumDomain(id = MediumUtils.MEDIA_COUNT + 1).fillAudit(audit = AuditUtils.newAudit())),
+                picture = null,
+                genres = listOf(GenreUtils.getGenreDomain(index = 1))
+            ).fillAudit(audit = AuditUtils.newAudit())
 
-        movieRepository.save(movie)
-
-        assertThat(movie.id).isEqualTo(MovieUtils.MOVIES_COUNT + 1)
-
-        val addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1)!!
-        val expectedAddedMovie = MovieUtils.newMovieDomain(null)
-                .copy(id = MovieUtils.MOVIES_COUNT + 1,
-                        media = listOf(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1).copy(audit = audit)),
-                        position = MovieUtils.MOVIES_COUNT,
-                        genres = listOf(GenreUtils.getGenreDomain(1)),
-                        audit = audit)
-        MovieUtils.assertMovieDeepEquals(expectedAddedMovie, addedMovie)
+        repository.save(movie)
 
         assertSoftly {
-            it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT + 1)
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 1)
+            it.assertThat(movie.id).isEqualTo(MovieUtils.MOVIES_COUNT + 1)
+            it.assertThat(movie.createdUser).isEqualTo(TestConstants.ACCOUNT.uuid!!)
+            it.assertThat(movie.createdTime).isEqualTo(TestConstants.TIME)
+            it.assertThat(movie.updatedUser).isEqualTo(TestConstants.ACCOUNT.uuid!!)
+            it.assertThat(movie.updatedTime).isEqualTo(TestConstants.TIME)
+        }
+
+        val addedMovie = MovieUtils.getMovie(entityManager, MovieUtils.MOVIES_COUNT + 1)!!
+        assertThat(addedMovie).isNotNull
+        MovieUtils.assertMovieDeepEquals(expected = expectedMovie, actual = addedMovie)
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT + 1)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT + 1)
         }
     }
 
     /**
-     * Test method for update movie with no media change.
+     * Test method for update movie.
      */
     @Test
-    fun updateNoMediaChange() {
-        val movie = MovieUtils.updateMovie(entityManager, 1)
+    fun update() {
+        val movie = MovieUtils.updateMovie(entityManager = entityManager, id = 1)
+        val expectedMovie = MovieUtils.getMovieDomain(index = 1)
+            .updated()
+            .copy(position = MovieUtils.POSITION)
+            .fillAudit(audit = AuditUtils.updatedAudit())
 
-        movieRepository.save(movie)
+        repository.saveAndFlush(movie)
 
-        val updatedMovie = MovieUtils.getMovie(entityManager, 1)!!
-        val expectedUpdatedMovie = MovieUtils.getMovie(1)
-                .updated()
-                .copy(position = MovieUtils.POSITION)
-        MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie)
+        val updatedMovie = MovieUtils.getMovie(entityManager = entityManager, id = 1)
+        assertThat(updatedMovie).isNotNull
+        MovieUtils.assertMovieDeepEquals(expected = expectedMovie, actual = updatedMovie!!)
 
         assertSoftly {
-            it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
         }
     }
 
@@ -137,21 +141,23 @@ class MovieRepositoryIntegrationTest {
     @Test
     @DirtiesContext
     fun updateAddedMedium() {
-        val audit = AuditUtils.getAudit()
-        var movie = MovieUtils.updateMovie(entityManager, 1)
+        var movie = MovieUtils.updateMovie(entityManager = entityManager, id = 1)
         val media = movie.media.toMutableList()
-        media.add(MediumUtils.newMediumDomain(null).copy(audit = audit))
+        media.add(MediumUtils.newMediumDomain(id = null))
         movie = movie.copy(media = media)
+            .fillAudit(audit = movie)
+        var expectedMovie = MovieUtils.getMovieDomain(index = 1)
+            .updated()
+        val expectedMedia = expectedMovie.media.toMutableList()
+        expectedMedia.add(MediumUtils.newMediumDomain(id = MediumUtils.MEDIA_COUNT + 1).fillAudit(audit = AuditUtils.newAudit()))
+        expectedMovie = expectedMovie.copy(media = expectedMedia)
+            .fillAudit(audit = AuditUtils.updatedAudit())
 
-        movieRepository.save(movie)
+        repository.saveAndFlush(movie)
 
-        val updatedMovie = MovieUtils.getMovie(entityManager, 1)!!
-        var expectedUpdatedMovie = MovieUtils.getMovie(1)
-                .updated()
-        val expectedMedia = expectedUpdatedMovie.media.toMutableList()
-        expectedMedia.add(MediumUtils.newMediumDomain(MediumUtils.MEDIA_COUNT + 1).copy(audit = audit))
-        expectedUpdatedMovie = expectedUpdatedMovie.copy(media = expectedMedia, position = MovieUtils.POSITION)
-        MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie)
+        val updatedMovie = MovieUtils.getMovie(entityManager, 1)
+        assertThat(updatedMovie).isNotNull
+        MovieUtils.assertMovieDeepEquals(expected = expectedMovie, actual = updatedMovie!!)
 
         assertSoftly {
             it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
@@ -164,21 +170,23 @@ class MovieRepositoryIntegrationTest {
      */
     @Test
     fun updateRemovedMedium() {
-        val mediaCount = MovieUtils.getMovie(1).media.size
-        val movie = MovieUtils.updateMovie(entityManager, 1)
-                .copy(media = emptyList())
+        var movie = MovieUtils.updateMovie(entityManager = entityManager, id = 1)
+        movie = movie.copy(media = emptyList())
+            .fillAudit(audit = movie)
+        val expectedMovie = MovieUtils.getMovieDomain(index = 1)
+            .updated()
+            .copy(media = emptyList())
+            .fillAudit(audit = AuditUtils.updatedAudit())
 
-        movieRepository.save(movie)
+        repository.saveAndFlush(movie)
 
-        val updatedMovie = MovieUtils.getMovie(entityManager, 1)!!
-        val expectedUpdatedMovie = MovieUtils.getMovie(1)
-                .updated()
-                .copy(media = emptyList(), position = MovieUtils.POSITION)
-        MovieUtils.assertMovieDeepEquals(expectedUpdatedMovie, updatedMovie)
+        val updatedMovie = MovieUtils.getMovie(entityManager, 1)
+        assertThat(updatedMovie).isNotNull
+        MovieUtils.assertMovieDeepEquals(expected = expectedMovie, actual = updatedMovie!!)
 
         assertSoftly {
             it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - mediaCount)
+            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - MovieUtils.getMovieDomain(index = 1).media.size)
         }
     }
 
@@ -187,15 +195,13 @@ class MovieRepositoryIntegrationTest {
      */
     @Test
     fun remove() {
-        val mediaCount = MovieUtils.getMovie(1).media.size
+        repository.delete(MovieUtils.getMovie(entityManager = entityManager, id = 1)!!)
 
-        movieRepository.delete(MovieUtils.getMovie(entityManager, 1)!!)
-
-        assertThat(MovieUtils.getMovie(entityManager, 1)).isNull()
+        assertThat(MovieUtils.getMovie(entityManager = entityManager, id = 1)).isNull()
 
         assertSoftly {
-            it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT - 1)
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - mediaCount)
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT - 1)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT - MovieUtils.getMovieDomain(index = 1).media.size)
         }
     }
 
@@ -204,11 +210,11 @@ class MovieRepositoryIntegrationTest {
      */
     @Test
     fun removeAll() {
-        movieRepository.deleteAll()
+        repository.deleteAll()
 
         assertSoftly {
-            it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(0)
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(0)
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(0)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(0)
         }
     }
 
@@ -216,14 +222,34 @@ class MovieRepositoryIntegrationTest {
      * Test method for get movies for user.
      */
     @Test
-    fun findByAuditCreatedUser() {
-        val movies = movieRepository.findByAuditCreatedUser(AuditUtils.getAudit().createdUser)
+    fun findByCreatedUser() {
+        val movies = repository.findByCreatedUser(user = AuditUtils.getAudit().createdUser!!)
 
-        MovieUtils.assertMoviesDeepEquals(MovieUtils.getMovies(), movies)
+        MovieUtils.assertDomainMoviesDeepEquals(expected = MovieUtils.getMovies(), actual = movies)
 
         assertSoftly {
-            it.assertThat(MovieUtils.getMoviesCount(entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
-            it.assertThat(MediumUtils.getMediaCount(entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for get movie by id for user.
+     */
+    @Test
+    fun findByIdAndCreatedUser() {
+        val user = AuditUtils.getAudit().createdUser!!
+        for (i in 1..MovieUtils.MOVIES_COUNT) {
+            val author = repository.findByIdAndCreatedUser(id = i, user = user).orElse(null)
+
+            MovieUtils.assertMovieDeepEquals(expected = MovieUtils.getMovieDomain(index = i), actual = author)
+        }
+
+        assertThat(repository.findByIdAndCreatedUser(id = Int.MAX_VALUE, user = user)).isNotPresent
+
+        assertSoftly {
+            it.assertThat(MovieUtils.getMoviesCount(entityManager = entityManager)).isEqualTo(MovieUtils.MOVIES_COUNT)
+            it.assertThat(MediumUtils.getMediaCount(entityManager = entityManager)).isEqualTo(MediumUtils.MEDIA_COUNT)
         }
     }
 

@@ -14,28 +14,29 @@ class SeasonMapper : Mapper<Season, com.github.vhromada.catalog.domain.Season> {
 
     override fun map(source: Season): com.github.vhromada.catalog.domain.Season {
         return com.github.vhromada.catalog.domain.Season(
-                id = source.id,
-                number = source.number!!,
-                startYear = source.startYear!!,
-                endYear = source.endYear!!,
-                language = source.language!!,
-                subtitles = source.subtitles!!.filterNotNull(),
-                note = source.note,
-                position = source.position,
-                episodes = emptyList(),
-                audit = null)
+            id = source.id,
+            number = source.number!!,
+            startYear = source.startYear!!,
+            endYear = source.endYear!!,
+            language = source.language!!,
+            subtitles = source.subtitles!!.filterNotNull(),
+            note = source.note,
+            position = source.position,
+            episodes = mutableListOf()
+        )
     }
 
     override fun mapBack(source: com.github.vhromada.catalog.domain.Season): Season {
         return Season(
-                id = source.id,
-                number = source.number,
-                startYear = source.startYear,
-                endYear = source.endYear,
-                language = source.language,
-                subtitles = source.subtitles,
-                note = source.note,
-                position = source.position)
+            id = source.id,
+            number = source.number,
+            startYear = source.startYear,
+            endYear = source.endYear,
+            language = source.language,
+            subtitles = source.subtitles,
+            note = source.note,
+            position = source.position
+        )
     }
 
 }

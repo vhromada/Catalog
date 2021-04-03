@@ -14,17 +14,18 @@ class PictureMapper : Mapper<Picture, com.github.vhromada.catalog.domain.Picture
 
     override fun map(source: Picture): com.github.vhromada.catalog.domain.Picture {
         return com.github.vhromada.catalog.domain.Picture(
-                id = source.id,
-                content = source.content!!.copyOf(),
-                position = source.position,
-                audit = null)
+            id = source.id,
+            content = source.content!!.copyOf(),
+            position = source.position
+        )
     }
 
     override fun mapBack(source: com.github.vhromada.catalog.domain.Picture): Picture {
         return Picture(
-                id = source.id,
-                content = source.content.copyOf(),
-                position = source.position)
+            id = source.id,
+            content = source.content.copyOf(),
+            position = source.position
+        )
     }
 
 }

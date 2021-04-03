@@ -14,21 +14,22 @@ class SongMapper : Mapper<Song, com.github.vhromada.catalog.domain.Song> {
 
     override fun map(source: Song): com.github.vhromada.catalog.domain.Song {
         return com.github.vhromada.catalog.domain.Song(
-                id = source.id,
-                name = source.name!!,
-                length = source.length!!,
-                note = source.note,
-                position = source.position,
-                audit = null)
+            id = source.id,
+            name = source.name!!,
+            length = source.length!!,
+            note = source.note,
+            position = source.position
+        )
     }
 
     override fun mapBack(source: com.github.vhromada.catalog.domain.Song): Song {
         return Song(
-                id = source.id,
-                name = source.name,
-                length = source.length,
-                note = source.note,
-                position = source.position)
+            id = source.id,
+            name = source.name,
+            length = source.length,
+            note = source.note,
+            position = source.position
+        )
     }
 
 }

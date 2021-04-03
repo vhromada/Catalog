@@ -16,50 +16,50 @@ import javax.validation.constraints.NotNull
  */
 @Years
 data class SeasonFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Number of season
+     */
+    @field:Range(min = 1, max = 100)
+    val number: String?,
 
-        /**
-         * Number of season
-         */
-        @field:Range(min = 1, max = 100)
-        val number: String?,
+    /**
+     * Starting year
+     */
+    @field:DateRange(Constants.MIN_YEAR)
+    val startYear: String?,
 
-        /**
-         * Starting year
-         */
-        @field:DateRange(Constants.MIN_YEAR)
-        val startYear: String?,
+    /**
+     * Ending year
+     */
+    @field:DateRange(Constants.MIN_YEAR)
+    val endYear: String?,
 
-        /**
-         * Ending year
-         */
-        @field:DateRange(Constants.MIN_YEAR)
-        val endYear: String?,
+    /**
+     * Language
+     */
+    @field:NotNull
+    val language: Language?,
 
-        /**
-         * Language
-         */
-        @field:NotNull
-        val language: Language?,
+    /**
+     * Subtitles
+     */
+    val subtitles: List<Language>?,
 
-        /**
-         * Subtitles
-         */
-        val subtitles: List<Language>?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        val position: Int?) : Serializable {
+    /**
+     * Position
+     */
+    val position: Int?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

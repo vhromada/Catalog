@@ -14,14 +14,16 @@ import org.springframework.stereotype.Component
 class TimeMapper : Mapper<Int, TimeFO> {
 
     override fun map(source: Int): TimeFO {
-        val time = Time(source)
-        return TimeFO(hours = time.getData(Time.TimeData.HOUR).toString(),
-                minutes = time.getData(Time.TimeData.MINUTE).toString(),
-                seconds = time.getData(Time.TimeData.SECOND).toString())
+        val time = Time(length = source)
+        return TimeFO(
+            hours = time.getData(dataType = Time.TimeData.HOUR).toString(),
+            minutes = time.getData(dataType = Time.TimeData.MINUTE).toString(),
+            seconds = time.getData(dataType = Time.TimeData.SECOND).toString()
+        )
     }
 
     override fun mapBack(source: TimeFO): Int {
-        return Time(source.hours!!.toInt(), source.minutes!!.toInt(), source.seconds!!.toInt()).length
+        return Time(hours = source.hours!!.toInt(), minutes = source.minutes!!.toInt(), seconds = source.seconds!!.toInt()).length
     }
 
 }

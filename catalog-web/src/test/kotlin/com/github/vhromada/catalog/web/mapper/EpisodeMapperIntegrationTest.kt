@@ -2,8 +2,8 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Episode
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.EpisodeUtils
 import com.github.vhromada.catalog.web.fo.EpisodeFO
+import com.github.vhromada.catalog.web.utils.EpisodeUtils
 import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,9 +33,9 @@ class EpisodeMapperIntegrationTest {
     fun map() {
         val episode = EpisodeUtils.getEpisode()
 
-        val episodeFO = mapper.map(episode)
+        val episodeFO = mapper.map(source = episode)
 
-        EpisodeUtils.assertEpisodeDeepEquals(episodeFO, episode)
+        EpisodeUtils.assertEpisodeDeepEquals(expected = episode, actual = episodeFO)
     }
 
     /**
@@ -45,9 +45,9 @@ class EpisodeMapperIntegrationTest {
     fun mapBack() {
         val episodeFO = EpisodeUtils.getEpisodeFO()
 
-        val episode = mapper.mapBack(episodeFO)
+        val episode = mapper.mapBack(source = episodeFO)
 
-        EpisodeUtils.assertEpisodeDeepEquals(episodeFO, episode)
+        EpisodeUtils.assertEpisodeDeepEquals(expected = episodeFO, actual = episode)
     }
 
 }

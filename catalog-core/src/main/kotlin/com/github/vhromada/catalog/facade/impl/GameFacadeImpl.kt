@@ -2,13 +2,11 @@ package com.github.vhromada.catalog.facade.impl
 
 import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.facade.GameFacade
-import com.github.vhromada.common.facade.AbstractMovableParentFacade
+import com.github.vhromada.common.facade.AbstractParentFacade
 import com.github.vhromada.common.mapper.Mapper
-import com.github.vhromada.common.provider.AccountProvider
-import com.github.vhromada.common.provider.TimeProvider
 import com.github.vhromada.common.result.Result
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.validator.MovableValidator
+import com.github.vhromada.common.service.ParentService
+import com.github.vhromada.common.validator.Validator
 import org.springframework.stereotype.Component
 
 /**
@@ -18,19 +16,31 @@ import org.springframework.stereotype.Component
  */
 @Component("gameFacade")
 class GameFacadeImpl(
-        gameService: MovableService<com.github.vhromada.catalog.domain.Game>,
-        accountProvider: AccountProvider,
-        timeProvider: TimeProvider,
-        mapper: Mapper<Game, com.github.vhromada.catalog.domain.Game>,
-        gameValidator: MovableValidator<Game>) : AbstractMovableParentFacade<Game, com.github.vhromada.catalog.domain.Game>(gameService, accountProvider, timeProvider, mapper, gameValidator), GameFacade {
+    private val gameService: ParentService<com.github.vhromada.catalog.domain.Game>,
+    mapper: Mapper<Game, com.github.vhromada.catalog.domain.Game>,
+    gameValidator: Validator<Game, com.github.vhromada.catalog.domain.Game>
+) : AbstractParentFacade<Game, com.github.vhromada.catalog.domain.Game>(parentService = gameService, mapper = mapper, validator = gameValidator), GameFacade {
 
-    override fun getTotalMediaCount(): Result<Int> {
-        return Result.of(service.getAll().sumBy { it.mediaCount })
+    @Suppress("DuplicatedCode")
+    override fun updateData(data: Game): Result<Unit> {
+        val storedGame = gameService.get(id = data.id!!)
+        val validationResult = validator.validateExists(data = storedGame)
+        if (validationResult.isOk()) {
+            val game = mapper.map(source = data)
+            game.createdUser = storedGame.get().createdUser
+            game.createdTime = storedGame.get().createdTime
+            gameService.update(data = game)
+        }
+        return validationResult
     }
 
-    override fun getDataForUpdate(data: Game): com.github.vhromada.catalog.domain.Game {
-        return super.getDataForUpdate(data)
-                .copy(cheat = service.get(data.id!!).get().cheat)
+    override fun addData(data: Game): Result<Unit> {
+        gameService.add(data = mapper.map(source = data))
+        return Result()
+    }
+
+    override fun getTotalMediaCount(): Result<Int> {
+        return Result.of(data = gameService.getAll().sumBy { it.mediaCount })
     }
 
 }

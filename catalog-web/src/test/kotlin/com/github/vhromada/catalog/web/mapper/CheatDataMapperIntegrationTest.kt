@@ -2,8 +2,8 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.CheatData
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.CheatDataUtils
 import com.github.vhromada.catalog.web.fo.CheatDataFO
+import com.github.vhromada.catalog.web.utils.CheatDataUtils
 import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,9 +33,9 @@ class CheatDataMapperIntegrationTest {
     fun map() {
         val cheatData = CheatDataUtils.getCheatData()
 
-        val cheatDataFO = mapper.map(cheatData)
+        val cheatDataFO = mapper.map(source = cheatData)
 
-        CheatDataUtils.assertCheatDataDeepEquals(cheatDataFO, cheatData)
+        CheatDataUtils.assertCheatDataDeepEquals(expected = cheatData, actual = cheatDataFO)
     }
 
     /**
@@ -45,9 +45,9 @@ class CheatDataMapperIntegrationTest {
     fun mapBack() {
         val cheatDataFO = CheatDataUtils.getCheatDataFO()
 
-        val cheatData = mapper.mapBack(cheatDataFO)
+        val cheatData = mapper.mapBack(source = cheatDataFO)
 
-        CheatDataUtils.assertCheatDataDeepEquals(cheatDataFO, cheatData)
+        CheatDataUtils.assertCheatDataDeepEquals(expected = cheatDataFO, actual = cheatData)
     }
 
 }

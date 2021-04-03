@@ -1,8 +1,9 @@
 package com.github.vhromada.catalog.domain
 
 import com.github.vhromada.common.domain.Audit
-import com.github.vhromada.common.domain.AuditEntity
 import com.github.vhromada.common.entity.Language
+import com.github.vhromada.common.entity.Movable
+import com.github.vhromada.common.utils.sorted
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.util.Objects
@@ -18,6 +19,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.OrderBy
 import javax.persistence.SequenceGenerator
@@ -31,72 +33,81 @@ import javax.persistence.Table
 @Entity
 @Table(name = "seasons")
 data class Season(
+    /**
+     * ID
+     */
+    @Id
+    @SequenceGenerator(name = "season_generator", sequenceName = "seasons_sq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "season_generator")
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        @Id
-        @SequenceGenerator(name = "season_generator", sequenceName = "seasons_sq", allocationSize = 1)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "season_generator")
-        override var id: Int?,
+    /**
+     * Number of season
+     */
+    @Column(name = "season_number")
+    val number: Int,
 
-        /**
-         * Number of season
-         */
-        @Column(name = "season_number")
-        val number: Int,
+    /**
+     * Starting year
+     */
+    @Column(name = "start_year")
+    val startYear: Int,
 
-        /**
-         * Starting year
-         */
-        @Column(name = "start_year")
-        val startYear: Int,
+    /**
+     * Ending year
+     */
+    @Column(name = "end_year")
+    val endYear: Int,
 
-        /**
-         * Ending year
-         */
-        @Column(name = "end_year")
-        val endYear: Int,
+    /**
+     * Language
+     */
+    @Column(name = "season_language")
+    @Enumerated(EnumType.STRING)
+    val language: Language,
 
-        /**
-         * Language
-         */
-        @Column(name = "season_language")
-        @Enumerated(EnumType.STRING)
-        val language: Language,
+    /**
+     * Subtitles
+     */
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "season_subtitles", joinColumns = [JoinColumn(name = "season")])
+    @Enumerated(EnumType.STRING)
+    @Fetch(FetchMode.SELECT)
+    val subtitles: List<Language>,
 
-        /**
-         * Subtitles
-         */
-        @ElementCollection(fetch = FetchType.EAGER)
-        @CollectionTable(name = "season_subtitles", joinColumns = [JoinColumn(name = "season")])
-        @Enumerated(EnumType.STRING)
-        @Fetch(FetchMode.SELECT)
-        val subtitles: List<Language>,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
+    /**
+     * Position
+     */
+    override var position: Int?,
 
-        /**
-         * Position
-         */
-        override var position: Int?,
+    /**
+     * Episodes
+     */
+    @OneToMany(mappedBy = "season", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OrderBy("position, id")
+    @Fetch(FetchMode.SELECT)
+    val episodes: MutableList<Episode>
+) : Audit(), Movable {
 
-        /**
-         * Episodes
-         */
-        @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
-        @JoinColumn(name = "season", referencedColumnName = "id")
-        @OrderBy("position, id")
-        @Fetch(FetchMode.SELECT)
-        val episodes: List<Episode>,
+    /**
+     * Show
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tv_show")
+    var show: Show? = null
 
-        /**
-         * Audit
-         */
-        override var audit: Audit?) : AuditEntity(audit) {
+    override fun updatePosition(position: Int) {
+        super.updatePosition(position)
+
+        for (i in episodes.sorted().indices) {
+            episodes[i].updatePosition(i)
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -23,7 +23,7 @@ object ConverterUtils {
      */
     @JvmStatic
     fun convertLength(length: Int): String {
-        return Time(length).toString()
+        return Time(length = length).toString()
     }
 
     /**
@@ -78,7 +78,7 @@ object ConverterUtils {
             totalLength += medium.length!!
         }
 
-        return Time(totalLength).toString()
+        return Time(length = totalLength).toString()
     }
 
     /**
@@ -93,12 +93,12 @@ object ConverterUtils {
         if (game.crack!!) {
             result.append("Crack")
         }
-        addToResult(result, game.serialKey!!, "serial key")
-        addToResult(result, game.patch!!, "patch")
-        addToResult(result, game.trainer!!, "trainer")
-        addToResult(result, game.trainerData!!, "data for trainer")
-        addToResult(result, game.editor!!, "editor")
-        addToResult(result, game.saves!!, "saves")
+        addToResult(result = result, value = game.serialKey!!, data = "serial key")
+        addToResult(result = result, value = game.patch!!, data = "patch")
+        addToResult(result = result, value = game.trainer!!, data = "trainer")
+        addToResult(result = result, value = game.trainerData!!, data = "data for trainer")
+        addToResult(result = result, value = game.editor!!, data = "editor")
+        addToResult(result = result, value = game.saves!!, data = "saves")
         if (!game.otherData.isNullOrBlank()) {
             if (result.isNotEmpty()) {
                 result.append(", ")
@@ -117,7 +117,7 @@ object ConverterUtils {
      */
     @JvmStatic
     fun convertGameAdditionalDataContent(game: Game): Boolean {
-        return convertGameAdditionalData(game).isNotEmpty()
+        return convertGameAdditionalData(game = game).isNotEmpty()
     }
 
     /**
@@ -143,7 +143,7 @@ object ConverterUtils {
         if (program.crack!!) {
             result.append("Crack")
         }
-        addToResult(result, program.serialKey!!, "serial key")
+        addToResult(result = result, value = program.serialKey!!, "serial key")
         if (!program.otherData.isNullOrBlank()) {
             if (result.isNotEmpty()) {
                 result.append(", ")
@@ -162,7 +162,7 @@ object ConverterUtils {
      */
     @JvmStatic
     fun convertProgramAdditionalDataContent(program: Program): Boolean {
-        return convertProgramAdditionalData(program).isNotEmpty()
+        return convertProgramAdditionalData(program = program).isNotEmpty()
     }
 
     /**

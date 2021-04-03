@@ -3,7 +3,6 @@ package com.github.vhromada.catalog.web.controller
 import com.github.vhromada.catalog.common.Format
 import com.github.vhromada.catalog.entity.Program
 import com.github.vhromada.catalog.facade.ProgramFacade
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.ProgramFO
 import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
@@ -24,8 +23,9 @@ import javax.validation.Valid
 @Controller("programController")
 @RequestMapping("/programs")
 class ProgramController(
-        private val programFacade: ProgramFacade,
-        private val programMapper: Mapper<Program, ProgramFO>) : AbstractResultController() {
+    private val programFacade: ProgramFacade,
+    private val programMapper: Mapper<Program, ProgramFO>
+) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -64,22 +64,16 @@ class ProgramController(
      * @param model model
      * @param id    ID of showing program
      * @return view for page with detail of program
-     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/{id}/detail")
     fun showDetail(model: Model, @PathVariable("id") id: Int): String {
-        val result = programFacade.get(id)
+        val result = programFacade.get(id = id)
         processResults(result)
 
-        val program = result.data
-        if (program != null) {
-            model.addAttribute("program", program)
-            model.addAttribute("title", "Program detail")
+        model.addAttribute("program", result.data)
+        model.addAttribute("title", "Program detail")
 
-            return "program/detail"
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return "program/detail"
     }
 
     /**
@@ -90,18 +84,20 @@ class ProgramController(
      */
     @GetMapping("/add")
     fun showAdd(model: Model): String {
-        val program = ProgramFO(id = null,
-                name = null,
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = null,
-                format = null,
-                crack = null,
-                serialKey = null,
-                otherData = null,
-                note = null,
-                position = null)
-        return createFormView(model, program, "Add program", "add")
+        val program = ProgramFO(
+            id = null,
+            name = null,
+            wikiEn = null,
+            wikiCz = null,
+            mediaCount = null,
+            format = null,
+            crack = null,
+            serialKey = null,
+            otherData = null,
+            note = null,
+            position = null
+        )
+        return createFormView(model = model, program = program, title = "Add program", action = "add")
     }
 
     /**
@@ -118,9 +114,9 @@ class ProgramController(
         require(program.id == null) { "ID must be null." }
 
         if (errors.hasErrors()) {
-            return createFormView(model, program, "Add program", "add")
+            return createFormView(model = model, program = program, title = "Add program", action = "add")
         }
-        processResults(programFacade.add(programMapper.mapBack(program)))
+        processResults(programFacade.add(data = programMapper.mapBack(source = program)))
 
         return LIST_REDIRECT_URL
     }
@@ -141,19 +137,13 @@ class ProgramController(
      * @param model model
      * @param id    ID of editing program
      * @return view for page for editing program
-     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("id") id: Int): String {
-        val result = programFacade.get(id)
+        val result = programFacade.get(id = id)
         processResults(result)
 
-        val program = result.data
-        return if (program != null) {
-            createFormView(model, programMapper.map(program), "Edit program", "edit")
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return createFormView(model = model, program = programMapper.map(source = result.data!!), title = "Edit program", action = "edit")
     }
 
     /**
@@ -164,16 +154,15 @@ class ProgramController(
      * @param errors  errors
      * @return view for redirect to page with list of programs (no errors) or view for page for editing program (errors)
      * @throws IllegalArgumentException if ID is null
-     * @throws IllegalRequestException  if program doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["update"])
     fun processEdit(model: Model, @ModelAttribute("program") @Valid program: ProgramFO, errors: Errors): String {
         require(program.id != null) { "ID mustn't be null." }
 
         if (errors.hasErrors()) {
-            return createFormView(model, program, "Edit program", "edit")
+            return createFormView(model = model, program = program, title = "Edit program", action = "edit")
         }
-        processResults(programFacade.update(processProgram(programMapper.mapBack(program))))
+        processResults(programFacade.update(data = programMapper.mapBack(source = program)))
 
         return LIST_REDIRECT_URL
     }
@@ -193,11 +182,10 @@ class ProgramController(
      *
      * @param id ID of duplicating program
      * @return view for redirect to page with list of programs
-     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("id") id: Int): String {
-        processResults(programFacade.duplicate(getProgram(id)))
+        processResults(programFacade.duplicate(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -207,11 +195,10 @@ class ProgramController(
      *
      * @param id ID of removing program
      * @return view for redirect to page with list of programs
-     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
-        processResults(programFacade.remove(getProgram(id)))
+        processResults(programFacade.remove(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -221,11 +208,10 @@ class ProgramController(
      *
      * @param id ID of moving program
      * @return view for redirect to page with list of programs
-     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
-        processResults(programFacade.moveUp(getProgram(id)))
+        processResults(programFacade.moveUp(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -235,11 +221,10 @@ class ProgramController(
      *
      * @param id ID of moving program
      * @return view for redirect to page with list of programs
-     * @throws IllegalRequestException if program doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
-        processResults(programFacade.moveDown(getProgram(id)))
+        processResults(programFacade.moveDown(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -254,47 +239,6 @@ class ProgramController(
         processResults(programFacade.updatePositions())
 
         return LIST_REDIRECT_URL
-    }
-
-    /**
-     * Returns program with ID.
-     *
-     * @param id ID
-     * @return program with ID
-     * @throws IllegalRequestException if program doesn't exist
-     */
-    private fun getProgram(id: Int): Program {
-        val program = Program(id = id,
-                name = null,
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = null,
-                format = null,
-                crack = null,
-                serialKey = null,
-                otherData = null,
-                note = null,
-                position = null)
-
-        return processProgram(program)
-    }
-
-    /**
-     * Returns processed program.
-     *
-     * @param program program for processing
-     * @return processed program
-     * @throws IllegalRequestException if program doesn't exist
-     */
-    private fun processProgram(program: Program): Program {
-        val programResult = programFacade.get(program.id!!)
-        processResults(programResult)
-
-        if (programResult.data != null) {
-            return program
-        }
-
-        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
     }
 
     /**
@@ -321,11 +265,6 @@ class ProgramController(
          * Redirect URL to list
          */
         private const val LIST_REDIRECT_URL = "redirect:/programs/list"
-
-        /**
-         * Message for illegal request
-         */
-        private const val ILLEGAL_REQUEST_MESSAGE = "Program doesn't exist."
 
     }
 

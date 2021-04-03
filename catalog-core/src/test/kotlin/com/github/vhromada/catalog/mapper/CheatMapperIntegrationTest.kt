@@ -3,7 +3,6 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Cheat
 import com.github.vhromada.catalog.utils.CheatUtils
-import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,17 +22,17 @@ class CheatMapperIntegrationTest {
      * Instance of [CheatMapper]
      */
     @Autowired
-    private lateinit var mapper: Mapper<Cheat, com.github.vhromada.catalog.domain.Cheat>
+    private lateinit var mapper: CheatMapper
 
     /**
      * Test method for [CheatMapper.map].
      */
     @Test
     fun map() {
-        val cheat = CheatUtils.newCheat(1)
+        val cheat = CheatUtils.newCheat(id = 1)
         val cheatDomain = mapper.map(cheat)
 
-        CheatUtils.assertCheatDeepEquals(cheat, cheatDomain)
+        CheatUtils.assertCheatDeepEquals(expected = cheat, actual = cheatDomain)
     }
 
     /**
@@ -41,10 +40,10 @@ class CheatMapperIntegrationTest {
      */
     @Test
     fun mapBack() {
-        val cheatDomain = CheatUtils.newCheatDomain(1)
+        val cheatDomain = CheatUtils.newCheatDomain(id = 1)
         val cheat = mapper.mapBack(cheatDomain)
 
-        CheatUtils.assertCheatDeepEquals(cheat, cheatDomain)
+        CheatUtils.assertCheatDeepEquals(expected = cheatDomain, actual = cheat)
     }
 
 }

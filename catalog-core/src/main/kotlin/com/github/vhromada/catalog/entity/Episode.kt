@@ -9,36 +9,36 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class Episode(
+    /**
+     * ID
+     */
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        override var id: Int?,
+    /**
+     * Number of episode
+     */
+    val number: Int?,
 
-        /**
-         * Number of episode
-         */
-        val number: Int?,
+    /**
+     * Name
+     */
+    val name: String?,
 
-        /**
-         * Name
-         */
-        val name: String?,
+    /**
+     * Length
+     */
+    val length: Int?,
 
-        /**
-         * Length
-         */
-        val length: Int?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        override var position: Int?) : Movable {
+    /**
+     * Position
+     */
+    override var position: Int?
+) : Movable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

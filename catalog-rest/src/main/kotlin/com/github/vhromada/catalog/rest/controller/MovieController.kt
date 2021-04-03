@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("movieController")
 @RequestMapping("/catalog/movies")
-class MovieController(private val movieFacade: MovieFacade) : AbstractController() {
+class MovieController(
+    private val movieFacade: MovieFacade
+) : AbstractController() {
 
     /**
      * Returns list of movies.
@@ -30,7 +32,7 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
      */
     @GetMapping
     fun getMovies(): List<Movie> {
-        return processResult(movieFacade.getAll())!!
+        return processResult(result = movieFacade.getAll())!!
     }
 
     /**
@@ -39,19 +41,19 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun newData() {
-        processResult(movieFacade.newData())
+        processResult(result = movieFacade.newData())
     }
 
     /**
-     * Returns movie with ID or null if there isn't such movie.
+     * Returns movie with ID.
      * <br></br>
      *
      * @param id ID
-     * @return movie with ID or null if there isn't such movie
+     * @return movie with ID
      */
     @GetMapping("/{id}")
-    fun getMovie(@PathVariable("id") id: Int): Movie? {
-        return processResult(movieFacade.get(id))!!
+    fun getMovie(@PathVariable("id") id: Int): Movie {
+        return processResult(result = movieFacade.get(id = id))!!
     }
 
     /**
@@ -90,7 +92,7 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     fun add(@RequestBody movie: Movie) {
-        processResult(movieFacade.add(movie))
+        processResult(result = movieFacade.add(data = movie))
     }
 
     /**
@@ -131,7 +133,7 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody movie: Movie) {
-        processResult(movieFacade.update(movie))
+        processResult(result = movieFacade.update(data = movie))
     }
 
     /**
@@ -146,22 +148,7 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun remove(@PathVariable("id") id: Int) {
-        val movie = Movie(id = id,
-                czechName = null,
-                originalName = null,
-                year = null,
-                language = null,
-                subtitles = null,
-                media = null,
-                csfd = null,
-                imdbCode = null,
-                wikiEn = null,
-                wikiCz = null,
-                picture = null,
-                note = null,
-                position = null,
-                genres = null)
-        processResult(movieFacade.remove(movie))
+        processResult(result = movieFacade.remove(id = id))
     }
 
     /**
@@ -169,15 +156,14 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Movie doesn't exist in data storage
      *
-     * @param movie movie
+     * @param id ID
      */
-    @PostMapping("/duplicate")
+    @PostMapping("/duplicate/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun duplicate(@RequestBody movie: Movie) {
-        processResult(movieFacade.duplicate(movie))
+    fun duplicate(@PathVariable("id") id: Int) {
+        processResult(result = movieFacade.duplicate(id = id))
     }
 
     /**
@@ -185,16 +171,15 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Movie can't be moved up
      *  * Movie doesn't exist in data storage
      *
-     * @param movie movie
+     * @param id ID
      */
-    @PostMapping("/moveUp")
+    @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveUp(@RequestBody movie: Movie) {
-        processResult(movieFacade.moveUp(movie))
+    fun moveUp(@PathVariable("id") id: Int) {
+        processResult(result = movieFacade.moveUp(id = id))
     }
 
     /**
@@ -202,16 +187,15 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Movie can't be moved down
      *  * Movie doesn't exist in data storage
      *
-     * @param movie movie
+     * @param id ID
      */
-    @PostMapping("/moveDown")
+    @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveDown(@RequestBody movie: Movie) {
-        processResult(movieFacade.moveDown(movie))
+    fun moveDown(@PathVariable("id") id: Int) {
+        processResult(result = movieFacade.moveDown(id = id))
     }
 
     /**
@@ -220,7 +204,7 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
     @PostMapping("/updatePositions")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updatePositions() {
-        processResult(movieFacade.updatePositions())
+        processResult(result = movieFacade.updatePositions())
     }
 
     /**
@@ -230,7 +214,7 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
      */
     @GetMapping("/totalMedia")
     fun getTotalMediaCount(): Int {
-        return processResult(movieFacade.getTotalMediaCount())!!
+        return processResult(result = movieFacade.getTotalMediaCount())!!
     }
 
     /**
@@ -240,7 +224,7 @@ class MovieController(private val movieFacade: MovieFacade) : AbstractController
      */
     @GetMapping("/totalLength")
     fun getTotalLength(): Int {
-        return processResult(movieFacade.getTotalLength())!!.length
+        return processResult(result = movieFacade.getTotalLength())!!.length
     }
 
 }

@@ -1,215 +1,522 @@
 package com.github.vhromada.catalog.validator
 
-import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.utils.GameUtils
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
-import com.github.vhromada.common.test.validator.MovableValidatorTest
-import com.github.vhromada.common.validator.AbstractMovableValidator
-import com.github.vhromada.common.validator.MovableValidator
-import com.github.vhromada.common.validator.ValidationType
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.assertj.core.api.SoftAssertions.assertSoftly
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Optional
 
 /**
  * A class represents test for class [GameValidator].
  *
  * @author Vladimir Hromada
  */
-class GameValidatorTest : MovableValidatorTest<Game, com.github.vhromada.catalog.domain.Game>() {
+class GameValidatorTest {
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null name.
+     * Instance of [GameValidator]
      */
-    @Test
-    fun validateDeepNullName() {
-        val game = getValidatingData(1)
-                .copy(name = null)
+    private lateinit var validator: GameValidator
 
-        val result = getValidator().validate(game, ValidationType.DEEP)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null.")))
-        }
-
-        verifyZeroInteractions(service)
+    /**
+     * Initializes validator.
+     */
+    @BeforeEach
+    fun setUp() {
+        validator = GameValidator()
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with empty name.
+     * Test method for [GameValidator.validate] with correct new game.
      */
     @Test
-    fun validateDeepEmptyName() {
-        val game = getValidatingData(1)
-                .copy(name = "")
-
-        val result = getValidator().validate(game, ValidationType.DEEP)
+    fun validateNew() {
+        val result = validator.validate(data = GameUtils.newGame(id = null), update = false)
 
         assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null URL to english Wikipedia page about game.
+     * Test method for [GameValidator.validate] with null new game.
      */
     @Test
-    fun validateDeepNullWikiEn() {
-        val game = getValidatingData(1)
-                .copy(wikiEn = null)
-
-        val result = getValidator().validate(game, ValidationType.DEEP)
+    fun validateNewNull() {
+        val result = validator.validate(data = null, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NULL", message = "Game mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null URL to czech Wikipedia page about game.
+     * Test method for [GameValidator.validate] with new game with not null ID.
      */
     @Test
-    fun validateDeepNullWikiCz() {
-        val game = getValidatingData(1)
-                .copy(wikiCz = null)
+    fun validateNewNotNullId() {
+        val game = GameUtils.newGame(id = null)
+            .copy(id = Int.MAX_VALUE)
 
-        val result = getValidator().validate(game, ValidationType.DEEP)
+        val result = validator.validate(data = game, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL",
-                    "URL to czech Wikipedia page about game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_ID_NOT_NULL", message = "ID must be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null count of media.
+     * Test method for [GameValidator.validate] with new game with not null position.
      */
     @Test
-    fun validateDeepNullMediaCount() {
-        val game = getValidatingData(1)
-                .copy(mediaCount = null)
+    fun validateNewNotNullPosition() {
+        val game = GameUtils.newGame(id = null)
+            .copy(position = Int.MAX_VALUE)
 
-        val result = getValidator().validate(game, ValidationType.DEEP)
+        val result = validator.validate(data = game, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_POSITION_NOT_NULL", message = "Position must be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with not positive count of media.
+     * Test method for [GameValidator.validate] with new game with null name.
      */
     @Test
-    fun validateDeepNotPositiveMediaCount() {
-        val game = getValidatingData(1)
-                .copy(mediaCount = 0)
+    fun validateNewNullName() {
+        val game = GameUtils.newGame(id = null)
+            .copy(name = null)
 
-        val result = getValidator().validate(game, ValidationType.DEEP)
+        val result = validator.validate(data = game, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NAME_NULL", message = "Name mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null format.
+     * Test method for [GameValidator.validate] with new game with empty name.
      */
     @Test
-    fun validateDeepNullFormat() {
-        val game = getValidatingData(1)
-                .copy(format = null)
+    fun validateNewEmptyName() {
+        val game = GameUtils.newGame(id = null)
+            .copy(name = "")
 
-        val result = getValidator().validate(game, ValidationType.DEEP)
+        val result = validator.validate(data = game, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NAME_EMPTY", message = "Name mustn't be empty string.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null other data.
+     * Test method for [GameValidator.validate] with new game with null URL to english Wikipedia page about game.
      */
     @Test
-    fun validateDeepNullOtherData() {
-        val game = getValidatingData(1)
-                .copy(otherData = null)
+    fun validateNewNullWikiEn() {
+        val game = GameUtils.newGame(id = null)
+            .copy(wikiEn = null)
 
-        val result = getValidator().validate(game, ValidationType.DEEP)
+        val result = validator.validate(data = game, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_OTHER_DATA_NULL", "Other data mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_WIKI_EN_NULL", message = "URL to english Wikipedia page about game mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null note.
+     * Test method for [GameValidator.validate] with new game with null URL to czech Wikipedia page about game.
      */
     @Test
-    fun validateDeepNullNote() {
-        val game = getValidatingData(1)
-                .copy(note = null)
+    fun validateNewNullWikiCz() {
+        val game = GameUtils.newGame(id = null)
+            .copy(wikiCz = null)
 
-        val result = getValidator().validate(game, ValidationType.DEEP)
+        val result = validator.validate(data = game, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_WIKI_CZ_NULL", message = "URL to czech Wikipedia page about game mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
-    override fun getValidator(): MovableValidator<Game> {
-        return GameValidator(service)
+    /**
+     * Test method for [GameValidator.validate] with new game with null count of media.
+     */
+    @Test
+    fun validateNewNullMediaCount() {
+        val game = GameUtils.newGame(id = null)
+            .copy(mediaCount = null)
+
+        val result = validator.validate(data = game, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_MEDIA_COUNT_NULL", message = "Count of media mustn't be null.")))
+        }
     }
 
-    override fun getValidatingData(id: Int?): Game {
-        return GameUtils.newGame(id)
+    /**
+     * Test method for [GameValidator.validate] with new game with  not positive count of media.
+     */
+    @Test
+    fun validateNewNotPositiveMediaCount() {
+        val game = GameUtils.newGame(id = null)
+            .copy(mediaCount = 0)
+
+        val result = validator.validate(data = game, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_MEDIA_COUNT_NOT_POSITIVE", message = "Count of media must be positive number.")))
+        }
     }
 
-    override fun getValidatingData(id: Int?, position: Int?): Game {
-        return GameUtils.newGame(id)
-                .copy(position = position)
+    /**
+     * Test method for [GameValidator.validate] with new game with null format.
+     */
+    @Test
+    fun validateNewNullFormat() {
+        val game = GameUtils.newGame(id = null)
+            .copy(format = null)
+
+        val result = validator.validate(data = game, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_FORMAT_NULL", message = "Format mustn't be null.")))
+        }
     }
 
-    override fun getRepositoryData(validatingData: Game): com.github.vhromada.catalog.domain.Game {
-        return GameUtils.newGameDomain(validatingData.id)
+    /**
+     * Test method for [GameValidator.validate] with new game with null other data.
+     */
+    @Test
+    fun validateNewNullOtherData() {
+        val game = GameUtils.newGame(id = null)
+            .copy(otherData = null)
+
+        val result = validator.validate(data = game, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_OTHER_DATA_NULL", message = "Other data mustn't be null.")))
+        }
     }
 
-    override fun getItem1(): com.github.vhromada.catalog.domain.Game {
-        return GameUtils.newGameDomain(1)
+    /**
+     * Test method for [GameValidator.validate] with new game with null note.
+     */
+    @Test
+    fun validateNewNullNote() {
+        val game = GameUtils.newGame(id = null)
+            .copy(note = null)
+
+        val result = validator.validate(data = game, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NOTE_NULL", message = "Note mustn't be null.")))
+        }
     }
 
-    override fun getItem2(): com.github.vhromada.catalog.domain.Game {
-        return GameUtils.newGameDomain(2)
+    /**
+     * Test method for [GameValidator.validate] with with update correct game.
+     */
+    @Test
+    fun validateUpdate() {
+        val result = validator.validate(data = GameUtils.newGame(id = 1), update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
     }
 
-    override fun getName(): String {
-        return "Game"
+    /**
+     * Test method for [GameValidator.validate] with null update game.
+     */
+    @Test
+    fun validateUpdateNull() {
+        val result = validator.validate(data = null, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NULL", message = "Game mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with null ID.
+     */
+    @Test
+    fun validateUpdateNullId() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(id = null)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_ID_NULL", message = "ID mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with null position.
+     */
+    @Test
+    fun validateUpdateNullPosition() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(position = null)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_POSITION_NULL", message = "Position mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with null name.
+     */
+    @Test
+    fun validateUpdateNullName() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(name = null)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NAME_NULL", message = "Name mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with empty name.
+     */
+    @Test
+    fun validateUpdateEmptyName() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(name = "")
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NAME_EMPTY", message = "Name mustn't be empty string.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with null URL to english Wikipedia page about game.
+     */
+    @Test
+    fun validateUpdateNullWikiEn() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(wikiEn = null)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_WIKI_EN_NULL", message = "URL to english Wikipedia page about game mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with null URL to czech Wikipedia page about game.
+     */
+    @Test
+    fun validateUpdateNullWikiCz() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(wikiCz = null)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_WIKI_CZ_NULL", message = "URL to czech Wikipedia page about game mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with null count of media.
+     */
+    @Test
+    fun validateUpdateNullMediaCount() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(mediaCount = null)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_MEDIA_COUNT_NULL", message = "Count of media mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with not positive count of media.
+     */
+    @Test
+    fun validateUpdateNotPositiveMediaCount() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(mediaCount = 0)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_MEDIA_COUNT_NOT_POSITIVE", message = "Count of media must be positive number.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with null format.
+     */
+    @Test
+    fun validateUpdateNullFormat() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(format = null)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_FORMAT_NULL", message = "Format mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with null other data.
+     */
+    @Test
+    fun validateUpdateNullOtherData() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(otherData = null)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_OTHER_DATA_NULL", message = "Other data mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validate] with update game with null note.
+     */
+    @Test
+    fun validateUpdateNullNote() {
+        val game = GameUtils.newGame(id = 1)
+            .copy(note = null)
+
+        val result = validator.validate(data = game, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NOTE_NULL", message = "Note mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validateExists] with correct game.
+     */
+    @Test
+    fun validateExists() {
+        val result = validator.validateExists(data = Optional.of(GameUtils.newGameDomain(id = 1)))
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validateExists] with invalid game.
+     */
+    @Test
+    fun validateExistsInvalid() {
+        val result = validator.validateExists(data = Optional.empty())
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NOT_EXIST", message = "Game doesn't exist.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validateMovingData] with correct up game.
+     */
+    @Test
+    fun validateMovingDataUp() {
+        val games = listOf(GameUtils.newGameDomain(id = 1), GameUtils.newGameDomain(id = 2))
+
+        val result = validator.validateMovingData(data = games[1], list = games, up = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validateMovingData] with with invalid up game.
+     */
+    @Test
+    fun validateMovingDataUpInvalid() {
+        val games = listOf(GameUtils.newGameDomain(id = 1), GameUtils.newGameDomain(id = 2))
+
+        val result = validator.validateMovingData(data = games[0], list = games, up = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NOT_MOVABLE", message = "Game can't be moved up.")))
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validateMovingData] with correct down game.
+     */
+    @Test
+    fun validateMovingDataDown() {
+        val games = listOf(GameUtils.newGameDomain(id = 1), GameUtils.newGameDomain(id = 2))
+
+        val result = validator.validateMovingData(data = games[0], list = games, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [GameValidator.validateMovingData] with with invalid down game.
+     */
+    @Test
+    fun validateMovingDataDownInvalid() {
+        val games = listOf(GameUtils.newGameDomain(id = 1), GameUtils.newGameDomain(id = 2))
+
+        val result = validator.validateMovingData(data = games[1], list = games, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_NOT_MOVABLE", message = "Game can't be moved down.")))
+        }
     }
 
 }

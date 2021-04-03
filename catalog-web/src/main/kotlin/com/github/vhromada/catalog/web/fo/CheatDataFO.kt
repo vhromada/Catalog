@@ -9,18 +9,18 @@ import javax.validation.constraints.NotBlank
  * @author Vladimir Hromada
  */
 data class CheatDataFO(
+    /**
+     * Action
+     */
+    @field:NotBlank
+    var action: String?,
 
-        /**
-         * Action
-         */
-        @field:NotBlank
-        var action: String?,
-
-        /**
-         * Description
-         */
-        @field:NotBlank
-        var description: String?) : Serializable {
+    /**
+     * Description
+     */
+    @field:NotBlank
+    var description: String?
+) : Serializable {
 
     constructor() : this(action = null, description = null)
 

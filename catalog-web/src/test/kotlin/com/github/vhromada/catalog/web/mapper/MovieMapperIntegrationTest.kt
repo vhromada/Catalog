@@ -2,8 +2,8 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Movie
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.MovieUtils
 import com.github.vhromada.catalog.web.fo.MovieFO
+import com.github.vhromada.catalog.web.utils.MovieUtils
 import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,9 +33,9 @@ class MovieMapperIntegrationTest {
     fun map() {
         val movie = MovieUtils.getMovie()
 
-        val movieFO = mapper.map(movie)
+        val movieFO = mapper.map(source = movie)
 
-        MovieUtils.assertMovieDeepEquals(movie, movieFO)
+        MovieUtils.assertMovieDeepEquals(expected = movie, actual = movieFO)
     }
 
     /**
@@ -45,9 +45,9 @@ class MovieMapperIntegrationTest {
     fun mapBack() {
         val movieFO = MovieUtils.getMovieFO()
 
-        val movie = mapper.mapBack(movieFO)
+        val movie = mapper.mapBack(source = movieFO)
 
-        MovieUtils.assertMovieDeepEquals(movieFO, movie)
+        MovieUtils.assertMovieDeepEquals(expected = movieFO, actual = movie)
     }
 
 }

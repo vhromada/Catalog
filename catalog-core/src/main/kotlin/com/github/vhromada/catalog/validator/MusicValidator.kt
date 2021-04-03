@@ -4,8 +4,7 @@ import com.github.vhromada.catalog.entity.Music
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.validator.AbstractMovableValidator
+import com.github.vhromada.common.validator.AbstractValidator
 import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 
@@ -15,7 +14,7 @@ import org.springframework.util.StringUtils
  * @author Vladimir Hromada
  */
 @Component("musicValidator")
-class MusicValidator(musicService: MovableService<com.github.vhromada.catalog.domain.Music>) : AbstractMovableValidator<Music, com.github.vhromada.catalog.domain.Music>("Music", musicService) {
+class MusicValidator : AbstractValidator<Music, com.github.vhromada.catalog.domain.Music>(name = "Music") {
 
     /**
      * Validates music deeply.
@@ -36,23 +35,23 @@ class MusicValidator(musicService: MovableService<com.github.vhromada.catalog.do
     override fun validateDataDeep(data: Music, result: Result<Unit>) {
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "MUSIC_NAME_NULL", message = "Name mustn't be null."))
             }
             !StringUtils.hasText(data.name) -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "MUSIC_NAME_EMPTY", message = "Name mustn't be empty string."))
             }
         }
-        validateUrls(data, result)
+        validateUrls(music = data, result = result)
         when {
             data.mediaCount == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "MUSIC_MEDIA_COUNT_NULL", message = "Count of media mustn't be null."))
             }
             data.mediaCount <= 0 -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "MUSIC_MEDIA_COUNT_NOT_POSITIVE", message = "Count of media must be positive number."))
             }
         }
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "MUSIC_NOTE_NULL", message = "Note mustn't be null."))
         }
     }
 
@@ -64,15 +63,15 @@ class MusicValidator(musicService: MovableService<com.github.vhromada.catalog.do
      *  * URL to english Wikipedia page about music is null
      *  * URL to czech Wikipedia page about music is null
      *
-     * @param data   validating show
+     * @param music  validating show
      * @param result result with validation errors
      */
-    private fun validateUrls(data: Music, result: Result<Unit>) {
-        if (data.wikiEn == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about music mustn't be null."))
+    private fun validateUrls(music: Music, result: Result<Unit>) {
+        if (music.wikiEn == null) {
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "MUSIC_WIKI_EN_NULL", message = "URL to english Wikipedia page about music mustn't be null."))
         }
-        if (data.wikiCz == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL", "URL to czech Wikipedia page about music mustn't be null."))
+        if (music.wikiCz == null) {
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "MUSIC_WIKI_CZ_NULL", message = "URL to czech Wikipedia page about music mustn't be null."))
         }
     }
 

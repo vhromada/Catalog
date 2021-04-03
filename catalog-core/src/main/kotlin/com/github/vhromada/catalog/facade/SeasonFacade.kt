@@ -2,7 +2,7 @@ package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.entity.Season
 import com.github.vhromada.catalog.entity.Show
-import com.github.vhromada.common.facade.MovableChildFacade
+import com.github.vhromada.common.facade.ChildFacade
 import com.github.vhromada.common.result.Result
 
 /**
@@ -10,14 +10,13 @@ import com.github.vhromada.common.result.Result
  *
  * @author Vladimir Hromada
  */
-interface SeasonFacade : MovableChildFacade<Season, Show> {
+interface SeasonFacade : ChildFacade<Season, Show> {
 
     /**
      * Adds season. Sets new ID and position.
      * <br></br>
      * Validation errors:
      *
-     *  * Show ID is null
      *  * Show doesn't exist in data storage
      *  * Season ID isn't null
      *  * Season position isn't null
@@ -33,11 +32,11 @@ interface SeasonFacade : MovableChildFacade<Season, Show> {
      *  * Subtitles contain null value
      *  * Note is null
      *
-     * @param parent show
+     * @param parent show ID
      * @param data   season
      * @return result with validation errors
      */
-    override fun add(parent: Show, data: Season): Result<Unit>
+    override fun add(parent: Int, data: Season): Result<Unit>
 
     /**
      * Updates season.

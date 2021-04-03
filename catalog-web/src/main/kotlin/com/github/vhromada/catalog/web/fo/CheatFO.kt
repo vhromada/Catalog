@@ -11,31 +11,26 @@ import javax.validation.constraints.Size
  * @author Vladimir Hromada
  */
 data class CheatFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Setting for game
+     */
+    val gameSetting: String?,
 
-        /**
-         * Setting for game
-         */
-        val gameSetting: String?,
+    /**
+     * Setting for cheat
+     */
+    val cheatSetting: String?,
 
-        /**
-         * Setting for cheat
-         */
-        val cheatSetting: String?,
-
-        /**
-         * Data
-         */
-        @field:NotNull
-        @field:Size(min = 1)
-        @field:Valid
-        var data: List<CheatDataFO?>?,
-
-        /**
-         * Position
-         */
-        val position: Int?) : Serializable
+    /**
+     * Data
+     */
+    @field:NotNull
+    @field:Size(min = 1)
+    @field:Valid
+    var data: List<CheatDataFO?>?
+) : Serializable

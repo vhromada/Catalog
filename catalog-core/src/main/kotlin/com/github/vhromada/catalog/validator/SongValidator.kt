@@ -1,16 +1,11 @@
 package com.github.vhromada.catalog.validator
 
-import com.github.vhromada.catalog.domain.Music
 import com.github.vhromada.catalog.entity.Song
-import com.github.vhromada.common.entity.Movable
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.utils.sorted
-import com.github.vhromada.common.validator.AbstractMovableValidator
+import com.github.vhromada.common.validator.AbstractValidator
 import org.springframework.stereotype.Component
-import java.util.Optional
 
 /**
  * A class represents validator for song.
@@ -18,32 +13,7 @@ import java.util.Optional
  * @author Vladimir Hromada
  */
 @Component("songValidator")
-class SongValidator(musicService: MovableService<Music>) : AbstractMovableValidator<Song, Music>("Song", musicService) {
-
-    override fun getData(data: Song): Optional<Movable> {
-        for (music in service.getAll()) {
-            for (song in music.songs) {
-                if (data.id == song.id) {
-                    return Optional.of(song)
-                }
-            }
-        }
-
-        return Optional.empty()
-    }
-
-    override fun getList(data: Song): List<com.github.vhromada.catalog.domain.Song> {
-        for (music in service.getAll()) {
-            for (song in music.songs) {
-                if (data.id == song.id) {
-                    return music.songs
-                            .sorted()
-                }
-            }
-        }
-
-        return emptyList()
-    }
+class SongValidator : AbstractValidator<Song, com.github.vhromada.catalog.domain.Song>(name = "Song") {
 
     /**
      * Validates song deeply.
@@ -62,22 +32,22 @@ class SongValidator(musicService: MovableService<Music>) : AbstractMovableValida
     override fun validateDataDeep(data: Song, result: Result<Unit>) {
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SONG_NAME_NULL", message = "Name mustn't be null."))
             }
             data.name.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SONG_NAME_EMPTY", message = "Name mustn't be empty string."))
             }
         }
         when {
             data.length == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NULL", "Length of song mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SONG_LENGTH_NULL", message = "Length of song mustn't be null."))
             }
             data.length < 0 -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NEGATIVE", "Length of song mustn't be negative number."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SONG_LENGTH_NEGATIVE", message = "Length of song mustn't be negative number."))
             }
         }
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "SONG_NOTE_NULL", message = "Note mustn't be null."))
         }
     }
 

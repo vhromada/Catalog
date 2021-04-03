@@ -1,7 +1,7 @@
 package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.entity.Genre
-import com.github.vhromada.common.facade.MovableParentFacade
+import com.github.vhromada.common.facade.ParentFacade
 import com.github.vhromada.common.result.Result
 
 /**
@@ -9,7 +9,7 @@ import com.github.vhromada.common.result.Result
  *
  * @author Vladimir Hromada
  */
-interface GenreFacade : MovableParentFacade<Genre> {
+interface GenreFacade : ParentFacade<Genre> {
 
     /**
      * Adds genre. Sets new ID and position.

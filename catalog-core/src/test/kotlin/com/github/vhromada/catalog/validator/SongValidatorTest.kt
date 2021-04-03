@@ -1,176 +1,394 @@
 package com.github.vhromada.catalog.validator
 
-import com.github.vhromada.catalog.domain.Music
-import com.github.vhromada.catalog.entity.Song
-import com.github.vhromada.catalog.utils.MusicUtils
 import com.github.vhromada.catalog.utils.SongUtils
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
-import com.github.vhromada.common.test.validator.MovableValidatorTest
-import com.github.vhromada.common.validator.AbstractMovableValidator
-import com.github.vhromada.common.validator.MovableValidator
-import com.github.vhromada.common.validator.ValidationType
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.SoftAssertions.assertSoftly
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Optional
 
 /**
  * A class represents test for class [SongValidator].
  *
  * @author Vladimir Hromada
  */
-class SongValidatorTest : MovableValidatorTest<Song, Music>() {
+class SongValidatorTest {
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null name.
+     * Instance of [SongValidator]
      */
-    @Test
-    fun validateDeepNullName() {
-        val song = getValidatingData(1)
-                .copy(name = null)
+    private lateinit var validator: SongValidator
 
-        val result = getValidator().validate(song, ValidationType.DEEP)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null.")))
-        }
-
-        verifyZeroInteractions(service)
+    /**
+     * Initializes validator.
+     */
+    @BeforeEach
+    fun setUp() {
+        validator = SongValidator()
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with empty name.
+     * Test method for [SongValidator.validate] with correct new song.
      */
     @Test
-    fun validateDeepEmptyName() {
-        val song = getValidatingData(1)
-                .copy(name = "")
-
-        val result = getValidator().validate(song, ValidationType.DEEP)
+    fun validateNew() {
+        val result = validator.validate(data = SongUtils.newSong(id = null), update = false)
 
         assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string.")))
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null length of song.
+     * Test method for [SongValidator.validate] with null new song.
      */
     @Test
-    fun validateDeepNullLength() {
-        val song = getValidatingData(1)
-                .copy(length = null)
-
-        val result = getValidator().validate(song, ValidationType.DEEP)
+    fun validateNewNull() {
+        val result = validator.validate(data = null, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NULL", "Length of song mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NULL", message = "Song mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with negative length of song.
+     * Test method for [SongValidator.validate] with new song with not null ID.
      */
     @Test
-    fun validateDeepNegativeLength() {
-        val song = getValidatingData(1)
-                .copy(length = -1)
+    fun validateNewNotNullId() {
+        val song = SongUtils.newSong(id = null)
+            .copy(id = Int.MAX_VALUE)
 
-        val result = getValidator().validate(song, ValidationType.DEEP)
+        val result = validator.validate(data = song, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NEGATIVE", "Length of song mustn't be negative number.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_ID_NOT_NULL", message = "ID must be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null note.
+     * Test method for [SongValidator.validate] with new song with not null position.
      */
     @Test
-    fun validateDeepNullNote() {
-        val song = getValidatingData(1)
-                .copy(note = null)
+    fun validateNewNotNullPosition() {
+        val song = SongUtils.newSong(id = null)
+            .copy(position = Int.MAX_VALUE)
 
-        val result = getValidator().validate(song, ValidationType.DEEP)
+        val result = validator.validate(data = song, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_POSITION_NOT_NULL", message = "Position must be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
-    override fun getValidator(): MovableValidator<Song> {
-        return SongValidator(service)
-    }
+    /**
+     * Test method for [SongValidator.validate] with new song with null name.
+     */
+    @Test
+    fun validateNewNullName() {
+        val song = SongUtils.newSong(id = null)
+            .copy(name = null)
 
-    override fun getValidatingData(id: Int?): Song {
-        return SongUtils.newSong(id)
-    }
+        val result = validator.validate(data = song, update = false)
 
-    override fun getValidatingData(id: Int?, position: Int?): Song {
-        return SongUtils.newSong(id)
-                .copy(position = position)
-    }
-
-    override fun getRepositoryData(validatingData: Song): Music {
-        return MusicUtils.newMusicWithSongs(validatingData.id)
-    }
-
-    override fun getItem1(): Music {
-        return MusicUtils.newMusicDomain(null)
-    }
-
-    override fun getItem2(): Music {
-        return MusicUtils.newMusicDomain(null)
-    }
-
-    override fun getName(): String {
-        return "Song"
-    }
-
-    override fun initExistsMock(validatingData: Song, exists: Boolean) {
-        val music = if (exists) MusicUtils.newMusicWithSongs(validatingData.id) else MusicUtils.newMusicDomain(Int.MAX_VALUE)
-
-        whenever(service.getAll()).thenReturn(listOf(music))
-    }
-
-    override fun verifyExistsMock(validatingData: Song) {
-        verify(service).getAll()
-        verifyNoMoreInteractions(service)
-    }
-
-    override fun initMovingMock(validatingData: Song, up: Boolean, valid: Boolean) {
-        val songs = if (up && valid || !up && !valid) {
-            listOf(SongUtils.newSongDomain(1), SongUtils.newSongDomain(validatingData.id))
-        } else {
-            listOf(SongUtils.newSongDomain(validatingData.id), SongUtils.newSongDomain(Int.MAX_VALUE))
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NAME_NULL", message = "Name mustn't be null.")))
         }
-        val music = MusicUtils.newMusicDomain(1)
-                .copy(songs = songs)
-
-        whenever(service.getAll()).thenReturn(listOf(music))
     }
 
-    override fun verifyMovingMock(validatingData: Song) {
-        verify(service, times(2)).getAll()
-        verifyNoMoreInteractions(service)
+    /**
+     * Test method for [SongValidator.validate] with new song with empty name.
+     */
+    @Test
+    fun validateNewEmptyName() {
+        val song = SongUtils.newSong(id = null)
+            .copy(name = "")
+
+        val result = validator.validate(data = song, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NAME_EMPTY", message = "Name mustn't be empty string.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with new song with null length of song.
+     */
+    @Test
+    fun validateNewNullLength() {
+        val song = SongUtils.newSong(id = null)
+            .copy(length = null)
+
+        val result = validator.validate(data = song, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_LENGTH_NULL", message = "Length of song mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with new song with negative length of song.
+     */
+    @Test
+    fun validateNewNegativeLength() {
+        val song = SongUtils.newSong(id = null)
+            .copy(length = -1)
+
+        val result = validator.validate(data = song, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_LENGTH_NEGATIVE", message = "Length of song mustn't be negative number.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with new song with null note.
+     */
+    @Test
+    fun validateNewNullNote() {
+        val song = SongUtils.newSong(id = null)
+            .copy(note = null)
+
+        val result = validator.validate(data = song, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NOTE_NULL", message = "Note mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with with update correct song.
+     */
+    @Test
+    fun validateUpdate() {
+        val result = validator.validate(data = SongUtils.newSong(id = 1), update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with null update song.
+     */
+    @Test
+    fun validateUpdateNull() {
+        val result = validator.validate(data = null, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NULL", message = "Song mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with update song with null ID.
+     */
+    @Test
+    fun validateUpdateNullId() {
+        val song = SongUtils.newSong(id = 1)
+            .copy(id = null)
+
+        val result = validator.validate(data = song, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_ID_NULL", message = "ID mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with update song with null position.
+     */
+    @Test
+    fun validateUpdateNullPosition() {
+        val song = SongUtils.newSong(id = 1)
+            .copy(position = null)
+
+        val result = validator.validate(data = song, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_POSITION_NULL", message = "Position mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with update song with null name.
+     */
+    @Test
+    fun validateUpdateNullName() {
+        val song = SongUtils.newSong(id = 1)
+            .copy(name = null)
+
+        val result = validator.validate(data = song, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NAME_NULL", message = "Name mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with update song with empty name.
+     */
+    @Test
+    fun validateUpdateEmptyName() {
+        val song = SongUtils.newSong(id = 1)
+            .copy(name = "")
+
+        val result = validator.validate(data = song, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NAME_EMPTY", message = "Name mustn't be empty string.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with update song with null length of song.
+     */
+    @Test
+    fun validateUpdateNullLength() {
+        val song = SongUtils.newSong(id = 1)
+            .copy(length = null)
+
+        val result = validator.validate(data = song, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_LENGTH_NULL", message = "Length of song mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with update song with negative length of song.
+     */
+    @Test
+    fun validateUpdateNegativeLength() {
+        val song = SongUtils.newSong(id = 1)
+            .copy(length = -1)
+
+        val result = validator.validate(data = song, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_LENGTH_NEGATIVE", message = "Length of song mustn't be negative number.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validate] with update song with null note.
+     */
+    @Test
+    fun validateUpdateNullNote() {
+        val song = SongUtils.newSong(id = 1)
+            .copy(note = null)
+
+        val result = validator.validate(data = song, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NOTE_NULL", message = "Note mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validateExists] with correct song.
+     */
+    @Test
+    fun validateExists() {
+        val result = validator.validateExists(data = Optional.of(SongUtils.newSongDomain(id = 1)))
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validateExists] with invalid song.
+     */
+    @Test
+    fun validateExistsInvalid() {
+        val result = validator.validateExists(data = Optional.empty())
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NOT_EXIST", message = "Song doesn't exist.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validateMovingData] with correct up song.
+     */
+    @Test
+    fun validateMovingDataUp() {
+        val songs = listOf(SongUtils.newSongDomain(id = 1), SongUtils.newSongDomain(id = 2))
+
+        val result = validator.validateMovingData(data = songs[1], list = songs, up = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validateMovingData] with with invalid up song.
+     */
+    @Test
+    fun validateMovingDataUpInvalid() {
+        val songs = listOf(SongUtils.newSongDomain(id = 1), SongUtils.newSongDomain(id = 2))
+
+        val result = validator.validateMovingData(data = songs[0], list = songs, up = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NOT_MOVABLE", message = "Song can't be moved up.")))
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validateMovingData] with correct down song.
+     */
+    @Test
+    fun validateMovingDataDown() {
+        val songs = listOf(SongUtils.newSongDomain(id = 1), SongUtils.newSongDomain(id = 2))
+
+        val result = validator.validateMovingData(data = songs[0], list = songs, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [SongValidator.validateMovingData] with with invalid down song.
+     */
+    @Test
+    fun validateMovingDataDownInvalid() {
+        val songs = listOf(SongUtils.newSongDomain(id = 1), SongUtils.newSongDomain(id = 2))
+
+        val result = validator.validateMovingData(data = songs[1], list = songs, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SONG_NOT_MOVABLE", message = "Song can't be moved down.")))
+        }
     }
 
 }

@@ -14,17 +14,18 @@ class MediumMapper : Mapper<Medium, com.github.vhromada.catalog.domain.Medium> {
 
     override fun map(source: Medium): com.github.vhromada.catalog.domain.Medium {
         return com.github.vhromada.catalog.domain.Medium(
-                id = source.id,
-                number = source.number!!,
-                length = source.length!!,
-                audit = null)
+            id = source.id,
+            number = source.number!!,
+            length = source.length!!
+        )
     }
 
     override fun mapBack(source: com.github.vhromada.catalog.domain.Medium): Medium {
         return Medium(
-                id = source.id,
-                number = source.number,
-                length = source.length)
+            id = source.id,
+            number = source.number,
+            length = source.length
+        )
     }
 
 }

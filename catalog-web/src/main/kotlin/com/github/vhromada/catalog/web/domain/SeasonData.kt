@@ -11,26 +11,26 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class SeasonData(
+    /**
+     * Show ID
+     */
+    val showId: Int,
 
-        /**
-         * Show ID
-         */
-        val showId: Int,
+    /**
+     * Season
+     */
+    val season: Season,
 
-        /**
-         * Season
-         */
-        val season: Season,
+    /**
+     * Count of episodes
+     */
+    val episodesCount: Int,
 
-        /**
-         * Count of episodes
-         */
-        val episodesCount: Int,
-
-        /**
-         * Total length
-         */
-        val totalLength: Time) : Serializable {
+    /**
+     * Total length
+     */
+    val totalLength: Time
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

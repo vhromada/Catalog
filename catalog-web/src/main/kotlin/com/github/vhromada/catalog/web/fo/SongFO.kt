@@ -13,34 +13,34 @@ import javax.validation.constraints.NotNull
  * @author Vladimir Hromada
  */
 data class SongFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Name
+     */
+    @field:NotBlank
+    val name: String?,
 
-        /**
-         * Name
-         */
-        @field:NotBlank
-        val name: String?,
+    /**
+     * Length
+     */
+    @field:NotNull
+    @field:Valid
+    var length: TimeFO?,
 
-        /**
-         * Length
-         */
-        @field:NotNull
-        @field:Valid
-        var length: TimeFO?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        val position: Int?) : Serializable {
+    /**
+     * Position
+     */
+    val position: Int?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

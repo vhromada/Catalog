@@ -1,7 +1,6 @@
 package com.github.vhromada.catalog.domain
 
 import com.github.vhromada.common.domain.Audit
-import com.github.vhromada.common.domain.Auditable
 import java.util.Objects
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -19,31 +18,26 @@ import javax.persistence.Table
 @Entity
 @Table(name = "media")
 data class Medium(
+    /**
+     * ID
+     */
+    @Id
+    @SequenceGenerator(name = "medium_generator", sequenceName = "media_sq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medium_generator")
+    var id: Int?,
 
-        /**
-         * ID
-         */
-        @Id
-        @SequenceGenerator(name = "medium_generator", sequenceName = "media_sq", allocationSize = 1)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medium_generator")
-        var id: Int?,
+    /**
+     * Number
+     */
+    @Column(name = "medium_number")
+    val number: Int,
 
-        /**
-         * Number
-         */
-        @Column(name = "medium_number")
-        val number: Int,
-
-        /**
-         * Length
-         */
-        @Column(name = "medium_length")
-        val length: Int,
-
-        /**
-         * Audit
-         */
-        override var audit: Audit?) : Auditable {
+    /**
+     * Length
+     */
+    @Column(name = "medium_length")
+    val length: Int
+) : Audit() {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

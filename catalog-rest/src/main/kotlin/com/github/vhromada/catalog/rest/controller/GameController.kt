@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("gameController")
 @RequestMapping("/catalog/games")
-class GameController(private val gameFacade: GameFacade) : AbstractController() {
+class GameController(
+    private val gameFacade: GameFacade
+) : AbstractController() {
 
     /**
      * Returns list of games.
@@ -30,7 +32,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
      */
     @GetMapping
     fun getGames(): List<Game> {
-        return processResult(gameFacade.getAll())!!
+        return processResult(result = gameFacade.getAll())!!
     }
 
     /**
@@ -39,18 +41,18 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun newData() {
-        processResult(gameFacade.newData())
+        processResult(result = gameFacade.newData())
     }
 
     /**
-     * Returns game with ID or null if there isn't such game.
+     * Returns game with ID.
      *
      * @param id ID
-     * @return game with ID or null if there isn't such game
+     * @return game with ID
      */
     @GetMapping("/{id}")
-    fun getGame(@PathVariable("id") id: Int): Game? {
-        return processResult(gameFacade.get(id))
+    fun getGame(@PathVariable("id") id: Int): Game {
+        return processResult(result = gameFacade.get(id = id))!!
     }
 
     /**
@@ -74,7 +76,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     fun add(@RequestBody game: Game) {
-        processResult(gameFacade.add(game))
+        processResult(result = gameFacade.add(data = game))
     }
 
     /**
@@ -99,7 +101,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@RequestBody game: Game) {
-        processResult(gameFacade.update(game))
+        processResult(result = gameFacade.update(data = game))
     }
 
     /**
@@ -114,23 +116,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun remove(@PathVariable("id") id: Int) {
-        val game = Game(id = id,
-                name = null,
-                mediaCount = null,
-                wikiEn = null,
-                wikiCz = null,
-                format = null,
-                crack = null,
-                serialKey = null,
-                patch = null,
-                trainer = null,
-                trainerData = null,
-                editor = null,
-                saves = null,
-                otherData = null,
-                note = null,
-                position = null)
-        processResult(gameFacade.remove(game))
+        processResult(result = gameFacade.remove(id = id))
     }
 
     /**
@@ -138,15 +124,14 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Game doesn't exist in data storage
      *
-     * @param game game
+     * @param id ID
      */
-    @PostMapping("/duplicate")
+    @PostMapping("/duplicate/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun duplicate(@RequestBody game: Game) {
-        processResult(gameFacade.duplicate(game))
+    fun duplicate(@PathVariable("id") id: Int) {
+        processResult(result = gameFacade.duplicate(id = id))
     }
 
     /**
@@ -154,16 +139,15 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Game can't be moved up
      *  * Game doesn't exist in data storage
      *
-     * @param game game
+     * @param id ID
      */
-    @PostMapping("/moveUp")
+    @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveUp(@RequestBody game: Game) {
-        processResult(gameFacade.moveUp(game))
+    fun moveUp(@PathVariable("id") id: Int) {
+        processResult(result = gameFacade.moveUp(id = id))
     }
 
     /**
@@ -171,16 +155,15 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Game can't be moved down
      *  * Game doesn't exist in data storage
      *
-     * @param game game
+     * @param id ID
      */
-    @PostMapping("/moveDown")
+    @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveDown(@RequestBody game: Game) {
-        processResult(gameFacade.moveDown(game))
+    fun moveDown(@PathVariable("id") id: Int) {
+        processResult(result = gameFacade.moveDown(id = id))
     }
 
     /**
@@ -189,7 +172,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
     @PostMapping("/updatePositions")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updatePositions() {
-        processResult(gameFacade.updatePositions())
+        processResult(result = gameFacade.updatePositions())
     }
 
     /**
@@ -199,7 +182,7 @@ class GameController(private val gameFacade: GameFacade) : AbstractController() 
      */
     @GetMapping("/totalMedia")
     fun totalMediaCount(): Int {
-        return processResult(gameFacade.getTotalMediaCount())!!
+        return processResult(result = gameFacade.getTotalMediaCount())!!
     }
 
 }

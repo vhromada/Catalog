@@ -18,7 +18,7 @@ abstract class AbstractResultController {
     protected fun processResults(vararg results: Result<*>) {
         val result = Result<Void>()
         for (resultItem in results) {
-            result.addEvents(resultItem.events())
+            result.addEvents(eventList = resultItem.events())
         }
 
         require(result.isOk()) { "Operation result with errors. $result" }

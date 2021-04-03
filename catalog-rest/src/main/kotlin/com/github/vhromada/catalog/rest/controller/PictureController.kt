@@ -28,7 +28,9 @@ import java.io.IOException
  */
 @RestController("pictureController")
 @RequestMapping("/catalog/pictures")
-class PictureController(private val pictureFacade: PictureFacade) : AbstractController() {
+class PictureController(
+    private val pictureFacade: PictureFacade
+) : AbstractController() {
 
     /**
      * Returns list of pictures.
@@ -37,7 +39,7 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractCont
      */
     @GetMapping
     fun getPictures(): List<Int> {
-        return processResult(pictureFacade.getAll())!!.map { it.id!! }
+        return processResult(result = pictureFacade.getAll())!!.map { it.id!! }
     }
 
     /**
@@ -48,7 +50,7 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractCont
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun newData() {
-        processResult(pictureFacade.newData())
+        processResult(result = pictureFacade.newData())
     }
 
     /**
@@ -59,11 +61,11 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractCont
      */
     @GetMapping("/{id}")
     fun getPicture(@PathVariable("id") id: Int): ResponseEntity<Resource> {
-        val picture = processResult(pictureFacade.get(id)) ?: throw InputException("PICTURE_NOT_EXIST", "Picture doesn't exist.", HttpStatus.NOT_FOUND)
+        val picture = processResult(result = pictureFacade.get(id = id)) ?: throw InputException(key = "PICTURE_NOT_EXIST", message = "Picture doesn't exist.", httpStatus = HttpStatus.NOT_FOUND)
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"picture.jpg\"")
-                .header(HttpHeaders.CONTENT_TYPE, "image/jpg")
-                .body(ByteArrayResource(picture.content!!))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"picture.jpg\"")
+            .header(HttpHeaders.CONTENT_TYPE, "image/jpg")
+            .body(ByteArrayResource(picture.content!!))
     }
 
     /**
@@ -81,9 +83,9 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractCont
     @Throws(IOException::class)
     fun add(@RequestParam("file") file: MultipartFile) {
         if (file.isEmpty) {
-            throw InputException("FILE_EMPTY", "File mustn't be empty.")
+            throw InputException(key = "FILE_EMPTY", message = "File mustn't be empty.")
         }
-        processResult(pictureFacade.add(Picture(id = null, content = file.bytes, position = null)))
+        processResult(result = pictureFacade.add(data = Picture(id = null, content = file.bytes, position = null)))
     }
 
     /**
@@ -98,7 +100,7 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractCont
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun remove(@PathVariable("id") id: Int) {
-        processResult(pictureFacade.remove(Picture(id = id, content = null, position = null)))
+        processResult(result = pictureFacade.remove(id = id))
     }
 
     /**
@@ -114,7 +116,7 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractCont
     @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun moveUp(@PathVariable("id") id: Int) {
-        processResult(pictureFacade.moveUp(Picture(id = id, content = null, position = null)))
+        processResult(result = pictureFacade.moveUp(id = id))
     }
 
     /**
@@ -130,7 +132,7 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractCont
     @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun moveDown(@PathVariable("id") id: Int) {
-        processResult(pictureFacade.moveDown(Picture(id = id, content = null, position = null)))
+        processResult(result = pictureFacade.moveDown(id = id))
     }
 
     /**
@@ -139,7 +141,7 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractCont
     @PostMapping("/updatePositions")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updatePositions() {
-        processResult(pictureFacade.updatePositions())
+        processResult(result = pictureFacade.updatePositions())
     }
 
 }

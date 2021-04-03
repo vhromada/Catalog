@@ -3,7 +3,6 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.CheatData
 import com.github.vhromada.catalog.utils.CheatDataUtils
-import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,17 +22,17 @@ class CheatDataMapperIntegrationTest {
      * Instance of [CheatDataMapper]
      */
     @Autowired
-    private lateinit var mapper: Mapper<CheatData, com.github.vhromada.catalog.domain.CheatData>
+    private lateinit var mapper: CheatDataMapper
 
     /**
      * Test method for [CheatDataMapper.map].
      */
     @Test
     fun map() {
-        val cheatData = CheatDataUtils.newCheatData(1)
+        val cheatData = CheatDataUtils.newCheatData(id = 1)
         val cheatDataDomain = mapper.map(cheatData)
 
-        CheatDataUtils.assertCheatDataDeepEquals(cheatData, cheatDataDomain)
+        CheatDataUtils.assertCheatDataDeepEquals(expected = cheatData, actual = cheatDataDomain)
     }
 
     /**
@@ -41,10 +40,10 @@ class CheatDataMapperIntegrationTest {
      */
     @Test
     fun mapBack() {
-        val cheatDataDomain = CheatDataUtils.newCheatDataDomain(1)
+        val cheatDataDomain = CheatDataUtils.newCheatDataDomain(id = 1)
         val cheatData = mapper.mapBack(cheatDataDomain)
 
-        CheatDataUtils.assertCheatDataDeepEquals(cheatData, cheatDataDomain)
+        CheatDataUtils.assertCheatDataDeepEquals(expected = cheatDataDomain, actual = cheatData)
     }
 
 }

@@ -14,15 +14,19 @@ import org.springframework.stereotype.Component
 class GenreMapper : Mapper<Genre, GenreFO> {
 
     override fun map(source: Genre): GenreFO {
-        return GenreFO(id = source.id,
-                name = source.name,
-                position = source.position)
+        return GenreFO(
+            id = source.id,
+            name = source.name,
+            position = source.position
+        )
     }
 
     override fun mapBack(source: GenreFO): Genre {
-        return Genre(id = source.id,
-                name = source.name,
-                position = source.position)
+        return Genre(
+            id = source.id,
+            name = source.name,
+            position = source.position
+        )
     }
 
 }

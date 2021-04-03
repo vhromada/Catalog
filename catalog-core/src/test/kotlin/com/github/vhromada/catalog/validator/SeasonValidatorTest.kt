@@ -1,303 +1,588 @@
 package com.github.vhromada.catalog.validator
 
-import com.github.vhromada.catalog.domain.Show
-import com.github.vhromada.catalog.entity.Season
 import com.github.vhromada.catalog.utils.SeasonUtils
-import com.github.vhromada.catalog.utils.ShowUtils
+import com.github.vhromada.catalog.utils.TestConstants
 import com.github.vhromada.common.entity.Language
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
-import com.github.vhromada.common.test.utils.TestConstants
-import com.github.vhromada.common.test.validator.MovableValidatorTest
-import com.github.vhromada.common.utils.Constants
-import com.github.vhromada.common.validator.AbstractMovableValidator
-import com.github.vhromada.common.validator.MovableValidator
-import com.github.vhromada.common.validator.ValidationType
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.SoftAssertions.assertSoftly
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Optional
 
 /**
  * A class represents test for class [SeasonValidator].
  *
  * @author Vladimir Hromada
  */
-class SeasonValidatorTest : MovableValidatorTest<Season, Show>() {
+class SeasonValidatorTest {
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null number of season.
+     * Instance of [SeasonValidator]
      */
-    @Test
-    fun validateDeepNullNumber() {
-        val season = getValidatingData(1)
-                .copy(number = null)
+    private lateinit var validator: SeasonValidator
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NUMBER_NULL", "Number of season mustn't be null.")))
-        }
-
-        verifyZeroInteractions(service)
+    /**
+     * Initializes validator.
+     */
+    @BeforeEach
+    fun setUp() {
+        validator = SeasonValidator()
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with not positive number of season.
+     * Test method for [SeasonValidator.validate] with correct new season.
      */
     @Test
-    fun validateDeepNotPositiveNumber() {
-        val season = getValidatingData(1)
-                .copy(number = 0)
-
-        val result = getValidator().validate(season, ValidationType.DEEP)
+    fun validateNew() {
+        val result = validator.validate(data = SeasonUtils.newSeason(id = null), update = false)
 
         assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NUMBER_NOT_POSITIVE", "Number of season must be positive number.")))
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null starting year.
+     * Test method for [SeasonValidator.validate] with null new season.
      */
     @Test
-    fun validateDeepNullStartingYear() {
+    fun validateNewNull() {
+        val result = validator.validate(data = null, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NULL", message = "Season mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with new season with not null ID.
+     */
+    @Test
+    fun validateNewNotNullId() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(id = Int.MAX_VALUE)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_ID_NOT_NULL", message = "ID must be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with new season with not null position.
+     */
+    @Test
+    fun validateNewNotNullPosition() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(position = Int.MAX_VALUE)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_POSITION_NOT_NULL", message = "Position must be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with new season with null number of season.
+     */
+    @Test
+    fun validateNewNullNumber() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(number = null)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NUMBER_NULL", message = "Number of season mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with new season with not positive number of season.
+     */
+    @Test
+    fun validateNewNotPositiveNumber() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(number = 0)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NUMBER_NOT_POSITIVE", message = "Number of season must be positive number.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with new season with null starting year.
+     */
+    @Test
+    fun validateNewNullStartingYear() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(startYear = null)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_START_YEAR_NULL", message = "Starting year mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with new season with null ending year.
+     */
+    @Test
+    fun validateNewNullEndingYear() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(endYear = null)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_END_YEAR_NULL", message = "Ending year mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with new season with bad minimum starting year and bad minimum ending year.
+     */
+    @Test
+    fun validateNewBadMinimumYears() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_STARTING_YEAR_EVENT, TestConstants.INVALID_ENDING_YEAR_EVENT))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with new season with bad maximum starting year and bad maximum ending year.
+     */
+    @Test
+    fun validateNewBadMaximumYears() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_STARTING_YEAR_EVENT, TestConstants.INVALID_ENDING_YEAR_EVENT))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with new season with starting year greater than ending year.
+     */
+    @Test
+    fun validateNewBadYears() {
+        var season = SeasonUtils.newSeason(id = null)
+        season = season.copy(startYear = season.endYear!! + 1)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_YEARS_NOT_VALID", message = "Starting year mustn't be greater than ending year.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate]} with new season with null language.
+     */
+    @Test
+    fun validateNewNullLanguage() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(language = null)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_LANGUAGE_NULL", message = "Language mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate]} with new season with null subtitles.
+     */
+    @Test
+    fun validateNewNullSubtitles() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(subtitles = null)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_SUBTITLES_NULL", message = "Subtitles mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate]} with new season with subtitles with null value.
+     */
+    @Test
+    fun validateNewBadSubtitles() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(subtitles = listOf(Language.CZ, null))
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_SUBTITLES_CONTAIN_NULL", message = "Subtitles mustn't contain null value.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate]} with new season with null note.
+     */
+    @Test
+    fun validateNewNullNote() {
+        val season = SeasonUtils.newSeason(id = null)
+            .copy(note = null)
+
+        val result = validator.validate(data = season, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NOTE_NULL", message = "Note mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with with update correct season.
+     */
+    @Test
+    fun validateUpdate() {
+        val result = validator.validate(data = SeasonUtils.newSeason(id = 1), update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with null update season.
+     */
+    @Test
+    fun validateUpdateNull() {
+        val result = validator.validate(data = null, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NULL", message = "Season mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with update season with null ID.
+     */
+    @Test
+    fun validateUpdateNullId() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(id = null)
+
+        val result = validator.validate(data = season, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_ID_NULL", message = "ID mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with update season with null position.
+     */
+    @Test
+    fun validateUpdateNullPosition() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(position = null)
+
+        val result = validator.validate(data = season, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_POSITION_NULL", message = "Position mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with update season with null number of season.
+     */
+    @Test
+    fun validateUpdateNullNumber() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(number = null)
+
+        val result = validator.validate(data = season, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NUMBER_NULL", message = "Number of season mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with update season with not positive number of season.
+     */
+    @Test
+    fun validateUpdateNotPositiveNumber() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(number = 0)
+
+        val result = validator.validate(data = season, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NUMBER_NOT_POSITIVE", message = "Number of season must be positive number.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validate] with update season with null starting year.
+     */
+    @Test
+    fun validateUpdateNullStartingYear() {
         val season = SeasonUtils.newSeason(1)
-                .copy(startYear = null)
+            .copy(startYear = null)
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
+        val result = validator.validate(data = season, update = true)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_START_YEAR_NULL", "Starting year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_START_YEAR_NULL", message = "Starting year mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null ending year.
+     * Test method for [SeasonValidator.validate] with update season with null ending year.
      */
     @Test
-    fun validateDeepNullEndingYear() {
+    fun validateUpdateNullEndingYear() {
         val season = SeasonUtils.newSeason(1)
-                .copy(endYear = null)
+            .copy(endYear = null)
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
+        val result = validator.validate(data = season, update = true)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_END_YEAR_NULL", "Ending year mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_END_YEAR_NULL", message = "Ending year mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with bad minimum starting year and bad minimum ending year.
+     * Test method for [SeasonValidator.validate] with update season with bad minimum starting year and bad minimum ending year.
      */
     @Test
-    fun validateDeepBadMinimumYears() {
+    fun validateUpdateBadMinimumYears() {
         val season = SeasonUtils.newSeason(1)
-                .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
+            .copy(startYear = TestConstants.BAD_MIN_YEAR, endYear = TestConstants.BAD_MIN_YEAR)
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
+        val result = validator.validate(data = season, update = true)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_STARTING_YEAR_EVENT, TestConstants.INVALID_ENDING_YEAR_EVENT))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with bad maximum starting year and bad maximum ending year.
+     * Test method for [SeasonValidator.validate] with update season with bad maximum starting year and bad maximum ending year.
      */
     @Test
-    fun validateDeepBadMaximumYears() {
+    fun validateUpdateBadMaximumYears() {
         val season = SeasonUtils.newSeason(1)
-                .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
+            .copy(startYear = TestConstants.BAD_MAX_YEAR, endYear = TestConstants.BAD_MAX_YEAR)
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
+        val result = validator.validate(data = season, update = true)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(INVALID_STARTING_YEAR_EVENT, INVALID_ENDING_YEAR_EVENT))
+            it.assertThat(result.events()).isEqualTo(listOf(TestConstants.INVALID_STARTING_YEAR_EVENT, TestConstants.INVALID_ENDING_YEAR_EVENT))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with starting year greater than ending year.
+     * Test method for [SeasonValidator.validate] with update season with starting year greater than ending year.
      */
     @Test
-    fun validateDeepBadYears() {
+    fun validateUpdateBadYears() {
         var season = SeasonUtils.newSeason(1)
         season = season.copy(startYear = season.endYear!! + 1)
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
+        val result = validator.validate(data = season, update = true)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_YEARS_NOT_VALID", "Starting year mustn't be greater than ending year.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_YEARS_NOT_VALID", message = "Starting year mustn't be greater than ending year.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null language.
+     * Test method for [SeasonValidator.validate]} with update season with null language.
      */
     @Test
-    fun validateDeepNullLanguage() {
-        val season = getValidatingData(1)
-                .copy(language = null)
+    fun validateUpdateNullLanguage() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(language = null)
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
+        val result = validator.validate(data = season, update = true)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_LANGUAGE_NULL", "Language mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_LANGUAGE_NULL", message = "Language mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null subtitles.
+     * Test method for [SeasonValidator.validate]} with update season with null subtitles.
      */
     @Test
-    fun validateDeepNullSubtitles() {
-        val season = getValidatingData(1)
-                .copy(subtitles = null)
+    fun validateUpdateNullSubtitles() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(subtitles = null)
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
+        val result = validator.validate(data = season, update = true)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_NULL", "Subtitles mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_SUBTITLES_NULL", message = "Subtitles mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with subtitles with null value.
+     * Test method for [SeasonValidator.validate]} with update season with subtitles with null value.
      */
     @Test
-    fun validateDeepBadSubtitles() {
-        val season = getValidatingData(1)
-                .copy(subtitles = listOf(Language.CZ, null))
+    fun validateUpdateBadSubtitles() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(subtitles = listOf(Language.CZ, null))
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
+        val result = validator.validate(data = season, update = true)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_SUBTITLES_CONTAIN_NULL", "Subtitles mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_SUBTITLES_CONTAIN_NULL", message = "Subtitles mustn't contain null value.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
     /**
-     * Test method for [AbstractMovableValidator.validate]} with [ValidationType.DEEP] with data with null note.
+     * Test method for [SeasonValidator.validate]} with update season with null note.
      */
     @Test
-    fun validateDeepNullNote() {
-        val season = getValidatingData(1)
-                .copy(note = null)
+    fun validateUpdateNullNote() {
+        val season = SeasonUtils.newSeason(id = 1)
+            .copy(note = null)
 
-        val result = getValidator().validate(season, ValidationType.DEEP)
+        val result = validator.validate(data = season, update = true)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NOTE_NULL", message = "Note mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
-    override fun getValidator(): MovableValidator<Season> {
-        return SeasonValidator(service)
-    }
+    /**
+     * Test method for [SeasonValidator.validateExists] with correct season.
+     */
+    @Test
+    fun validateExists() {
+        val result = validator.validateExists(data = Optional.of(SeasonUtils.newSeasonDomain(id = 1)))
 
-    override fun getValidatingData(id: Int?): Season {
-        return SeasonUtils.newSeason(id)
-    }
-
-    override fun getValidatingData(id: Int?, position: Int?): Season {
-        return SeasonUtils.newSeason(id)
-                .copy(position = position)
-    }
-
-    override fun getRepositoryData(validatingData: Season): Show {
-        return ShowUtils.newShowWithSeasons(validatingData.id)
-    }
-
-    override fun getItem1(): Show {
-        return ShowUtils.newShowDomain(null)
-    }
-
-    override fun getItem2(): Show {
-        return ShowUtils.newShowDomain(null)
-    }
-
-    override fun getName(): String {
-        return "Season"
-    }
-
-    override fun initExistsMock(validatingData: Season, exists: Boolean) {
-        val show = if (exists) ShowUtils.newShowWithSeasons(validatingData.id) else ShowUtils.newShowDomain(Int.MAX_VALUE)
-
-        whenever(service.getAll()).thenReturn(listOf(show))
-    }
-
-    override fun verifyExistsMock(validatingData: Season) {
-        verify(service).getAll()
-        verifyNoMoreInteractions(service)
-    }
-
-    override fun initMovingMock(validatingData: Season, up: Boolean, valid: Boolean) {
-        val seasons = if (up && valid || !up && !valid) {
-            listOf(SeasonUtils.newSeasonDomain(1), SeasonUtils.newSeasonDomain(validatingData.id))
-        } else {
-            listOf(SeasonUtils.newSeasonDomain(validatingData.id), SeasonUtils.newSeasonDomain(Int.MAX_VALUE))
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
         }
-        val show = ShowUtils.newShowDomain(1)
-                .copy(seasons = seasons)
-
-        whenever(service.getAll()).thenReturn(listOf(show))
     }
 
-    override fun verifyMovingMock(validatingData: Season) {
-        verify(service, times(2)).getAll()
-        verifyNoMoreInteractions(service)
+    /**
+     * Test method for [SeasonValidator.validateExists] with invalid season.
+     */
+    @Test
+    fun validateExistsInvalid() {
+        val result = validator.validateExists(data = Optional.empty())
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NOT_EXIST", message = "Season doesn't exist.")))
+        }
     }
 
-    companion object {
+    /**
+     * Test method for [SeasonValidator.validateMovingData] with correct up season.
+     */
+    @Test
+    fun validateMovingDataUp() {
+        val seasons = listOf(SeasonUtils.newSeasonDomain(id = 1), SeasonUtils.newSeasonDomain(id = 2))
 
-        /**
-         * Event for invalid starting year
-         */
-        private val INVALID_STARTING_YEAR_EVENT = Event(Severity.ERROR, "SEASON_START_YEAR_NOT_VALID",
-                "Starting year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}.")
+        val result = validator.validateMovingData(data = seasons[1], list = seasons, up = true)
 
-        /**
-         * Event for invalid ending year
-         */
-        private val INVALID_ENDING_YEAR_EVENT = Event(Severity.ERROR, "SEASON_END_YEAR_NOT_VALID",
-                "Ending year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}.")
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
 
+    /**
+     * Test method for [SeasonValidator.validateMovingData] with with invalid up season.
+     */
+    @Test
+    fun validateMovingDataUpInvalid() {
+        val seasons = listOf(SeasonUtils.newSeasonDomain(id = 1), SeasonUtils.newSeasonDomain(id = 2))
+
+        val result = validator.validateMovingData(data = seasons[0], list = seasons, up = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NOT_MOVABLE", message = "Season can't be moved up.")))
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validateMovingData] with correct down season.
+     */
+    @Test
+    fun validateMovingDataDown() {
+        val seasons = listOf(SeasonUtils.newSeasonDomain(id = 1), SeasonUtils.newSeasonDomain(id = 2))
+
+        val result = validator.validateMovingData(data = seasons[0], list = seasons, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [SeasonValidator.validateMovingData] with with invalid down season.
+     */
+    @Test
+    fun validateMovingDataDownInvalid() {
+        val seasons = listOf(SeasonUtils.newSeasonDomain(id = 1), SeasonUtils.newSeasonDomain(id = 2))
+
+        val result = validator.validateMovingData(data = seasons[1], list = seasons, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "SEASON_NOT_MOVABLE", message = "Season can't be moved down.")))
+        }
     }
 
 }

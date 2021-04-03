@@ -1,70 +1,266 @@
 package com.github.vhromada.catalog.validator
 
-import com.github.vhromada.catalog.entity.Picture
 import com.github.vhromada.catalog.utils.PictureUtils
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
-import com.github.vhromada.common.test.validator.MovableValidatorTest
-import com.github.vhromada.common.validator.AbstractMovableValidator
-import com.github.vhromada.common.validator.MovableValidator
-import com.github.vhromada.common.validator.ValidationType
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.assertj.core.api.SoftAssertions.assertSoftly
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Optional
 
 /**
  * A class represents test for class [PictureValidator].
  *
  * @author Vladimir Hromada
  */
-class PictureValidatorTest : MovableValidatorTest<Picture, com.github.vhromada.catalog.domain.Picture>() {
+class PictureValidatorTest {
 
     /**
-     * Test method for [AbstractMovableValidator.validate] with [ValidationType.DEEP] with data with null content.
+     * Instance of [PictureValidator]
+     */
+    private lateinit var validator: PictureValidator
+
+    /**
+     * Initializes validator.
+     */
+    @BeforeEach
+    fun setUp() {
+        validator = PictureValidator()
+    }
+
+    /**
+     * Test method for [PictureValidator.validate] with correct new picture.
      */
     @Test
-    fun validateDeepNullContent() {
-        val picture = getValidatingData(1)
-                .copy(content = null)
+    fun validateNew() {
+        val result = validator.validate(data = PictureUtils.newPicture(id = null), update = false)
 
-        val result = getValidator().validate(picture, ValidationType.DEEP)
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [PictureValidator.validate] with null new picture.
+     */
+    @Test
+    fun validateNewNull() {
+        val result = validator.validate(data = null, update = false)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getPrefix()}_CONTENT_NULL", "Content mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_NULL", message = "Picture mustn't be null.")))
         }
-
-        verifyZeroInteractions(service)
     }
 
-    override fun getValidator(): MovableValidator<Picture> {
-        return PictureValidator(service)
+    /**
+     * Test method for [PictureValidator.validate] with new picture with not null ID.
+     */
+    @Test
+    fun validateNewNotNullId() {
+        val picture = PictureUtils.newPicture(id = null)
+            .copy(id = Int.MAX_VALUE)
+
+        val result = validator.validate(data = picture, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_ID_NOT_NULL", message = "ID must be null.")))
+        }
     }
 
-    override fun getValidatingData(id: Int?): Picture {
-        return PictureUtils.newPicture(id)
+    /**
+     * Test method for [PictureValidator.validate] with new picture with not null position.
+     */
+    @Test
+    fun validateNewNotNullPosition() {
+        val picture = PictureUtils.newPicture(id = null)
+            .copy(position = Int.MAX_VALUE)
+
+        val result = validator.validate(data = picture, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_POSITION_NOT_NULL", message = "Position must be null.")))
+        }
     }
 
-    override fun getValidatingData(id: Int?, position: Int?): Picture {
-        return PictureUtils.newPicture(id)
-                .copy(position = position)
+    /**
+     * Test method for [PictureValidator.validate] with new picture with null content.
+     */
+    @Test
+    fun validateNewNullContent() {
+        val picture = PictureUtils.newPicture(id = null)
+            .copy(content = null)
+
+        val result = validator.validate(data = picture, update = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_CONTENT_NULL", message = "Content mustn't be null.")))
+        }
     }
 
-    override fun getRepositoryData(validatingData: Picture): com.github.vhromada.catalog.domain.Picture {
-        return PictureUtils.newPictureDomain(validatingData.id)
+    /**
+     * Test method for [PictureValidator.validate] with with update correct picture.
+     */
+    @Test
+    fun validateUpdate() {
+        val result = validator.validate(data = PictureUtils.newPicture(id = 1), update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
     }
 
-    override fun getItem1(): com.github.vhromada.catalog.domain.Picture {
-        return PictureUtils.newPictureDomain(1)
+    /**
+     * Test method for [PictureValidator.validate] with null update picture.
+     */
+    @Test
+    fun validateUpdateNull() {
+        val result = validator.validate(data = null, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_NULL", message = "Picture mustn't be null.")))
+        }
     }
 
-    override fun getItem2(): com.github.vhromada.catalog.domain.Picture {
-        return PictureUtils.newPictureDomain(2)
+    /**
+     * Test method for [PictureValidator.validate] with update picture with null ID.
+     */
+    @Test
+    fun validateUpdateNullId() {
+        val picture = PictureUtils.newPicture(id = 1)
+            .copy(id = null)
+
+        val result = validator.validate(data = picture, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_ID_NULL", message = "ID mustn't be null.")))
+        }
     }
 
-    override fun getName(): String {
-        return "Picture"
+    /**
+     * Test method for [PictureValidator.validate] with update picture with null position.
+     */
+    @Test
+    fun validateUpdateNullPosition() {
+        val picture = PictureUtils.newPicture(id = 1)
+            .copy(position = null)
+
+        val result = validator.validate(data = picture, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_POSITION_NULL", message = "Position mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [PictureValidator.validate] with update picture with null content.
+     */
+    @Test
+    fun validateUpdateNullContent() {
+        val picture = PictureUtils.newPicture(id = 1)
+            .copy(content = null)
+
+        val result = validator.validate(data = picture, update = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_CONTENT_NULL", message = "Content mustn't be null.")))
+        }
+    }
+
+    /**
+     * Test method for [PictureValidator.validateExists] with correct picture.
+     */
+    @Test
+    fun validateExists() {
+        val result = validator.validateExists(data = Optional.of(PictureUtils.newPictureDomain(id = 1)))
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [PictureValidator.validateExists] with invalid picture.
+     */
+    @Test
+    fun validateExistsInvalid() {
+        val result = validator.validateExists(data = Optional.empty())
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_NOT_EXIST", message = "Picture doesn't exist.")))
+        }
+    }
+
+    /**
+     * Test method for [PictureValidator.validateMovingData] with correct up picture.
+     */
+    @Test
+    fun validateMovingDataUp() {
+        val pictures = listOf(PictureUtils.newPictureDomain(id = 1), PictureUtils.newPictureDomain(id = 2))
+
+        val result = validator.validateMovingData(data = pictures[1], list = pictures, up = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [PictureValidator.validateMovingData] with with invalid up picture.
+     */
+    @Test
+    fun validateMovingDataUpInvalid() {
+        val pictures = listOf(PictureUtils.newPictureDomain(id = 1), PictureUtils.newPictureDomain(id = 2))
+
+        val result = validator.validateMovingData(data = pictures[0], list = pictures, up = true)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_NOT_MOVABLE", message = "Picture can't be moved up.")))
+        }
+    }
+
+    /**
+     * Test method for [PictureValidator.validateMovingData] with correct down picture.
+     */
+    @Test
+    fun validateMovingDataDown() {
+        val pictures = listOf(PictureUtils.newPictureDomain(id = 1), PictureUtils.newPictureDomain(id = 2))
+
+        val result = validator.validateMovingData(data = pictures[0], list = pictures, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+    }
+
+    /**
+     * Test method for [PictureValidator.validateMovingData] with with invalid down picture.
+     */
+    @Test
+    fun validateMovingDataDownInvalid() {
+        val pictures = listOf(PictureUtils.newPictureDomain(id = 1), PictureUtils.newPictureDomain(id = 2))
+
+        val result = validator.validateMovingData(data = pictures[1], list = pictures, up = false)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "PICTURE_NOT_MOVABLE", message = "Picture can't be moved down.")))
+        }
     }
 
 }

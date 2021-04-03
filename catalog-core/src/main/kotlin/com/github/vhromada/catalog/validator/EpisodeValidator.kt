@@ -1,16 +1,11 @@
 package com.github.vhromada.catalog.validator
 
-import com.github.vhromada.catalog.domain.Show
 import com.github.vhromada.catalog.entity.Episode
-import com.github.vhromada.common.entity.Movable
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.utils.sorted
-import com.github.vhromada.common.validator.AbstractMovableValidator
+import com.github.vhromada.common.validator.AbstractValidator
 import org.springframework.stereotype.Component
-import java.util.Optional
 
 /**
  * A class represents validator for episode.
@@ -18,36 +13,7 @@ import java.util.Optional
  * @author Vladimir Hromada
  */
 @Component("episodeValidator")
-class EpisodeValidator(showService: MovableService<Show>) : AbstractMovableValidator<Episode, Show>("Episode", showService) {
-
-    override fun getData(data: Episode): Optional<Movable> {
-        for (show in service.getAll()) {
-            for (season in show.seasons) {
-                for (episode in season.episodes) {
-                    if (data.id == episode.id) {
-                        return Optional.of(episode)
-                    }
-                }
-            }
-        }
-
-        return Optional.empty()
-    }
-
-    override fun getList(data: Episode): List<com.github.vhromada.catalog.domain.Episode> {
-        for (show in service.getAll()) {
-            for (season in show.seasons) {
-                for (episode in season.episodes) {
-                    if (data.id == episode.id) {
-                        return season.episodes
-                                .sorted()
-                    }
-                }
-            }
-        }
-
-        return emptyList()
-    }
+class EpisodeValidator : AbstractValidator<Episode, com.github.vhromada.catalog.domain.Episode>(name = "Episode") {
 
     /**
      * Validates episode deeply.
@@ -68,30 +34,30 @@ class EpisodeValidator(showService: MovableService<Show>) : AbstractMovableValid
     override fun validateDataDeep(data: Episode, result: Result<Unit>) {
         when {
             data.number == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NUMBER_NULL", "Number of episode mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "EPISODE_NUMBER_NULL", message = "Number of episode mustn't be null."))
             }
             data.number <= 0 -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NUMBER_NOT_POSITIVE", "Number of episode must be positive number."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "EPISODE_NUMBER_NOT_POSITIVE", message = "Number of episode must be positive number."))
             }
         }
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "EPISODE_NAME_NULL", message = "Name mustn't be null."))
             }
             data.name.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "EPISODE_NAME_EMPTY", message = "Name mustn't be empty string."))
             }
         }
         when {
             data.length == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NULL", "Length of episode mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "EPISODE_LENGTH_NULL", message = "Length of episode mustn't be null."))
             }
             data.length < 0 -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_LENGTH_NEGATIVE", "Length of episode mustn't be negative number."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "EPISODE_LENGTH_NEGATIVE", message = "Length of episode mustn't be negative number."))
             }
         }
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "EPISODE_NOTE_NULL", message = "Note mustn't be null."))
         }
     }
 

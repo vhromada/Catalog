@@ -21,8 +21,9 @@ import javax.validation.Valid
 @Controller("registrationController")
 @RequestMapping("/registration")
 class RegistrationController(
-        private val accountFacade: AccountFacade,
-        private val accountMapper: Mapper<AccountFO, Credentials>) : AbstractResultController() {
+    private val accountFacade: AccountFacade,
+    private val accountMapper: Mapper<AccountFO, Credentials>
+) : AbstractResultController() {
 
     /**
      * Shows page for registration.
@@ -32,7 +33,7 @@ class RegistrationController(
      */
     @GetMapping
     fun login(model: Model): String {
-        return createFormView(model, AccountFO(username = null, password = null, copyPassword = null))
+        return createFormView(model = model, account = AccountFO(username = null, password = null, copyPassword = null))
     }
 
     /**
@@ -46,9 +47,9 @@ class RegistrationController(
     @PostMapping(params = ["create"])
     fun processAdd(model: Model, @ModelAttribute("account") @Valid account: AccountFO, errors: Errors): String {
         if (errors.hasErrors()) {
-            return createFormView(model, account)
+            return createFormView(model = model, account = account)
         }
-        processResults(accountFacade.add(accountMapper.map(account)))
+        processResults(accountFacade.add(credentials = accountMapper.map(source = account)))
 
         return "redirect:/login"
     }

@@ -16,19 +16,21 @@ import org.springframework.stereotype.Component
 class CheatMapper(private val cheatDataMapper: Mapper<CheatData, CheatDataFO>) : Mapper<Cheat, CheatFO> {
 
     override fun map(source: Cheat): CheatFO {
-        return CheatFO(id = source.id,
-                gameSetting = source.gameSetting,
-                cheatSetting = source.cheatSetting,
-                data = cheatDataMapper.map(source.data!!.filterNotNull()),
-                position = source.position)
+        return CheatFO(
+            id = source.id,
+            gameSetting = source.gameSetting,
+            cheatSetting = source.cheatSetting,
+            data = cheatDataMapper.map(source = source.data!!.filterNotNull())
+        )
     }
 
     override fun mapBack(source: CheatFO): Cheat {
-        return Cheat(id = source.id,
-                gameSetting = source.gameSetting,
-                cheatSetting = source.cheatSetting,
-                data = cheatDataMapper.mapBack(source.data!!.filterNotNull()),
-                position = source.position)
+        return Cheat(
+            id = source.id,
+            gameSetting = source.gameSetting,
+            cheatSetting = source.cheatSetting,
+            data = cheatDataMapper.mapBack(source = source.data!!.filterNotNull())
+        )
     }
 
 }

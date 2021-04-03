@@ -13,40 +13,40 @@ import javax.validation.constraints.NotNull
  * @author Vladimir Hromada
  */
 data class EpisodeFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Number of episode
+     */
+    @field:Range(min = 1, max = 500)
+    val number: String?,
 
-        /**
-         * Number of episode
-         */
-        @field:Range(min = 1, max = 500)
-        val number: String?,
+    /**
+     * Name
+     */
+    @field:NotBlank
+    val name: String?,
 
-        /**
-         * Name
-         */
-        @field:NotBlank
-        val name: String?,
+    /**
+     * Length
+     */
+    @field:NotNull
+    @field:Valid
+    var length: TimeFO?,
 
-        /**
-         * Length
-         */
-        @field:NotNull
-        @field:Valid
-        var length: TimeFO?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        val position: Int?) : Serializable {
+    /**
+     * Position
+     */
+    val position: Int?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

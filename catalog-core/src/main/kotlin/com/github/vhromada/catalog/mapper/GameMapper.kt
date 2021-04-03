@@ -14,44 +14,45 @@ class GameMapper : Mapper<Game, com.github.vhromada.catalog.domain.Game> {
 
     override fun map(source: Game): com.github.vhromada.catalog.domain.Game {
         return com.github.vhromada.catalog.domain.Game(
-                id = source.id,
-                name = source.name!!,
-                wikiEn = source.wikiEn,
-                wikiCz = source.wikiCz,
-                mediaCount = source.mediaCount!!,
-                format = source.format!!,
-                cheat = null,
-                crack = source.crack!!,
-                serialKey = source.serialKey!!,
-                patch = source.patch!!,
-                trainer = source.trainer!!,
-                trainerData = source.trainerData!!,
-                editor = source.editor!!,
-                saves = source.saves!!,
-                otherData = source.otherData,
-                note = source.note,
-                position = source.position,
-                audit = null)
+            id = source.id,
+            name = source.name!!,
+            wikiEn = source.wikiEn,
+            wikiCz = source.wikiCz,
+            mediaCount = source.mediaCount!!,
+            format = source.format!!,
+            cheat = null,
+            crack = source.crack!!,
+            serialKey = source.serialKey!!,
+            patch = source.patch!!,
+            trainer = source.trainer!!,
+            trainerData = source.trainerData!!,
+            editor = source.editor!!,
+            saves = source.saves!!,
+            otherData = source.otherData,
+            note = source.note,
+            position = source.position
+        )
     }
 
     override fun mapBack(source: com.github.vhromada.catalog.domain.Game): Game {
         return Game(
-                id = source.id,
-                name = source.name,
-                wikiEn = source.wikiEn,
-                wikiCz = source.wikiCz,
-                mediaCount = source.mediaCount,
-                format = source.format,
-                crack = source.crack,
-                serialKey = source.serialKey,
-                patch = source.patch,
-                trainer = source.trainer,
-                trainerData = source.trainerData,
-                editor = source.editor,
-                saves = source.saves,
-                otherData = source.otherData,
-                note = source.note,
-                position = source.position)
+            id = source.id,
+            name = source.name,
+            wikiEn = source.wikiEn,
+            wikiCz = source.wikiCz,
+            mediaCount = source.mediaCount,
+            format = source.format,
+            crack = source.crack,
+            serialKey = source.serialKey,
+            patch = source.patch,
+            trainer = source.trainer,
+            trainerData = source.trainerData,
+            editor = source.editor,
+            saves = source.saves,
+            otherData = source.otherData,
+            note = source.note,
+            position = source.position
+        )
     }
 
 }

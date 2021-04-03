@@ -21,8 +21,9 @@ import javax.validation.Valid
 @Controller("accountController")
 @RequestMapping("/accounts")
 class AccountController(
-        private val accountFacade: AccountFacade,
-        private val accountMapper: Mapper<AccountFO, Credentials>) : AbstractResultController() {
+    private val accountFacade: AccountFacade,
+    private val accountMapper: Mapper<AccountFO, Credentials>
+) : AbstractResultController() {
 
     /**
      * Shows page with list of accounts.
@@ -49,7 +50,7 @@ class AccountController(
      */
     @GetMapping("/edit")
     fun showEdit(model: Model): String {
-        return createFormView(model, AccountFO(username = null, password = null, copyPassword = null))
+        return createFormView(model = model, account = AccountFO(username = null, password = null, copyPassword = null))
     }
 
     /**
@@ -63,9 +64,9 @@ class AccountController(
     @PostMapping(value = ["/edit"], params = ["update"])
     fun processEdit(model: Model, @ModelAttribute("account") @Valid account: AccountFO, errors: Errors): String {
         if (errors.hasErrors()) {
-            return createFormView(model, account)
+            return createFormView(model = model, account = account)
         }
-        processResults(accountFacade.update(accountMapper.map(account)))
+        processResults(accountFacade.update(credentials = accountMapper.map(source = account)))
 
         return HOME_PAGE_REDIRECT_URL
     }

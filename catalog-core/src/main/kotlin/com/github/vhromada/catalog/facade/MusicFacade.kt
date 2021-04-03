@@ -2,7 +2,7 @@ package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.entity.Music
 import com.github.vhromada.common.entity.Time
-import com.github.vhromada.common.facade.MovableParentFacade
+import com.github.vhromada.common.facade.ParentFacade
 import com.github.vhromada.common.result.Result
 
 /**
@@ -10,7 +10,7 @@ import com.github.vhromada.common.result.Result
  *
  * @author Vladimir Hromada
  */
-interface MusicFacade : MovableParentFacade<Music> {
+interface MusicFacade : ParentFacade<Music> {
 
     /**
      * Adds music. Sets new ID and position.

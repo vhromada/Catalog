@@ -5,7 +5,6 @@ import com.github.vhromada.catalog.entity.Movie
 import com.github.vhromada.catalog.facade.GenreFacade
 import com.github.vhromada.catalog.facade.MovieFacade
 import com.github.vhromada.catalog.facade.PictureFacade
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.MovieFO
 import com.github.vhromada.catalog.web.fo.TimeFO
 import com.github.vhromada.common.entity.Language
@@ -29,10 +28,11 @@ import javax.validation.Valid
 @Controller("movieController")
 @RequestMapping("/movies")
 class MovieController(
-        private val movieFacade: MovieFacade,
-        private val pictureFacade: PictureFacade,
-        private val genreFacade: GenreFacade,
-        private val movieMapper: Mapper<Movie, MovieFO>) : AbstractResultController() {
+    private val movieFacade: MovieFacade,
+    private val pictureFacade: PictureFacade,
+    private val genreFacade: GenreFacade,
+    private val movieMapper: Mapper<Movie, MovieFO>
+) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -73,22 +73,16 @@ class MovieController(
      * @param model model
      * @param id    ID of showing movie
      * @return view for page with detail of movie
-     * @throws IllegalRequestException if movie doesn't exist
      */
     @GetMapping("/{id}/detail")
     fun showDetail(model: Model, @PathVariable("id") id: Int): String {
-        val result = movieFacade.get(id)
+        val result = movieFacade.get(id = id)
         processResults(result)
 
-        val movie = result.data
-        if (movie != null) {
-            model.addAttribute("movie", movie)
-            model.addAttribute("title", "Movie detail")
+        model.addAttribute("movie", result.data)
+        model.addAttribute("title", "Movie detail")
 
-            return "movie/detail"
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return "movie/detail"
     }
 
     /**
@@ -99,23 +93,25 @@ class MovieController(
      */
     @GetMapping("/add")
     fun showAdd(model: Model): String {
-        val movie = MovieFO(id = null,
-                czechName = null,
-                originalName = null,
-                year = null,
-                language = null,
-                subtitles = null,
-                media = null,
-                csfd = null,
-                imdb = false,
-                imdbCode = null,
-                wikiEn = null,
-                wikiCz = null,
-                picture = null,
-                note = null,
-                position = null,
-                genres = null)
-        return createAddFormView(model, movie)
+        val movie = MovieFO(
+            id = null,
+            czechName = null,
+            originalName = null,
+            year = null,
+            language = null,
+            subtitles = null,
+            media = null,
+            csfd = null,
+            imdb = false,
+            imdbCode = null,
+            wikiEn = null,
+            wikiCz = null,
+            picture = null,
+            note = null,
+            position = null,
+            genres = null
+        )
+        return createAddFormView(model = model, movie = movie)
     }
 
     /**
@@ -134,19 +130,19 @@ class MovieController(
 
         if (request.getParameter("create") != null) {
             if (errors.hasErrors()) {
-                return createAddFormView(model, movie)
+                return createAddFormView(model = model, movie = movie)
             }
-            processResults(movieFacade.add(movieMapper.mapBack(movie).copy(genres = getGenres(movie.genres!!))))
+            processResults(movieFacade.add(data = movieMapper.mapBack(source = movie).copy(genres = getGenres(source = movie.genres!!))))
         }
 
         if (request.getParameter("addMedium") != null) {
             val media = if (movie.media == null) mutableListOf() else movie.media!!.toMutableList()
             media.add(TimeFO(hours = null, minutes = null, seconds = null))
 
-            return createAddFormView(model, movie.copy(media = media))
+            return createAddFormView(model = model, movie = movie.copy(media = media))
         }
 
-        return processAddMovie(model, movie, request)
+        return processAddMovie(model = model, movie = movie, request = request)
     }
 
     /**
@@ -155,19 +151,13 @@ class MovieController(
      * @param model model
      * @param id    ID of editing movie
      * @return view for page for editing movie
-     * @throws IllegalRequestException if movie doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("id") id: Int): String {
-        val result = movieFacade.get(id)
+        val result = movieFacade.get(id = id)
         processResults(result)
 
-        val movie = result.data
-        return if (movie != null) {
-            createEditFormView(model, movieMapper.map(movie))
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return createEditFormView(model = model, movie = movieMapper.map(source = result.data!!))
     }
 
     /**
@@ -179,7 +169,6 @@ class MovieController(
      * @param request HTTP request
      * @return view for redirect to page with list of movies (no errors) or view for page for editing movie (errors)
      * @throws IllegalArgumentException if ID is null
-     * @throws IllegalRequestException  if movie doesn't exist
      */
     @PostMapping("/edit")
     fun processEdit(model: Model, @ModelAttribute("movie") @Valid movie: MovieFO, errors: Errors, request: HttpServletRequest): String {
@@ -187,20 +176,20 @@ class MovieController(
 
         if (request.getParameter("update") != null) {
             if (errors.hasErrors()) {
-                return createEditFormView(model, movie)
+                return createEditFormView(model = model, movie = movie)
             }
 
-            processResults(movieFacade.update(processMovie(movieMapper.mapBack(movie).copy(genres = getGenres(movie.genres!!)))))
+            processResults(movieFacade.update(data = movieMapper.mapBack(source = movie).copy(genres = getGenres(source = movie.genres!!))))
         }
 
         if (request.getParameter("addMedium") != null) {
             val media = movie.media!!.toMutableList()
             media.add(TimeFO(hours = null, minutes = null, seconds = null))
 
-            return createEditFormView(model, movie.copy(media = media))
+            return createEditFormView(model = model, movie = movie.copy(media = media))
         }
 
-        return processEditMovie(model, movie, request)
+        return processEditMovie(model = model, movie = movie, request = request)
     }
 
     /**
@@ -208,11 +197,10 @@ class MovieController(
      *
      * @param id ID of duplicating movie
      * @return view for redirect to page with list of movies
-     * @throws IllegalRequestException if movie doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("id") id: Int): String {
-        processResults(movieFacade.duplicate(getMovie(id)))
+        processResults(movieFacade.duplicate(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -222,11 +210,10 @@ class MovieController(
      *
      * @param id ID of removing movie
      * @return view for redirect to page with list of movies
-     * @throws IllegalRequestException if movie doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
-        processResults(movieFacade.remove(getMovie(id)))
+        processResults(movieFacade.remove(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -236,11 +223,10 @@ class MovieController(
      *
      * @param id ID of moving movie
      * @return view for redirect to page with list of movies
-     * @throws IllegalRequestException if movie doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
-        processResults(movieFacade.moveUp(getMovie(id)))
+        processResults(movieFacade.moveUp(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -250,11 +236,10 @@ class MovieController(
      *
      * @param id ID of moving movie
      * @return view for redirect to page with list of movies
-     * @throws IllegalRequestException if movie doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
-        processResults(movieFacade.moveDown(getMovie(id)))
+        processResults(movieFacade.moveDown(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -281,19 +266,19 @@ class MovieController(
      */
     private fun processAddMovie(model: Model, movie: MovieFO, request: HttpServletRequest): String {
         if (request.getParameter("choosePicture") != null) {
-            return createAddFormView(model, movie)
+            return createAddFormView(model = model, movie = movie)
         }
 
         if (request.getParameter("removePicture") != null) {
-            return createAddFormView(model, movie.copy(picture = null))
+            return createAddFormView(model = model, movie = movie.copy(picture = null))
         }
 
-        val index = getRemoveIndex(request)
+        val index = getRemoveIndex(request = request)
         if (index != null) {
             val media = movie.media!!.toMutableList()
             media.removeAt(index)
 
-            return createAddFormView(model, movie.copy(media = media))
+            return createAddFormView(model = model, movie = movie.copy(media = media))
         }
 
         return LIST_REDIRECT_URL
@@ -309,19 +294,19 @@ class MovieController(
      */
     private fun processEditMovie(model: Model, movie: MovieFO, request: HttpServletRequest): String {
         if (request.getParameter("choosePicture") != null) {
-            return createEditFormView(model, movie)
+            return createEditFormView(model = model, movie = movie)
         }
 
         if (request.getParameter("removePicture") != null) {
-            return createEditFormView(model, movie.copy(picture = null))
+            return createEditFormView(model = model, movie = movie.copy(picture = null))
         }
 
-        val index = getRemoveIndex(request)
+        val index = getRemoveIndex(request = request)
         if (index != null) {
             val media = movie.media!!.toMutableList()
             media.removeAt(index)
 
-            return createEditFormView(model, movie.copy(media = media))
+            return createEditFormView(model = model, movie = movie.copy(media = media))
         }
 
         return LIST_REDIRECT_URL
@@ -337,17 +322,16 @@ class MovieController(
      * @return page's view with form
      */
     private fun createFormView(model: Model, movie: MovieFO, title: String, action: String): String {
-        val pictures = pictureFacade.getAll()
-        processResults(pictures)
-        val genres = genreFacade.getAll()
-        processResults(genres)
+        val picturesResult = pictureFacade.getAll()
+        val genresResult = genreFacade.getAll()
+        processResults(picturesResult, genresResult)
 
         model.addAttribute("movie", movie)
         model.addAttribute("title", title)
         model.addAttribute("languages", Language.values())
         model.addAttribute("subtitles", arrayOf(Language.CZ, Language.EN))
-        model.addAttribute("pictures", pictures.data!!.map { it.id })
-        model.addAttribute("genres", genres.data)
+        model.addAttribute("pictures", picturesResult.data!!.map { it.id })
+        model.addAttribute("genres", genresResult.data)
         model.addAttribute("action", action)
 
         return "movie/form"
@@ -361,7 +345,7 @@ class MovieController(
      * @return page's view with form for adding movie
      */
     private fun createAddFormView(model: Model, movie: MovieFO): String {
-        return createFormView(model, movie, "Add movie", "add")
+        return createFormView(model = model, movie = movie, title = "Add movie", action = "add")
     }
 
     /**
@@ -372,52 +356,7 @@ class MovieController(
      * @return page's view with form for editing movie
      */
     private fun createEditFormView(model: Model, movie: MovieFO): String {
-        return createFormView(model, movie, "Edit movie", "edit")
-    }
-
-    /**
-     * Returns movie with ID.
-     *
-     * @param id ID
-     * @return movie with ID
-     * @throws IllegalRequestException if movie doesn't exist
-     */
-    private fun getMovie(id: Int): Movie {
-        val movie = Movie(id = id,
-                czechName = null,
-                originalName = null,
-                year = null,
-                language = null,
-                subtitles = null,
-                media = null,
-                csfd = null,
-                imdbCode = null,
-                wikiEn = null,
-                wikiCz = null,
-                picture = null,
-                note = null,
-                position = null,
-                genres = null)
-
-        return processMovie(movie)
-    }
-
-    /**
-     * Returns processed movie.
-     *
-     * @param movie movie for processing
-     * @return processed movie
-     * @throws IllegalRequestException if movie doesn't exist
-     */
-    private fun processMovie(movie: Movie): Movie {
-        val movieResult = movieFacade.get(movie.id!!)
-        processResults(movieResult)
-
-        if (movieResult.data != null) {
-            return movie
-        }
-
-        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
+        return createFormView(model = model, movie = movie, title = "Edit movie", action = "edit")
     }
 
     /**
@@ -428,7 +367,7 @@ class MovieController(
      */
     private fun getGenres(source: List<Int?>): List<Genre> {
         return source.map {
-            val result = genreFacade.get(it!!)
+            val result = genreFacade.get(id = it!!)
             processResults(result)
 
             result.data!!
@@ -461,10 +400,6 @@ class MovieController(
          */
         private const val LIST_REDIRECT_URL = "redirect:/movies/list"
 
-        /**
-         * Message for illegal request
-         */
-        private const val ILLEGAL_REQUEST_MESSAGE = "Movie doesn't exist."
     }
 
 }

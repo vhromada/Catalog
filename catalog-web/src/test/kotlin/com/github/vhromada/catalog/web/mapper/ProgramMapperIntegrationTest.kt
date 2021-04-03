@@ -2,8 +2,8 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Program
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.ProgramUtils
 import com.github.vhromada.catalog.web.fo.ProgramFO
+import com.github.vhromada.catalog.web.utils.ProgramUtils
 import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,9 +33,9 @@ class ProgramMapperIntegrationTest {
     fun map() {
         val program = ProgramUtils.getProgram()
 
-        val programFO = mapper.map(program)
+        val programFO = mapper.map(source = program)
 
-        ProgramUtils.assertProgramDeepEquals(programFO, program)
+        ProgramUtils.assertProgramDeepEquals(expected = program, actual = programFO)
     }
 
     /**
@@ -45,9 +45,9 @@ class ProgramMapperIntegrationTest {
     fun mapBack() {
         val programFO = ProgramUtils.getProgramFO()
 
-        val program = mapper.mapBack(programFO)
+        val program = mapper.mapBack(source = programFO)
 
-        ProgramUtils.assertProgramDeepEquals(programFO, program)
+        ProgramUtils.assertProgramDeepEquals(expected = programFO, actual = program)
     }
 
 }

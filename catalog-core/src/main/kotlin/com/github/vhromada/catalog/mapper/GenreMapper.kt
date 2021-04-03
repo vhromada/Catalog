@@ -14,17 +14,18 @@ class GenreMapper : Mapper<Genre, com.github.vhromada.catalog.domain.Genre> {
 
     override fun map(source: Genre): com.github.vhromada.catalog.domain.Genre {
         return com.github.vhromada.catalog.domain.Genre(
-                id = source.id,
-                name = source.name!!,
-                position = source.position,
-                audit = null)
+            id = source.id,
+            name = source.name!!,
+            position = source.position
+        )
     }
 
     override fun mapBack(source: com.github.vhromada.catalog.domain.Genre): Genre {
         return Genre(
-                id = source.id,
-                name = source.name,
-                position = source.position)
+            id = source.id,
+            name = source.name,
+            position = source.position
+        )
     }
 
 }

@@ -1,6 +1,6 @@
 package com.github.vhromada.catalog.entity
 
-import com.github.vhromada.common.entity.Movable
+import com.github.vhromada.common.entity.Identifiable
 import java.util.Objects
 
 /**
@@ -9,31 +9,26 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class Cheat(
+    /**
+     * ID
+     */
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        override var id: Int?,
+    /**
+     * Setting for game
+     */
+    val gameSetting: String?,
 
-        /**
-         * Setting for game
-         */
-        val gameSetting: String?,
+    /**
+     * Setting for cheat
+     */
+    val cheatSetting: String?,
 
-        /**
-         * Setting for cheat
-         */
-        val cheatSetting: String?,
-
-        /**
-         * Data
-         */
-        val data: List<CheatData?>?,
-
-        /**
-         * Position
-         */
-        override var position: Int?) : Movable {
+    /**
+     * Data
+     */
+    val data: List<CheatData?>?
+) : Identifiable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -11,21 +11,21 @@ import javax.validation.constraints.NotBlank
  */
 @Password
 data class AccountFO(
+    /**
+     * Username
+     */
+    @field:NotBlank
+    val username: String?,
 
-        /**
-         * Username
-         */
-        @field:NotBlank
-        val username: String?,
+    /**
+     * Password
+     */
+    @field:NotBlank
+    val password: String?,
 
-        /**
-         * Password
-         */
-        @field:NotBlank
-        val password: String?,
-
-        /**
-         * Copy of password
-         */
-        @field:NotBlank
-        val copyPassword: String?) : Serializable
+    /**
+     * Copy of password
+     */
+    @field:NotBlank
+    val copyPassword: String?
+) : Serializable

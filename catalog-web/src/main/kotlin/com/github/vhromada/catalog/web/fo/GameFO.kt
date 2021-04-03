@@ -13,89 +13,89 @@ import javax.validation.constraints.NotNull
  * @author Vladimir Hromada
  */
 data class GameFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Name
+     */
+    @field:NotBlank
+    val name: String?,
 
-        /**
-         * Name
-         */
-        @field:NotBlank
-        val name: String?,
+    /**
+     * URL to english Wikipedia page about game
+     */
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about game
-         */
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about game
+     */
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about game
-         */
-        val wikiCz: String?,
+    /**
+     * Count of media
+     */
+    @field:Range(min = 1, max = 100)
+    val mediaCount: String?,
 
-        /**
-         * Count of media
-         */
-        @field:Range(min = 1, max = 100)
-        val mediaCount: String?,
+    /**
+     * Format
+     */
+    @field:NotNull
+    val format: Format?,
 
-        /**
-         * Format
-         */
-        @field:NotNull
-        val format: Format?,
+    /**
+     * True if there is crack
+     */
+    val crack: Boolean?,
 
-        /**
-         * True if there is crack
-         */
-        val crack: Boolean?,
+    /**
+     * True if there is serial key
+     */
+    val serialKey: Boolean?,
 
-        /**
-         * True if there is serial key
-         */
-        val serialKey: Boolean?,
+    /**
+     * True if there is patch
+     */
+    val patch: Boolean?,
 
-        /**
-         * True if there is patch
-         */
-        val patch: Boolean?,
+    /**
+     * True if there is trainer
+     */
+    val trainer: Boolean?,
 
-        /**
-         * True if there is trainer
-         */
-        val trainer: Boolean?,
+    /**
+     * True if there is data for trainer
+     */
+    val trainerData: Boolean?,
 
-        /**
-         * True if there is data for trainer
-         */
-        val trainerData: Boolean?,
+    /**
+     * True if there is editor
+     */
+    val editor: Boolean?,
 
-        /**
-         * True if there is editor
-         */
-        val editor: Boolean?,
+    /**
+     * True if there are saves
+     */
+    val saves: Boolean?,
 
-        /**
-         * True if there are saves
-         */
-        val saves: Boolean?,
+    /**
+     * Other data
+     */
+    val otherData: String?,
 
-        /**
-         * Other data
-         */
-        val otherData: String?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        val position: Int?) : Serializable {
+    /**
+     * Position
+     */
+    val position: Int?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -11,24 +11,24 @@ import java.io.Serializable
  */
 @Time
 data class TimeFO(
+    /**
+     * Hours
+     */
+    @field:Range(min = 0, max = 23)
+    var hours: String?,
 
-        /**
-         * Hours
-         */
-        @field:Range(min = 0, max = 23)
-        var hours: String?,
+    /**
+     * Minutes
+     */
+    @field:Range(min = 0, max = 59)
+    var minutes: String?,
 
-        /**
-         * Minutes
-         */
-        @field:Range(min = 0, max = 59)
-        var minutes: String?,
-
-        /**
-         * Seconds
-         */
-        @field:Range(min = 0, max = 59)
-        var seconds: String?) : Serializable {
+    /**
+     * Seconds
+     */
+    @field:Range(min = 0, max = 59)
+    var seconds: String?
+) : Serializable {
 
     constructor() : this(hours = null, minutes = null, seconds = null)
 

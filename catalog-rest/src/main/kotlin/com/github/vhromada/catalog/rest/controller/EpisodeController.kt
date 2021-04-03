@@ -1,8 +1,9 @@
 package com.github.vhromada.catalog.rest.controller
 
 import com.github.vhromada.catalog.entity.Episode
-import com.github.vhromada.catalog.entity.Season
 import com.github.vhromada.catalog.facade.EpisodeFacade
+import com.github.vhromada.catalog.facade.SeasonFacade
+import com.github.vhromada.catalog.facade.ShowFacade
 import com.github.vhromada.common.web.controller.AbstractController
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -22,21 +23,35 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("episodeController")
 @RequestMapping("/catalog/shows/{showId}/seasons/{seasonId}/episodes")
-class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractController() {
+class EpisodeController(
+    private val episodeFacade: EpisodeFacade,
+    private val showFacade: ShowFacade,
+    private val seasonFacade: SeasonFacade
+) : AbstractController() {
 
     /**
-     * Returns episode with ID or null if there isn't such episode.
+     * Returns episode with ID.
+     * <br></br>
+     * Validation errors:
+     *
+     *  * Show doesn't exist in data storage
+     *  * Season doesn't exist in data storage
+     *  * Episode doesn't exist in data storage
      *
      * @param showId    show ID
      * @param seasonId  season ID
      * @param episodeId episode ID
-     * @return episode with ID or null if there isn't such episode
+     * @return episode with ID
      */
     @GetMapping("/{episodeId}")
-    fun getEpisode(@PathVariable("showId") showId: Int,
-                   @PathVariable("seasonId") seasonId: Int,
-                   @PathVariable("episodeId") episodeId: Int): Episode? {
-        return processResult(episodeFacade.get(episodeId))
+    fun getEpisode(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("seasonId") seasonId: Int,
+        @PathVariable("episodeId") episodeId: Int
+    ): Episode {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.get(id = seasonId))
+        return processResult(result = episodeFacade.get(id = episodeId))!!
     }
 
     /**
@@ -44,6 +59,7 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
+     *  * Show doesn't exist in data storage
      *  * Season doesn't exist in data storage
      *  * Episode ID isn't null
      *  * Episode position isn't null
@@ -59,11 +75,13 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      */
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    fun add(@PathVariable("showId") showId: Int,
-            @PathVariable("seasonId") seasonId: Int,
-            @RequestBody episode: Episode) {
-        val season = Season(id = seasonId, number = null, startYear = null, endYear = null, language = null, subtitles = null, note = null, position = null)
-        processResult(episodeFacade.add(season, episode))
+    fun add(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("seasonId") seasonId: Int,
+        @RequestBody episode: Episode
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = episodeFacade.add(parent = seasonId, data = episode))
     }
 
     /**
@@ -71,6 +89,8 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
+     *  * Show doesn't exist in data storage
+     *  * Season doesn't exist in data storage
      *  * ID is null
      *  * Position is null
      *  * Number of episode isn't positive number
@@ -78,17 +98,21 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      *  * Name is empty string
      *  * Length of episode is negative value
      *  * Note is null
-     *  * Season doesn't exist in data storage
+     *  * Episode doesn't exist in data storage
      *
      * @param showId   show ID
      * @param seasonId season ID
      * @param episode  new value of episode
      */
     @PostMapping("/update")
-    fun update(@PathVariable("showId") showId: Int,
-               @PathVariable("seasonId") seasonId: Int,
-               @RequestBody episode: Episode) {
-        processResult(episodeFacade.update(episode))
+    fun update(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("seasonId") seasonId: Int,
+        @RequestBody episode: Episode
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.get(id = seasonId))
+        processResult(result = episodeFacade.update(data = episode))
     }
 
     /**
@@ -96,6 +120,8 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
+     *  * Show doesn't exist in data storage
+     *  * Season doesn't exist in data storage
      *  * Episode doesn't exist in data storage
      *
      * @param showId   show ID
@@ -104,11 +130,14 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      */
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun remove(@PathVariable("showId") showId: Int,
-               @PathVariable("seasonId") seasonId: Int,
-               @PathVariable("id") id: Int) {
-        val episode = Episode(id = id, number = null, name = null, length = null, note = null, position = null)
-        processResult(episodeFacade.remove(episode))
+    fun remove(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("seasonId") seasonId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.get(id = seasonId))
+        processResult(result = episodeFacade.remove(id = id))
     }
 
     /**
@@ -116,19 +145,24 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Show doesn't exist in data storage
+     *  * Season doesn't exist in data storage
      *  * Episode doesn't exist in data storage
      *
      * @param showId   show ID
      * @param seasonId season ID
-     * @param episode  episode
+     * @param id       ID
      */
-    @PostMapping("/duplicate")
+    @PostMapping("/duplicate/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun duplicate(@PathVariable("showId") showId: Int,
-                  @PathVariable("seasonId") seasonId: Int,
-                  @RequestBody episode: Episode) {
-        processResult(episodeFacade.duplicate(episode))
+    fun duplicate(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("seasonId") seasonId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.get(id = seasonId))
+        processResult(result = episodeFacade.duplicate(id = id))
     }
 
     /**
@@ -136,20 +170,25 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Show doesn't exist in data storage
+     *  * Season doesn't exist in data storage
      *  * Episode can't be moved up
      *  * Episode doesn't exist in data storage
      *
      * @param showId   show ID
      * @param seasonId season ID
-     * @param episode  episode
+     * @param id       ID
      */
-    @PostMapping("/moveUp")
+    @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveUp(@PathVariable("showId") showId: Int,
-               @PathVariable("seasonId") seasonId: Int,
-               @RequestBody episode: Episode) {
-        processResult(episodeFacade.moveUp(episode))
+    fun moveUp(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("seasonId") seasonId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.get(id = seasonId))
+        processResult(result = episodeFacade.moveUp(id = id))
     }
 
     /**
@@ -157,20 +196,25 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
-     *  * Episode can't be moved down
+     *  * Show doesn't exist in data storage
+     *  * Season doesn't exist in data storage
+     *  * Episode can't be moved up
      *  * Episode doesn't exist in data storage
      *
      * @param showId   show ID
      * @param seasonId season ID
-     * @param episode  episode
+     * @param id       ID
      */
-    @PostMapping("/moveDown")
+    @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveDown(@PathVariable("showId") showId: Int,
-                 @PathVariable("seasonId") seasonId: Int,
-                 @RequestBody episode: Episode) {
-        processResult(episodeFacade.moveDown(episode))
+    fun moveDown(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("seasonId") seasonId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = showFacade.get(id = showId))
+        processResult(result = seasonFacade.get(id = seasonId))
+        processResult(result = episodeFacade.moveDown(id = id))
     }
 
     /**
@@ -178,7 +222,7 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Show doesn't exist in data storage
      *  * Season doesn't exist in data storage
      *
      * @param showId   show ID
@@ -186,10 +230,12 @@ class EpisodeController(private val episodeFacade: EpisodeFacade) : AbstractCont
      * @return list of episodes for specified season
      */
     @GetMapping
-    fun findEpisodesBySeason(@PathVariable("showId") showId: Int,
-                             @PathVariable("seasonId") seasonId: Int): List<Episode> {
-        val season = Season(id = seasonId, number = null, startYear = null, endYear = null, language = null, subtitles = null, note = null, position = null)
-        return processResult(episodeFacade.find(season))!!
+    fun findEpisodesBySeason(
+        @PathVariable("showId") showId: Int,
+        @PathVariable("seasonId") seasonId: Int
+    ): List<Episode> {
+        processResult(result = showFacade.get(id = showId))
+        return processResult(result = episodeFacade.find(parent = seasonId))!!
     }
 
 }

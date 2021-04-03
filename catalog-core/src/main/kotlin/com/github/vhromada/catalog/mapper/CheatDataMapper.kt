@@ -14,17 +14,18 @@ class CheatDataMapper : Mapper<CheatData, com.github.vhromada.catalog.domain.Che
 
     override fun map(source: CheatData): com.github.vhromada.catalog.domain.CheatData {
         return com.github.vhromada.catalog.domain.CheatData(
-                id = source.id,
-                action = source.action!!,
-                description = source.description!!,
-                audit = null)
+            id = source.id,
+            action = source.action!!,
+            description = source.description!!
+        )
     }
 
     override fun mapBack(source: com.github.vhromada.catalog.domain.CheatData): CheatData {
         return CheatData(
-                id = source.id,
-                action = source.action,
-                description = source.description)
+            id = source.id,
+            action = source.action,
+            description = source.description
+        )
     }
 
 }

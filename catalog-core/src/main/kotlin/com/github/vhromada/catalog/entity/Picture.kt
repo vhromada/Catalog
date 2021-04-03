@@ -9,21 +9,21 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class Picture(
+    /**
+     * ID
+     */
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        override var id: Int?,
+    /**
+     * Picture
+     */
+    val content: ByteArray?,
 
-        /**
-         * Picture
-         */
-        val content: ByteArray?,
-
-        /**
-         * Position
-         */
-        override var position: Int?) : Movable {
+    /**
+     * Position
+     */
+    override var position: Int?
+) : Movable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

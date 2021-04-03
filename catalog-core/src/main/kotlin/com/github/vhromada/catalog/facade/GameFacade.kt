@@ -1,7 +1,7 @@
 package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.entity.Game
-import com.github.vhromada.common.facade.MovableParentFacade
+import com.github.vhromada.common.facade.ParentFacade
 import com.github.vhromada.common.result.Result
 
 /**
@@ -9,7 +9,7 @@ import com.github.vhromada.common.result.Result
  *
  * @author Vladimir Hromada
  */
-interface GameFacade : MovableParentFacade<Game> {
+interface GameFacade : ParentFacade<Game> {
 
     /**
      * Adds game. Sets new ID and position.

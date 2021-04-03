@@ -6,19 +6,20 @@ import com.github.vhromada.catalog.utils.EpisodeUtils
 import com.github.vhromada.catalog.utils.GenreUtils
 import com.github.vhromada.catalog.utils.SeasonUtils
 import com.github.vhromada.catalog.utils.ShowUtils
+import com.github.vhromada.catalog.utils.TestConstants
+import com.github.vhromada.catalog.utils.fillAudit
 import com.github.vhromada.catalog.utils.updated
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.data.domain.Sort
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
 
 /**
  * A class represents integration test for class [ShowRepository].
@@ -34,29 +35,28 @@ class ShowRepositoryIntegrationTest {
     /**
      * Instance of [EntityManager]
      */
-    @Autowired
-    @Qualifier("containerManagedEntityManager")
+    @PersistenceContext
     private lateinit var entityManager: EntityManager
 
     /**
      * Instance of [ShowRepository]
      */
     @Autowired
-    private lateinit var showRepository: ShowRepository
+    private lateinit var repository: ShowRepository
 
     /**
      * Test method for get shows.
      */
     @Test
     fun getShows() {
-        val shows = showRepository.findAll(Sort.by("position", "id"))
+        val shows = repository.findAll()
 
-        ShowUtils.assertShowsDeepEquals(ShowUtils.getShows(), shows)
+        ShowUtils.assertDomainShowsDeepEquals(expected = ShowUtils.getShows(), actual = shows)
 
         assertSoftly {
-            it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
-            it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
         }
     }
 
@@ -64,20 +64,19 @@ class ShowRepositoryIntegrationTest {
      * Test method for get show.
      */
     @Test
-    @Suppress("UsePropertyAccessSyntax")
     fun getShow() {
         for (i in 1..ShowUtils.SHOWS_COUNT) {
-            val show = showRepository.findById(i).orElse(null)
+            val show = repository.findById(i).orElse(null)
 
-            ShowUtils.assertShowDeepEquals(ShowUtils.getShow(i), show)
+            ShowUtils.assertShowDeepEquals(expected = ShowUtils.getShowDomain(index = i), actual = show)
         }
 
-        assertThat(showRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
+        assertThat(repository.findById(Int.MAX_VALUE)).isNotPresent
 
         assertSoftly {
-            it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
-            it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
         }
     }
 
@@ -86,79 +85,54 @@ class ShowRepositoryIntegrationTest {
      */
     @Test
     fun add() {
-        val audit = AuditUtils.getAudit()
-        val show = ShowUtils.newShowDomain(null)
-                .copy(position = ShowUtils.SHOWS_COUNT, genres = listOf(GenreUtils.getGenre(entityManager, 1)!!), audit = audit)
+        val show = ShowUtils.newShowDomain(id = null)
+            .copy(position = ShowUtils.SHOWS_COUNT, genres = listOf(GenreUtils.getGenre(entityManager = entityManager, id = 1)!!))
+        val expectedShow = ShowUtils.newShowDomain(id = ShowUtils.SHOWS_COUNT + 1)
+            .copy(picture = null, genres = listOf(GenreUtils.getGenre(entityManager = entityManager, id = 1)!!))
+            .fillAudit(audit = AuditUtils.newAudit())
 
-        showRepository.save(show)
+        repository.save(show)
 
-        assertThat(show.id).isEqualTo(ShowUtils.SHOWS_COUNT + 1)
+        assertSoftly {
+            it.assertThat(show.id).isEqualTo(ShowUtils.SHOWS_COUNT + 1)
+            it.assertThat(show.createdUser).isEqualTo(TestConstants.ACCOUNT.uuid!!)
+            it.assertThat(show.createdTime).isEqualTo(TestConstants.TIME)
+            it.assertThat(show.updatedUser).isEqualTo(TestConstants.ACCOUNT.uuid!!)
+            it.assertThat(show.updatedTime).isEqualTo(TestConstants.TIME)
+        }
 
         val addedShow = ShowUtils.getShow(entityManager, ShowUtils.SHOWS_COUNT + 1)!!
-        val expectedAddedShow = ShowUtils.newShowDomain(null)
-                .copy(id = ShowUtils.SHOWS_COUNT + 1, position = ShowUtils.SHOWS_COUNT, genres = listOf(GenreUtils.getGenreDomain(1)), audit = audit)
-        ShowUtils.assertShowDeepEquals(expectedAddedShow, addedShow)
+        assertThat(addedShow).isNotNull
+        ShowUtils.assertShowDeepEquals(expected = expectedShow, actual = addedShow)
 
         assertSoftly {
-            it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT + 1)
-            it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT + 1)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
         }
     }
 
     /**
-     * Test method for update show with updated data.
+     * Test method for update show.
      */
     @Test
-    fun updateData() {
-        val show = ShowUtils.updateShow(entityManager, 1)
+    fun update() {
+        val show = ShowUtils.updateShow(entityManager = entityManager, id = 1)
+        val expectedShow = ShowUtils.getShowDomain(index = 1)
+            .updated()
+            .copy(position = ShowUtils.POSITION)
+            .fillAudit(audit = AuditUtils.updatedAudit())
 
-        showRepository.save(show)
+        repository.saveAndFlush(show)
 
-        val updatedShow = ShowUtils.getShow(entityManager, 1)!!
-        val expectedUpdatedShow = ShowUtils.getShow(1)
-                .updated()
-                .copy(position = ShowUtils.POSITION)
-        ShowUtils.assertShowDeepEquals(expectedUpdatedShow, updatedShow)
-
-        assertSoftly {
-            it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
-            it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
-        }
-    }
-
-    /**
-     * Test method for update show with added season.
-     */
-    @Test
-    fun updateAddedSeason() {
-        val audit = AuditUtils.getAudit()
-        var season = SeasonUtils.newSeasonDomain(null)
-        season = season.copy(subtitles = season.subtitles.toMutableList(),
-                position = SeasonUtils.SEASONS_COUNT, audit = audit)
-        entityManager.persist(season)
-
-        var show = ShowUtils.getShow(entityManager, 1)!!
-        val seasons = show.seasons.toMutableList()
-        seasons.add(season)
-        show = show.copy(seasons = seasons)
-
-        showRepository.save(show)
-
-        val updatedShow = ShowUtils.getShow(entityManager, 1)!!
-        val expectedSeason = SeasonUtils.newSeasonDomain(null)
-                .copy(id = SeasonUtils.SEASONS_COUNT + 1, position = SeasonUtils.SEASONS_COUNT, audit = audit)
-        var expectedUpdatedShow = ShowUtils.getShow(1)
-        val expectedSeasons = expectedUpdatedShow.seasons.toMutableList()
-        expectedSeasons.add(expectedSeason)
-        expectedUpdatedShow = expectedUpdatedShow.copy(seasons = seasons)
-        ShowUtils.assertShowDeepEquals(expectedUpdatedShow, updatedShow)
+        val updatedShow = ShowUtils.getShow(entityManager = entityManager, id = 1)
+        assertThat(updatedShow).isNotNull
+        ShowUtils.assertShowDeepEquals(expected = expectedShow, actual = updatedShow!!)
 
         assertSoftly {
-            it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
-            it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT + 1)
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
         }
     }
 
@@ -167,17 +141,14 @@ class ShowRepositoryIntegrationTest {
      */
     @Test
     fun remove() {
-        val seasonsCount = ShowUtils.getShow(1).seasons.size
-        val episodesCount = seasonsCount * EpisodeUtils.EPISODES_PER_SEASON_COUNT
+        repository.delete(ShowUtils.getShow(entityManager = entityManager, id = 1)!!)
 
-        showRepository.delete(ShowUtils.getShow(entityManager, 1)!!)
-
-        assertThat(ShowUtils.getShow(entityManager, 1)).isNull()
+        assertThat(ShowUtils.getShow(entityManager = entityManager, id = 1)).isNull()
 
         assertSoftly {
-            it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT - 1)
-            it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT - seasonsCount)
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT - episodesCount)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT - 1)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT - SeasonUtils.SEASONS_PER_SHOW_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT - EpisodeUtils.EPISODES_PER_SHOW_COUNT)
         }
     }
 
@@ -186,12 +157,12 @@ class ShowRepositoryIntegrationTest {
      */
     @Test
     fun removeAll() {
-        showRepository.deleteAll()
+        repository.deleteAll()
 
         assertSoftly {
-            it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(0)
-            it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(0)
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(0)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(0)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(0)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(0)
         }
     }
 
@@ -199,15 +170,36 @@ class ShowRepositoryIntegrationTest {
      * Test method for get shows for user.
      */
     @Test
-    fun findByAuditCreatedUser() {
-        val shows = showRepository.findByAuditCreatedUser(AuditUtils.getAudit().createdUser)
+    fun findByCreatedUser() {
+        val shows = repository.findByCreatedUser(user = AuditUtils.getAudit().createdUser!!)
 
-        ShowUtils.assertShowsDeepEquals(ShowUtils.getShows(), shows)
+        ShowUtils.assertDomainShowsDeepEquals(expected = ShowUtils.getShows(), actual = shows)
 
         assertSoftly {
-            it.assertThat(ShowUtils.getShowsCount(entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
-            it.assertThat(SeasonUtils.getSeasonsCount(entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
-            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
+        }
+    }
+
+    /**
+     * Test method for get show by id for user.
+     */
+    @Test
+    fun findByIdAndCreatedUser() {
+        val user = AuditUtils.getAudit().createdUser!!
+        for (i in 1..ShowUtils.SHOWS_COUNT) {
+            val author = repository.findByIdAndCreatedUser(id = i, user = user).orElse(null)
+
+            ShowUtils.assertShowDeepEquals(expected = ShowUtils.getShowDomain(index = i), actual = author)
+        }
+
+        assertThat(repository.findByIdAndCreatedUser(id = Int.MAX_VALUE, user = user)).isNotPresent
+
+        assertSoftly {
+            it.assertThat(ShowUtils.getShowsCount(entityManager = entityManager)).isEqualTo(ShowUtils.SHOWS_COUNT)
+            it.assertThat(SeasonUtils.getSeasonsCount(entityManager = entityManager)).isEqualTo(SeasonUtils.SEASONS_COUNT)
+            it.assertThat(EpisodeUtils.getEpisodesCount(entityManager = entityManager)).isEqualTo(EpisodeUtils.EPISODES_COUNT)
         }
     }
 

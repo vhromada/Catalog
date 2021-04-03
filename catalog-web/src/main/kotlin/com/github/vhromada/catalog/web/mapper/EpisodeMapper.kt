@@ -15,21 +15,25 @@ import org.springframework.stereotype.Component
 class EpisodeMapper(private val timeMapper: Mapper<Int, TimeFO>) : Mapper<Episode, EpisodeFO> {
 
     override fun map(source: Episode): EpisodeFO {
-        return EpisodeFO(id = source.id,
-                number = source.number!!.toString(),
-                length = timeMapper.map(source.length!!),
-                name = source.name,
-                note = source.note,
-                position = source.position)
+        return EpisodeFO(
+            id = source.id,
+            number = source.number!!.toString(),
+            length = timeMapper.map(source = source.length!!),
+            name = source.name,
+            note = source.note,
+            position = source.position
+        )
     }
 
     override fun mapBack(source: EpisodeFO): Episode {
-        return Episode(id = source.id,
-                number = source.number!!.toInt(),
-                length = timeMapper.mapBack(source.length!!),
-                name = source.name,
-                note = source.note,
-                position = source.position)
+        return Episode(
+            id = source.id,
+            number = source.number!!.toInt(),
+            length = timeMapper.mapBack(source = source.length!!),
+            name = source.name,
+            note = source.note,
+            position = source.position
+        )
     }
 
 }

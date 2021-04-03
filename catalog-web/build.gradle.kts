@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "2.4.0"
+    id("org.springframework.boot") version "2.4.4"
     kotlin("jvm")
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
@@ -20,7 +20,9 @@ dependencies {
     implementation("jakarta.validation:jakarta.validation-api")
     implementation("org.hibernate.validator:hibernate-validator")
     runtimeOnly("com.h2database:h2")
-    testImplementation("com.github.vhromada.common:common-test:$commonVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
     testImplementation(kotlin("test-junit5"))
 }
 

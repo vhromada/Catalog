@@ -4,8 +4,7 @@ import com.github.vhromada.catalog.entity.Picture
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.validator.AbstractMovableValidator
+import com.github.vhromada.common.validator.AbstractValidator
 import org.springframework.stereotype.Component
 
 /**
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component
  * @author Vladimir Hromada
  */
 @Component("pictureValidator")
-class PictureValidator(pictureService: MovableService<com.github.vhromada.catalog.domain.Picture>) : AbstractMovableValidator<Picture, com.github.vhromada.catalog.domain.Picture>("Picture", pictureService) {
+class PictureValidator : AbstractValidator<Picture, com.github.vhromada.catalog.domain.Picture>(name = "Picture") {
 
     /**
      * Validates picture deeply.
@@ -28,7 +27,7 @@ class PictureValidator(pictureService: MovableService<com.github.vhromada.catalo
      */
     override fun validateDataDeep(data: Picture, result: Result<Unit>) {
         if (data.content == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_CONTENT_NULL", "Content mustn't be null."))
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "PICTURE_CONTENT_NULL", message = "Content mustn't be null."))
         }
     }
 

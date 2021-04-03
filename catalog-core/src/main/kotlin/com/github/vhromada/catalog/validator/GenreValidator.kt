@@ -4,8 +4,7 @@ import com.github.vhromada.catalog.entity.Genre
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.validator.AbstractMovableValidator
+import com.github.vhromada.common.validator.AbstractValidator
 import org.springframework.stereotype.Component
 
 /**
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component
  * @author Vladimir Hromada
  */
 @Component("genreValidator")
-class GenreValidator(genreService: MovableService<com.github.vhromada.catalog.domain.Genre>) : AbstractMovableValidator<Genre, com.github.vhromada.catalog.domain.Genre>("Genre", genreService) {
+class GenreValidator : AbstractValidator<Genre, com.github.vhromada.catalog.domain.Genre>(name = "Genre") {
 
     /**
      * Validates genre deeply.
@@ -30,10 +29,10 @@ class GenreValidator(genreService: MovableService<com.github.vhromada.catalog.do
     override fun validateDataDeep(data: Genre, result: Result<Unit>) {
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "GENRE_NAME_NULL", message = "Name mustn't be null."))
             }
             data.name.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "GENRE_NAME_EMPTY", message = "Name mustn't be empty string."))
             }
         }
     }

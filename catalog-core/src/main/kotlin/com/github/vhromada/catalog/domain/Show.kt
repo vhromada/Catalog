@@ -1,7 +1,8 @@
 package com.github.vhromada.catalog.domain
 
 import com.github.vhromada.common.domain.Audit
-import com.github.vhromada.common.domain.AuditEntity
+import com.github.vhromada.common.entity.Movable
+import com.github.vhromada.common.utils.sorted
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.util.Objects
@@ -27,86 +28,88 @@ import javax.persistence.Table
 @Entity
 @Table(name = "tv_shows")
 data class Show(
+    /**
+     * ID
+     */
+    @Id
+    @SequenceGenerator(name = "show_generator", sequenceName = "tv_shows_sq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "show_generator")
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        @Id
-        @SequenceGenerator(name = "show_generator", sequenceName = "tv_shows_sq", allocationSize = 1)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "show_generator")
-        override var id: Int?,
+    /**
+     * Czech name
+     */
+    @Column(name = "czech_name")
+    val czechName: String,
 
-        /**
-         * Czech name
-         */
-        @Column(name = "czech_name")
-        val czechName: String,
+    /**
+     * Original name
+     */
+    @Column(name = "original_name")
+    val originalName: String,
 
-        /**
-         * Original name
-         */
-        @Column(name = "original_name")
-        val originalName: String,
+    /**
+     * URL to ČSFD page about show
+     */
+    val csfd: String?,
 
-        /**
-         * URL to ČSFD page about show
-         */
-        val csfd: String?,
+    /**
+     * IMDB code
+     */
+    @Column(name = "imdb_code")
+    val imdbCode: Int?,
 
-        /**
-         * IMDB code
-         */
-        @Column(name = "imdb_code")
-        val imdbCode: Int?,
+    /**
+     * URL to english Wikipedia page about show
+     */
+    @Column(name = "wiki_en")
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about show
-         */
-        @Column(name = "wiki_en")
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about show
+     */
+    @Column(name = "wiki_cz")
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about show
-         */
-        @Column(name = "wiki_cz")
-        val wikiCz: String?,
+    /**
+     * Picture's ID
+     */
+    val picture: Int?,
 
-        /**
-         * Picture's ID
-         */
-        val picture: Int?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
+    /**
+     * Position
+     */
+    override var position: Int?,
 
-        /**
-         * Position
-         */
-        override var position: Int?,
+    /**
+     * Genres
+     */
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tv_show_genres", joinColumns = [JoinColumn(name = "tv_show")], inverseJoinColumns = [JoinColumn(name = "genre")])
+    @Fetch(FetchMode.SELECT)
+    val genres: List<Genre>,
 
-        /**
-         * Genres
-         */
-        @OneToMany(fetch = FetchType.EAGER)
-        @JoinTable(name = "tv_show_genres", joinColumns = [JoinColumn(name = "tv_show")], inverseJoinColumns = [JoinColumn(name = "genre")])
-        @Fetch(FetchMode.SELECT)
-        val genres: List<Genre>,
+    /**
+     * Seasons
+     */
+    @OneToMany(mappedBy = "show", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OrderBy("position, id")
+    @Fetch(FetchMode.SELECT)
+    val seasons: MutableList<Season>
+) : Audit(), Movable {
 
-        /**
-         * Seasons
-         */
-        @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
-        @JoinColumn(name = "tv_show", referencedColumnName = "id")
-        @OrderBy("position, id")
-        @Fetch(FetchMode.SELECT)
-        val seasons: List<Season>,
+    override fun updatePosition(position: Int) {
+        super.updatePosition(position)
 
-        /**
-         * Audit
-         */
-        override var audit: Audit?) : AuditEntity(audit) {
+        for (i in seasons.sorted().indices) {
+            seasons[i].updatePosition(i)
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -22,7 +22,7 @@ class LoginController {
      */
     @GetMapping
     fun login(model: Model): String {
-        return createLoginView(model)
+        return createLoginView(model = model)
     }
 
     /**
@@ -35,13 +35,13 @@ class LoginController {
     fun loginError(model: Model): String {
         model.addAttribute("loginError", true)
 
-        return createLoginView(model)
+        return createLoginView(model = model)
     }
 
     /**
      * Returns page's view for login.
      *
-     * @param model  model
+     * @param model model
      * @return page's view for login
      */
     private fun createLoginView(model: Model): String {

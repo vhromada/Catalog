@@ -20,7 +20,7 @@ class LogoutController {
     /**
      * Process logout.
      *
-     * @param request HTTP request
+     * @param request  HTTP request
      * @param response HTTP response
      * @return view for redirect to page for login
      */

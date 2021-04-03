@@ -2,8 +2,8 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Season
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.SeasonUtils
 import com.github.vhromada.catalog.web.fo.SeasonFO
+import com.github.vhromada.catalog.web.utils.SeasonUtils
 import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,9 +33,9 @@ class SeasonMapperIntegrationTest {
     fun map() {
         val season = SeasonUtils.getSeason()
 
-        val seasonFO = mapper.map(season)
+        val seasonFO = mapper.map(source = season)
 
-        SeasonUtils.assertSeasonDeepEquals(seasonFO, season)
+        SeasonUtils.assertSeasonDeepEquals(expected = season, actual = seasonFO)
     }
 
     /**
@@ -45,9 +45,9 @@ class SeasonMapperIntegrationTest {
     fun mapBack() {
         val seasonFO = SeasonUtils.getSeasonFO()
 
-        val season = mapper.mapBack(seasonFO)
+        val season = mapper.mapBack(source = seasonFO)
 
-        SeasonUtils.assertSeasonDeepEquals(seasonFO, season)
+        SeasonUtils.assertSeasonDeepEquals(expected = seasonFO, actual = season)
     }
 
 }

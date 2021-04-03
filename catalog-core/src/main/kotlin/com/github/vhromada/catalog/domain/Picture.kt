@@ -1,7 +1,7 @@
 package com.github.vhromada.catalog.domain
 
 import com.github.vhromada.common.domain.Audit
-import com.github.vhromada.common.domain.AuditEntity
+import com.github.vhromada.common.entity.Movable
 import java.util.Objects
 import javax.persistence.Basic
 import javax.persistence.Entity
@@ -21,31 +21,26 @@ import javax.persistence.Table
 @Entity
 @Table(name = "pictures")
 data class Picture(
+    /**
+     * ID
+     */
+    @Id
+    @SequenceGenerator(name = "picture_generator", sequenceName = "pictures_sq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "picture_generator")
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        @Id
-        @SequenceGenerator(name = "picture_generator", sequenceName = "pictures_sq", allocationSize = 1)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "picture_generator")
-        override var id: Int?,
+    /**
+     * Picture
+     */
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    val content: ByteArray,
 
-        /**
-         * Picture
-         */
-        @Lob
-        @Basic(fetch = FetchType.LAZY)
-        val content: ByteArray,
-
-        /**
-         * Position
-         */
-        override var position: Int?,
-
-        /**
-         * Audit
-         */
-        override var audit: Audit?) : AuditEntity(audit) {
+    /**
+     * Position
+     */
+    override var position: Int?
+) : Audit(), Movable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

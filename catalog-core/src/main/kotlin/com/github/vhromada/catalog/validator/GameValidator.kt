@@ -4,8 +4,7 @@ import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.validator.AbstractMovableValidator
+import com.github.vhromada.common.validator.AbstractValidator
 import org.springframework.stereotype.Component
 
 /**
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component
  * @author Vladimir Hromada
  */
 @Component("gameValidator")
-class GameValidator(gameService: MovableService<com.github.vhromada.catalog.domain.Game>) : AbstractMovableValidator<Game, com.github.vhromada.catalog.domain.Game>("Game", gameService) {
+class GameValidator : AbstractValidator<Game, com.github.vhromada.catalog.domain.Game>(name = "Game") {
 
     /**
      * Validates game deeply.
@@ -28,7 +27,6 @@ class GameValidator(gameService: MovableService<com.github.vhromada.catalog.doma
      *  * Count of media is null
      *  * Count of media isn't positive number
      *  * Format is null
-     *  * Cheat is ot null
      *  * Other data is null
      *  * Note is null
      *
@@ -38,29 +36,29 @@ class GameValidator(gameService: MovableService<com.github.vhromada.catalog.doma
     override fun validateDataDeep(data: Game, result: Result<Unit>) {
         when {
             data.name == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_NULL", "Name mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "GAME_NAME_NULL", message = "Name mustn't be null."))
             }
             data.name.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NAME_EMPTY", "Name mustn't be empty string."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "GAME_NAME_EMPTY", message = "Name mustn't be empty string."))
             }
         }
-        validateUrls(data, result)
+        validateUrls(game = data, result = result)
         when {
             data.mediaCount == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NULL", "Count of media mustn't be null."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "GAME_MEDIA_COUNT_NULL", message = "Count of media mustn't be null."))
             }
             data.mediaCount <= 0 -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_MEDIA_COUNT_NOT_POSITIVE", "Count of media must be positive number."))
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "GAME_MEDIA_COUNT_NOT_POSITIVE", message = "Count of media must be positive number."))
             }
         }
         if (data.format == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_FORMAT_NULL", "Format mustn't be null."))
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "GAME_FORMAT_NULL", message = "Format mustn't be null."))
         }
         if (data.otherData == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_OTHER_DATA_NULL", "Other data mustn't be null."))
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "GAME_OTHER_DATA_NULL", message = "Other data mustn't be null."))
         }
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "GAME_NOTE_NULL", message = "Note mustn't be null."))
         }
     }
 
@@ -72,15 +70,15 @@ class GameValidator(gameService: MovableService<com.github.vhromada.catalog.doma
      *  * URL to english Wikipedia page about game is null
      *  * URL to czech Wikipedia page about game is null
      *
-     * @param data   validating show
+     * @param game   validating show
      * @param result result with validation errors
      */
-    private fun validateUrls(data: Game, result: Result<Unit>) {
-        if (data.wikiEn == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about game mustn't be null."))
+    private fun validateUrls(game: Game, result: Result<Unit>) {
+        if (game.wikiEn == null) {
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "GAME_WIKI_EN_NULL", message = "URL to english Wikipedia page about game mustn't be null."))
         }
-        if (data.wikiCz == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL", "URL to czech Wikipedia page about game mustn't be null."))
+        if (game.wikiCz == null) {
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "GAME_WIKI_CZ_NULL", message = "URL to czech Wikipedia page about game mustn't be null."))
         }
     }
 

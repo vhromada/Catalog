@@ -17,39 +17,41 @@ class MovieMapper(private val timeMapper: Mapper<Int, TimeFO>) : Mapper<Movie, M
 
     override fun map(source: Movie): MovieFO {
         return MovieFO(id = source.id,
-                czechName = source.czechName,
-                originalName = source.originalName,
-                year = source.year.toString(),
-                language = source.language,
-                subtitles = source.subtitles!!.filterNotNull(),
-                media = source.media!!.map { timeMapper.map(it!!.length!!) },
-                csfd = source.csfd,
-                imdb = source.imdbCode!! >= 1,
-                imdbCode = if (source.imdbCode!! < 1) null else source.imdbCode!!.toString(),
-                wikiEn = source.wikiEn,
-                wikiCz = source.wikiCz,
-                picture = source.picture,
-                note = source.note,
-                position = source.position,
-                genres = source.genres!!.map { it!!.id!! })
+            czechName = source.czechName,
+            originalName = source.originalName,
+            year = source.year.toString(),
+            language = source.language,
+            subtitles = source.subtitles!!.filterNotNull(),
+            media = source.media!!.map { timeMapper.map(source = it!!.length!!) },
+            csfd = source.csfd,
+            imdb = source.imdbCode!! >= 1,
+            imdbCode = if (source.imdbCode!! < 1) null else source.imdbCode!!.toString(),
+            wikiEn = source.wikiEn,
+            wikiCz = source.wikiCz,
+            picture = source.picture,
+            note = source.note,
+            position = source.position,
+            genres = source.genres!!.map { it!!.id!! })
     }
 
     override fun mapBack(source: MovieFO): Movie {
-        return Movie(id = source.id,
-                czechName = source.czechName,
-                originalName = source.originalName,
-                year = source.year!!.toInt(),
-                language = source.language,
-                subtitles = source.subtitles,
-                media = source.media!!.mapIndexed { index, it -> mapMedium(index, it) },
-                csfd = source.csfd,
-                imdbCode = if (source.imdb) source.imdbCode!!.toInt() else -1,
-                wikiEn = source.wikiEn,
-                wikiCz = source.wikiCz,
-                picture = source.picture,
-                note = source.note,
-                position = source.position,
-                genres = null)
+        return Movie(
+            id = source.id,
+            czechName = source.czechName,
+            originalName = source.originalName,
+            year = source.year!!.toInt(),
+            language = source.language,
+            subtitles = source.subtitles,
+            media = source.media!!.mapIndexed { index, it -> mapMedium(index = index, source = it) },
+            csfd = source.csfd,
+            imdbCode = if (source.imdb) source.imdbCode!!.toInt() else -1,
+            wikiEn = source.wikiEn,
+            wikiCz = source.wikiCz,
+            picture = source.picture,
+            note = source.note,
+            position = source.position,
+            genres = null
+        )
     }
 
     /**
@@ -60,9 +62,11 @@ class MovieMapper(private val timeMapper: Mapper<Int, TimeFO>) : Mapper<Movie, M
      * @return medium
      */
     private fun mapMedium(index: Int, source: TimeFO?): Medium {
-        return Medium(id = null,
-                length = timeMapper.mapBack(source!!),
-                number = index + 1)
+        return Medium(
+            id = null,
+            length = timeMapper.mapBack(source = source!!),
+            number = index + 1
+        )
     }
 
 }

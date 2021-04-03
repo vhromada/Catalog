@@ -1,16 +1,13 @@
 package com.github.vhromada.catalog.validator
 
 import com.github.vhromada.catalog.entity.Genre
-import com.github.vhromada.catalog.entity.Picture
 import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
-import com.github.vhromada.common.service.MovableService
 import com.github.vhromada.common.utils.Constants
-import com.github.vhromada.common.validator.AbstractMovableValidator
-import com.github.vhromada.common.validator.MovableValidator
-import com.github.vhromada.common.validator.ValidationType
+import com.github.vhromada.common.validator.AbstractValidator
+import com.github.vhromada.common.validator.Validator
 import org.springframework.stereotype.Component
 
 /**
@@ -20,9 +17,8 @@ import org.springframework.stereotype.Component
  */
 @Component("showValidator")
 class ShowValidator(
-        showService: MovableService<com.github.vhromada.catalog.domain.Show>,
-        private val pictureValidator: MovableValidator<Picture>,
-        private val genreValidator: MovableValidator<Genre>) : AbstractMovableValidator<Show, com.github.vhromada.catalog.domain.Show>("Show", showService) {
+    private val genreValidator: Validator<Genre, com.github.vhromada.catalog.domain.Genre>
+) : AbstractValidator<Show, com.github.vhromada.catalog.domain.Show>(name = "Show") {
 
     /**
      * Validates show deeply.
@@ -39,25 +35,22 @@ class ShowValidator(
      *  * URL to english Wikipedia page about show is null
      *  * URL to czech Wikipedia page about show is null
      *  * Note is null
-     *  * Picture doesn't exist
      *  * Genres are null
      *  * Genres contain null value
      *  * Genre ID is null
      *  * Genre name is null
      *  * Genre name is empty string
-     *  * Genre doesn't exist
      *
      * @param data   validating show
      * @param result result with validation errors
      */
     override fun validateDataDeep(data: Show, result: Result<Unit>) {
-        validateNames(data, result)
-        validateUrls(data, result)
+        validateNames(show = data, result = result)
+        validateUrls(show = data, result = result)
         if (data.note == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_NOTE_NULL", "Note mustn't be null."))
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_NOTE_NULL", message = "Note mustn't be null."))
         }
-        validatePicture(data, result)
-        validateGenres(data, result)
+        validateGenres(show = data, result = result)
     }
 
     /**
@@ -70,24 +63,24 @@ class ShowValidator(
      *  * Original name is null
      *  * Original name is empty string
      *
-     * @param data   validating movie
+     * @param show   validating show
      * @param result result with validation errors
      */
-    private fun validateNames(data: Show, result: Result<Unit>) {
+    private fun validateNames(show: Show, result: Result<Unit>) {
         when {
-            data.czechName == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_NULL", "Czech name mustn't be null."))
+            show.czechName == null -> {
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_CZECH_NAME_NULL", message = "Czech name mustn't be null."))
             }
-            data.czechName.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_CZECH_NAME_EMPTY", "Czech name mustn't be empty string."))
+            show.czechName.isBlank() -> {
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_CZECH_NAME_EMPTY", message = "Czech name mustn't be empty string."))
             }
         }
         when {
-            data.originalName == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_NULL", "Original name mustn't be null."))
+            show.originalName == null -> {
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_ORIGINAL_NAME_NULL", message = "Original name mustn't be null."))
             }
-            data.originalName.isBlank() -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_ORIGINAL_NAME_EMPTY", "Original name mustn't be empty string."))
+            show.originalName.isBlank() -> {
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_ORIGINAL_NAME_EMPTY", message = "Original name mustn't be empty string."))
             }
         }
     }
@@ -103,44 +96,26 @@ class ShowValidator(
      *  * URL to english Wikipedia page about show is null
      *  * URL to czech Wikipedia page about show is null
      *
-     * @param data   validating show
+     * @param show   validating show
      * @param result result with validation errors
      */
-    private fun validateUrls(data: Show, result: Result<Unit>) {
-        if (data.csfd == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_CSFD_NULL", "URL to ČSFD page about show mustn't be null."))
+    private fun validateUrls(show: Show, result: Result<Unit>) {
+        if (show.csfd == null) {
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_CSFD_NULL", message = "URL to ČSFD page about show mustn't be null."))
         }
         when {
-            data.imdbCode == null -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NULL", "IMDB code mustn't be null."))
+            show.imdbCode == null -> {
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_IMDB_CODE_NULL", message = "IMDB code mustn't be null."))
             }
-            data.imdbCode != -1 && (data.imdbCode < 1 || data.imdbCode > Constants.MAX_IMDB_CODE) -> {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_IMDB_CODE_NOT_VALID", "IMDB code must be between 1 and 9999999 or -1."))
+            show.imdbCode != -1 && (show.imdbCode < 1 || show.imdbCode > Constants.MAX_IMDB_CODE) -> {
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_IMDB_CODE_NOT_VALID", message = "IMDB code must be between 1 and 9999999 or -1."))
             }
         }
-        if (data.wikiEn == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_EN_NULL", "URL to english Wikipedia page about show mustn't be null."))
+        if (show.wikiEn == null) {
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_WIKI_EN_NULL", message = "URL to english Wikipedia page about show mustn't be null."))
         }
-        if (data.wikiCz == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_WIKI_CZ_NULL", "URL to czech Wikipedia page about show mustn't be null."))
-        }
-    }
-
-    /**
-     * Validates picture.
-     * <br></br>
-     * Validation errors:
-     *
-     *  * Picture doesn't exist
-     *
-     * @param data   validating movie
-     * @param result result with validation errors
-     */
-    private fun validatePicture(data: Show, result: Result<Unit>) {
-        if (data.picture != null) {
-            val picture = Picture(data.picture, null, null)
-            val validationResult = pictureValidator.validate(picture, ValidationType.EXISTS)
-            result.addEvents(validationResult.events())
+        if (show.wikiCz == null) {
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_WIKI_CZ_NULL", message = "URL to czech Wikipedia page about show mustn't be null."))
         }
     }
 
@@ -154,21 +129,20 @@ class ShowValidator(
      *  * Genre ID is null
      *  * Genre name is null
      *  * Genre name is empty string
-     *  * Genre doesn't exist
      *
-     * @param data   validating show
+     * @param show   validating show
      * @param result result with validation errors
      */
-    private fun validateGenres(data: Show, result: Result<Unit>) {
-        if (data.genres == null) {
-            result.addEvent(Event(Severity.ERROR, "${getPrefix()}_GENRES_NULL", "Genres mustn't be null."))
+    private fun validateGenres(show: Show, result: Result<Unit>) {
+        if (show.genres == null) {
+            result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_GENRES_NULL", message = "Genres mustn't be null."))
         } else {
-            if (data.genres.contains(null)) {
-                result.addEvent(Event(Severity.ERROR, "${getPrefix()}_GENRES_CONTAIN_NULL", "Genres mustn't contain null value."))
+            if (show.genres.contains(null)) {
+                result.addEvent(event = Event(severity = Severity.ERROR, key = "SHOW_GENRES_CONTAIN_NULL", message = "Genres mustn't contain null value."))
             }
-            for (genre in data.genres) {
+            for (genre in show.genres) {
                 if (genre != null) {
-                    val validationResult = genreValidator.validate(genre, ValidationType.EXISTS, ValidationType.DEEP)
+                    val validationResult = genreValidator.validate(data = genre, update = true)
                     result.addEvents(validationResult.events())
                 }
             }

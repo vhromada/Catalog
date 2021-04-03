@@ -2,8 +2,8 @@ package com.github.vhromada.catalog.web.mapper
 
 import com.github.vhromada.catalog.entity.Song
 import com.github.vhromada.catalog.web.CatalogMapperTestConfiguration
-import com.github.vhromada.catalog.web.common.SongUtils
 import com.github.vhromada.catalog.web.fo.SongFO
+import com.github.vhromada.catalog.web.utils.SongUtils
 import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,9 +33,9 @@ class SongMapperIntegrationTest {
     fun map() {
         val song = SongUtils.getSong()
 
-        val songFO = mapper.map(song)
+        val songFO = mapper.map(source = song)
 
-        SongUtils.assertSongDeepEquals(songFO, song)
+        SongUtils.assertSongDeepEquals(expected = song, actual = songFO)
     }
 
     /**
@@ -45,9 +45,9 @@ class SongMapperIntegrationTest {
     fun mapBack() {
         val songFO = SongUtils.getSongFO()
 
-        val song = mapper.mapBack(songFO)
+        val song = mapper.mapBack(source = songFO)
 
-        SongUtils.assertSongDeepEquals(songFO, song)
+        SongUtils.assertSongDeepEquals(expected = songFO, actual = song)
     }
 
 }

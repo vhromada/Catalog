@@ -10,81 +10,81 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class Movie(
+    /**
+     * ID
+     */
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        override var id: Int?,
+    /**
+     * Czech name
+     */
+    val czechName: String?,
 
-        /**
-         * Czech name
-         */
-        val czechName: String?,
+    /**
+     * Original name
+     */
+    val originalName: String?,
 
-        /**
-         * Original name
-         */
-        val originalName: String?,
+    /**
+     * Year
+     */
+    val year: Int?,
 
-        /**
-         * Year
-         */
-        val year: Int?,
+    /**
+     * Language
+     */
+    val language: Language?,
 
-        /**
-         * Language
-         */
-        val language: Language?,
+    /**
+     * Subtitles
+     */
+    val subtitles: List<Language?>?,
 
-        /**
-         * Subtitles
-         */
-        val subtitles: List<Language?>?,
+    /**
+     * Media
+     */
+    val media: List<Medium?>?,
 
-        /**
-         * Media
-         */
-        val media: List<Medium?>?,
+    /**
+     * URL to ČSFD page about movie
+     */
+    val csfd: String?,
 
-        /**
-         * URL to ČSFD page about movie
-         */
-        val csfd: String?,
+    /**
+     * IMDB code
+     */
+    val imdbCode: Int?,
 
-        /**
-         * IMDB code
-         */
-        val imdbCode: Int?,
+    /**
+     * URL to english Wikipedia page about movie
+     */
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about movie
-         */
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about movie
+     */
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about movie
-         */
-        val wikiCz: String?,
+    /**
+     * Picture's ID
+     */
+    val picture: Int?,
 
-        /**
-         * Picture's ID
-         */
-        val picture: Int?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
+    /**
+     * Position
+     */
+    override var position: Int?,
 
-        /**
-         * Position
-         */
-        override var position: Int?,
-
-        /**
-         * Genres
-         */
-        val genres: List<Genre?>?) : Movable {
+    /**
+     * Genres
+     */
+    val genres: List<Genre?>?
+) : Movable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

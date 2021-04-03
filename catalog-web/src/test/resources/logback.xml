@@ -6,6 +6,7 @@
         </encoder>
     </appender>
     <logger name="org.springframework" level="warn"/>
+    <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings" level="warn"/>
     <logger name="org.hibernate" level="warn"/>
     <logger name="org.flywaydb" level="warn"/>
     <logger name="com.zaxxer" level="warn"/>

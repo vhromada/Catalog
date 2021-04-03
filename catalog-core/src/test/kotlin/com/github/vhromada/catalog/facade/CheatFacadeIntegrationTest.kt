@@ -1,38 +1,42 @@
 package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.CatalogTestConfiguration
-import com.github.vhromada.catalog.entity.Cheat
-import com.github.vhromada.catalog.entity.Game
+import com.github.vhromada.catalog.utils.AuditUtils
 import com.github.vhromada.catalog.utils.CheatDataUtils
 import com.github.vhromada.catalog.utils.CheatUtils
 import com.github.vhromada.catalog.utils.GameUtils
-import com.github.vhromada.common.facade.MovableChildFacade
+import com.github.vhromada.catalog.utils.fillAudit
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
-import com.github.vhromada.common.test.facade.MovableChildFacadeIntegrationTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
 
 /**
  * A class represents integration test for class [CheatFacade].
  *
  * @author Vladimir Hromada
  */
+@ExtendWith(SpringExtension::class)
 @ContextConfiguration(classes = [CatalogTestConfiguration::class])
-class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.github.vhromada.catalog.domain.Cheat, Game>() {
+@Transactional
+@Rollback
+class CheatFacadeIntegrationTest {
 
     /**
      * Instance of [EntityManager]
      */
-    @Autowired
-    @Qualifier("containerManagedEntityManager")
+    @PersistenceContext
     private lateinit var entityManager: EntityManager
 
     /**
@@ -41,206 +45,96 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
     @Autowired
     private lateinit var facade: CheatFacade
 
+    /**
+     * Test method for [CheatFacade.get].
+     */
     @Test
-    @DirtiesContext
-    override fun addNotNullPosition() {
-        val expectedData = newDomainData(getDefaultChildDataCount() + 1)
-        expectedData.position = Int.MAX_VALUE
+    fun get() {
+        for (i in 1..CheatUtils.CHEATS_COUNT) {
+            val result = facade.get(id = i)
 
-        val result = getFacade().add(newParentData(1), newChildData(null, 0))
+            assertSoftly {
+                it.assertThat(result.status).isEqualTo(Status.OK)
+                it.assertThat(result.data).isNotNull
+                it.assertThat(result.events()).isEmpty()
+            }
+            CheatUtils.assertCheatDeepEquals(expected = CheatUtils.getCheatDomain(index = i), actual = result.data!!)
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.get] with bad ID.
+     */
+    @Test
+    fun getBadId() {
+        val result = facade.get(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(CHEAT_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.update].
+     */
+    @Test
+    fun update() {
+        val cheat = CheatUtils.newCheat(id = 1)
+        val expectedCheat = CheatUtils.newCheatDomain(id = 1)
+            .fillAudit(audit = AuditUtils.updatedAudit())
+        expectedCheat.game = GameUtils.getGame(entityManager = entityManager, id = 2)
+        expectedCheat.data.forEach { it.fillAudit(audit = AuditUtils.updatedAudit()) }
+
+        val result = facade.update(data = cheat)
+        entityManager.flush()
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.OK)
             it.assertThat(result.events()).isEmpty()
         }
 
-        assertDataDomainDeepEquals(expectedData, getRepositoryData(getDefaultChildDataCount() + 1)!!)
-        assertAddRepositoryData()
+        CheatUtils.assertCheatDeepEquals(expected = expectedCheat, actual = CheatUtils.getCheat(entityManager = entityManager, id = 1)!!)
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT - CheatDataUtils.CHEAT_DATA_CHEAT_COUNT + 1)
+        }
     }
 
     /**
-     * Test method for [CheatFacade.add] with cheat with null setting for game.
+     * Test method for [CheatFacade.update] with cheat with null ID.
      */
     @Test
-    fun addNullGameSetting() {
-        val cheat = newChildData(null)
-                .copy(gameSetting = null)
+    fun updateNullId() {
+        val cheat = CheatUtils.newCheat(id = 1)
+            .copy(id = null)
 
-        val result = facade.add(newParentData(1), cheat)
+        val result = facade.update(data = cheat)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_GAME_SETTING_NULL", "Setting for game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_ID_NULL", message = "ID mustn't be null.")))
         }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [CheatFacade.add] with cheat with null setting for cheat.
-     */
-    @Test
-    fun addNullCheatSetting() {
-        val cheat = newChildData(null)
-                .copy(cheatSetting = null)
-
-        val result = facade.add(newParentData(1), cheat)
 
         assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_CHEAT_SETTING_NULL", "Setting for cheat mustn't be null.")))
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
         }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [CheatFacade.add] with cheat with null cheat's data.
-     */
-    @Test
-    fun addNullCheatData() {
-        val cheat = newChildData(null)
-                .copy(data = null)
-
-        val result = facade.add(newParentData(1), cheat)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_NULL", "Cheat's data mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [CheatFacade.add] with cheat with cheat's data with null value.
-     */
-    @Test
-    fun addBadCheatData() {
-        val cheat = newChildData(null)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), null))
-
-        val result = facade.add(newParentData(1), cheat)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_CONTAIN_NULL", "Cheat's data mustn't contain null value.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [CheatFacade.add] with cheat with cheat's data with null action.
-     */
-    @Test
-    fun addCheatDataWithNullAction() {
-        val badCheatData = CheatDataUtils.newCheatData(2)
-                .copy(action = null)
-        val cheat = newChildData(null)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
-
-        val result = facade.add(newParentData(1), cheat)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_ACTION_NULL", "Cheat's data action mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [CheatFacade.add] with cheat with cheat's data with empty action.
-     */
-    @Test
-    fun addCheatDataWithEmptyAction() {
-        val badCheatData = CheatDataUtils.newCheatData(2)
-                .copy(action = "")
-        val cheat = newChildData(null)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
-
-        val result = facade.add(newParentData(1), cheat)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_ACTION_EMPTY", "Cheat's data action mustn't be empty string.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [CheatFacade.add] with cheat with cheat's data with null description.
-     */
-    @Test
-    fun addCheatDataWithNullDescription() {
-        val badCheatData = CheatDataUtils.newCheatData(2)
-                .copy(description = null)
-        val cheat = newChildData(null)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
-
-        val result = facade.add(newParentData(1), cheat)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_DESCRIPTION_NULL", "Cheat's data description mustn't be null.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [CheatFacade.add] with cheat with cheat's data with empty description.
-     */
-    @Test
-    fun addCheatDataWithEmptyDescription() {
-        val badCheatData = CheatDataUtils.newCheatData(2)
-                .copy(description = "")
-        val cheat = newChildData(null)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
-
-        val result = facade.add(newParentData(1), cheat)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_DESCRIPTION_EMPTY", "Cheat's data description mustn't be empty string.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    /**
-     * Test method for [CheatFacade.add] with game with cheat.
-     */
-    @Test
-    fun addGameWithCheat() {
-        val cheat = newChildData(null)
-
-        val result = facade.add(newParentData(2), cheat)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getParentPrefix()}_CHEAT_EXIST", "${getParentName()} already has cheat.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    @Test
-    @DirtiesContext
-    override fun updateNullPosition() {
-        val data = newChildData(1, null)
-
-        val result = getFacade().update(data)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.OK)
-            it.assertThat(result.events()).isEmpty()
-        }
-
-        assertDataDeepEquals(data, getRepositoryData(1)!!)
-        assertUpdateRepositoryData()
     }
 
     /**
@@ -248,17 +142,21 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
      */
     @Test
     fun updateNullGameSetting() {
-        val cheat = newChildData(1)
-                .copy(gameSetting = null)
+        val cheat = CheatUtils.newCheat(id = 1)
+            .copy(gameSetting = null)
 
-        val result = facade.update(cheat)
+        val result = facade.update(data = cheat)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_GAME_SETTING_NULL", "Setting for game mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_GAME_SETTING_NULL", message = "Setting for game mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -266,17 +164,21 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
      */
     @Test
     fun updateNullCheatSetting() {
-        val cheat = newChildData(1)
-                .copy(cheatSetting = null)
+        val cheat = CheatUtils.newCheat(id = 1)
+            .copy(cheatSetting = null)
 
-        val result = facade.update(cheat)
+        val result = facade.update(data = cheat)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_CHEAT_SETTING_NULL", "Setting for cheat mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_CHEAT_SETTING_NULL", message = "Setting for cheat mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -284,17 +186,21 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
      */
     @Test
     fun updateNullCheatData() {
-        val cheat = newChildData(1)
-                .copy(data = null)
+        val cheat = CheatUtils.newCheat(id = 1)
+            .copy(data = null)
 
-        val result = facade.update(cheat)
+        val result = facade.update(data = cheat)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_NULL", "Cheat's data mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_NULL", message = "Cheat's data mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -302,17 +208,21 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
      */
     @Test
     fun updateBadCheatData() {
-        val cheat = newChildData(1)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), null))
+        val cheat = CheatUtils.newCheat(id = 1)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), null))
 
-        val result = facade.update(cheat)
+        val result = facade.update(data = cheat)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_CONTAIN_NULL", "Cheat's data mustn't contain null value.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_CONTAIN_NULL", message = "Cheat's data mustn't contain null value.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -320,19 +230,23 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
      */
     @Test
     fun updateCheatDataWithNullAction() {
-        val badCheatData = CheatDataUtils.newCheatData(2)
-                .copy(action = null)
-        val cheat = newChildData(1)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+        val badCheatData = CheatDataUtils.newCheatData(id = 2)
+            .copy(action = null)
+        val cheat = CheatUtils.newCheat(id = 1)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), badCheatData))
 
-        val result = facade.update(cheat)
+        val result = facade.update(data = cheat)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_ACTION_NULL", "Cheat's data action mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_ACTION_NULL", message = "Cheat's data action mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -340,19 +254,23 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
      */
     @Test
     fun updateCheatDataWithEmptyAction() {
-        val badCheatData = CheatDataUtils.newCheatData(2)
-                .copy(action = "")
-        val cheat = newChildData(1)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+        val badCheatData = CheatDataUtils.newCheatData(id = 2)
+            .copy(action = "")
+        val cheat = CheatUtils.newCheat(id = 1)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), badCheatData))
 
-        val result = facade.update(cheat)
+        val result = facade.update(data = cheat)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_ACTION_EMPTY", "Cheat's data action mustn't be empty string.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_ACTION_EMPTY", message = "Cheat's data action mustn't be empty string.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -360,19 +278,23 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
      */
     @Test
     fun updateCheatDataWithNullDescription() {
-        val badCheatData = CheatDataUtils.newCheatData(2)
-                .copy(description = null)
-        val cheat = newChildData(1)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+        val badCheatData = CheatDataUtils.newCheatData(id = 2)
+            .copy(description = null)
+        val cheat = CheatUtils.newCheat(id = 1)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), badCheatData))
 
-        val result = facade.update(cheat)
+        val result = facade.update(data = cheat)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_DESCRIPTION_NULL", "Cheat's data description mustn't be null.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_DESCRIPTION_NULL", message = "Cheat's data description mustn't be null.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
     /**
@@ -380,200 +302,469 @@ class CheatFacadeIntegrationTest : MovableChildFacadeIntegrationTest<Cheat, com.
      */
     @Test
     fun updateCheatDataWithEmptyDescription() {
-        val badCheatData = CheatDataUtils.newCheatData(2)
-                .copy(description = "")
-        val cheat = newChildData(1)
-                .copy(data = listOf(CheatDataUtils.newCheatData(1), badCheatData))
+        val badCheatData = CheatDataUtils.newCheatData(id = 2)
+            .copy(description = "")
+        val cheat = CheatUtils.newCheat(id = 1)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), badCheatData))
 
-        val result = facade.update(cheat)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_DATA_DESCRIPTION_EMPTY", "Cheat's data description mustn't be empty string.")))
-        }
-
-        assertDefaultRepositoryData()
-    }
-
-    @Test
-    override fun duplicate() {
-        val result = getFacade().duplicate(newChildData(Int.MAX_VALUE))
+        val result = facade.update(data = cheat)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOT_DUPLICABLE", "${getChildName()} can't be duplicated.")))
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_DESCRIPTION_EMPTY", message = "Cheat's data description mustn't be empty string.")))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
+    /**
+     * Test method for [CheatFacade.update] with cheat with bad ID.
+     */
     @Test
-    override fun duplicateNullId() {
-        // no test
-    }
-
-    @Test
-    override fun duplicateBadId() {
-        // no test
-    }
-
-    @Test
-    override fun moveUp() {
-        val result = getFacade().moveUp(newChildData(Int.MAX_VALUE))
+    fun updateBadId() {
+        val result = facade.update(data = CheatUtils.newCheat(id = Int.MAX_VALUE))
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOT_MOVABLE", "${getChildName()} can't be moved up.")))
+            it.assertThat(result.events()).isEqualTo(listOf(CHEAT_NOT_EXIST_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
+    /**
+     * Test method for [CheatFacade.remove].
+     */
     @Test
-    override fun moveUpNullId() {
-        // no test
+    fun remove() {
+        val result = facade.remove(id = 1)
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        assertThat(CheatUtils.getCheat(entityManager = entityManager, id = 1)).isNull()
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT - 1)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT - CheatDataUtils.CHEAT_DATA_CHEAT_COUNT)
+        }
     }
 
+    /**
+     * Test method for [CheatFacade.remove] with cheat with bad ID.
+     */
     @Test
-    override fun moveUpNotMovableData() {
-        // no test
-    }
-
-    @Test
-    override fun moveUpBadId() {
-        // no test
-    }
-
-    @Test
-    override fun moveDown() {
-        val result = getFacade().moveDown(newChildData(Int.MAX_VALUE))
+    fun removeBadId() {
+        val result = facade.remove(id = Int.MAX_VALUE)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "${getChildPrefix()}_NOT_MOVABLE", "${getChildName()} can't be moved down.")))
+            it.assertThat(result.events()).isEqualTo(listOf(CHEAT_NOT_EXIST_EVENT))
         }
 
-        assertDefaultRepositoryData()
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
+    /**
+     * Test method for [CheatFacade.duplicate].
+     */
     @Test
-    override fun moveDownNullId() {
-        // no test
+    fun duplicate() {
+        val result = facade.duplicate(id = CheatUtils.CHEATS_COUNT)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_NOT_DUPLICABLE", message = "Cheat can't be duplicated.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
+    /**
+     * Test method for [CheatFacade.moveUp].
+     */
     @Test
-    override fun moveDownNotMovableData() {
-        // no test
+    fun moveUp() {
+        val result = facade.moveUp(id = 2)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_NOT_MOVABLE", message = "Cheat can't be moved up.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
+    /**
+     * Test method for [CheatFacade.moveDown].
+     */
     @Test
-    override fun moveDownBadId() {
-        // no test
+    fun moveDown() {
+        val result = facade.moveDown(id = 1)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_NOT_MOVABLE", message = "Cheat can't be moved down.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
     }
 
+    /**
+     * Test method for [CheatFacade.add].
+     */
     @Test
-    override fun find() {
-        for (i in 1..getDefaultParentDataCount()) {
-            val result = getFacade().find(newParentData(i))
+    @DirtiesContext
+    fun add() {
+        val expectedCheat = CheatUtils.newCheatDomain(id = CheatUtils.CHEATS_COUNT + 1)
+            .copy(data = listOf(CheatDataUtils.newCheatDataDomain(id = CheatDataUtils.CHEAT_DATA_COUNT + 1)))
+            .fillAudit(audit = AuditUtils.newAudit())
+        expectedCheat.game = GameUtils.getGame(entityManager = entityManager, id = 1)
+        expectedCheat.data.forEach { it.fillAudit(audit = AuditUtils.newAudit()) }
+
+        val result = facade.add(parent = 1, data = CheatUtils.newCheat(id = null))
+        entityManager.flush()
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        CheatUtils.assertCheatDeepEquals(expected = expectedCheat, actual = CheatUtils.getCheat(entityManager = entityManager, id = CheatUtils.CHEATS_COUNT + 1)!!)
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT + 1)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT + 1)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with bad game ID.
+     */
+    @Test
+    fun addBadGameId() {
+        val result = facade.add(parent = Int.MAX_VALUE, data = CheatUtils.newCheat(id = null))
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(GAME_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with not null ID.
+     */
+    @Test
+    fun addNotNullId() {
+        val cheat = CheatUtils.newCheat(id = null)
+            .copy(id = Int.MAX_VALUE)
+
+        val result = facade.add(parent = 1, data = cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_ID_NOT_NULL", message = "ID must be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with null setting for game.
+     */
+    @Test
+    fun addNullGameSetting() {
+        val cheat = CheatUtils.newCheat(id = null)
+            .copy(gameSetting = null)
+
+        val result = facade.add(parent = 1, data = cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_GAME_SETTING_NULL", message = "Setting for game mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with null setting for cheat.
+     */
+    @Test
+    fun addNullCheatSetting() {
+        val cheat = CheatUtils.newCheat(id = null)
+            .copy(cheatSetting = null)
+
+        val result = facade.add(parent = 1, data = cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_CHEAT_SETTING_NULL", message = "Setting for cheat mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with null cheat's data.
+     */
+    @Test
+    fun addNullCheatData() {
+        val cheat = CheatUtils.newCheat(id = null)
+            .copy(data = null)
+
+        val result = facade.add(parent = 1, data = cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_NULL", message = "Cheat's data mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with null value.
+     */
+    @Test
+    fun addBadCheatData() {
+        val cheat = CheatUtils.newCheat(id = null)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), null))
+
+        val result = facade.add(parent = 1, data = cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_CONTAIN_NULL", message = "Cheat's data mustn't contain null value.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with null action.
+     */
+    @Test
+    fun addCheatDataWithNullAction() {
+        val badCheatData = CheatDataUtils.newCheatData(id = 2)
+            .copy(action = null)
+        val cheat = CheatUtils.newCheat(id = null)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), badCheatData))
+
+        val result = facade.add(parent = 1, data = cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_ACTION_NULL", message = "Cheat's data action mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with empty action.
+     */
+    @Test
+    fun addCheatDataWithEmptyAction() {
+        val badCheatData = CheatDataUtils.newCheatData(id = 2)
+            .copy(action = "")
+        val cheat = CheatUtils.newCheat(id = null)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), badCheatData))
+
+        val result = facade.add(parent = 1, data = cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_ACTION_EMPTY", message = "Cheat's data action mustn't be empty string.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with null description.
+     */
+    @Test
+    fun addCheatDataWithNullDescription() {
+        val badCheatData = CheatDataUtils.newCheatData(id = 2)
+            .copy(description = null)
+        val cheat = CheatUtils.newCheat(id = null)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), badCheatData))
+
+        val result = facade.add(parent = 1, data = cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_DESCRIPTION_NULL", message = "Cheat's data description mustn't be null.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with cheat with cheat's data with empty description.
+     */
+    @Test
+    fun addCheatDataWithEmptyDescription() {
+        val badCheatData = CheatDataUtils.newCheatData(id = 2)
+            .copy(description = "")
+        val cheat = CheatUtils.newCheat(id = null)
+            .copy(data = listOf(CheatDataUtils.newCheatData(id = 1), badCheatData))
+
+        val result = facade.add(parent = 1, data = cheat)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_DATA_DESCRIPTION_EMPTY", message = "Cheat's data description mustn't be empty string.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with game with cheat.
+     */
+    @Test
+    fun addGameWithCheat() {
+        val result = facade.add(parent = 2, data = CheatUtils.newCheat(id = null))
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "GAME_CHEAT_EXIST", message = "Game already has cheat.")))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        }
+    }
+
+    /**
+     * Test method for [CheatFacade.find].
+     */
+    @Test
+    fun find() {
+        for (i in 1..GameUtils.GAMES_COUNT) {
+            val result = facade.find(parent = i)
 
             assertSoftly {
                 it.assertThat(result.status).isEqualTo(Status.OK)
+                it.assertThat(result.data).isNotNull
                 it.assertThat(result.events()).isEmpty()
-                if (i == 1) {
-                    it.assertThat(result.data).isEmpty()
-                } else {
-                    assertDataListDeepEquals(result.data!!, getDataList(i))
-                }
             }
+            CheatUtils.assertCheatListDeepEquals(expected = CheatUtils.getCheats(game = i), actual = result.data!!)
         }
 
-        assertDefaultRepositoryData()
-    }
-
-    override fun getFacade(): MovableChildFacade<Cheat, Game> {
-        return facade
-    }
-
-    override fun getDefaultParentDataCount(): Int {
-        return GameUtils.GAMES_COUNT
-    }
-
-    override fun getDefaultChildDataCount(): Int {
-        return CheatUtils.CHEATS_COUNT
-    }
-
-    override fun getRepositoryParentDataCount(): Int {
-        return GameUtils.getGamesCount(entityManager)
-    }
-
-    override fun getRepositoryChildDataCount(): Int {
-        return CheatUtils.getCheatsCount(entityManager)
-    }
-
-    override fun getDataList(parentId: Int): List<com.github.vhromada.catalog.domain.Cheat> {
-        return listOf(CheatUtils.getCheat(parentId - 1))
-    }
-
-    override fun getDomainData(index: Int): com.github.vhromada.catalog.domain.Cheat {
-        return CheatUtils.getCheat(index)
-    }
-
-    override fun newParentData(id: Int?): Game {
-        return GameUtils.newGame(id)
-    }
-
-    override fun newChildData(id: Int?): Cheat {
-        return CheatUtils.newCheat(id)
-    }
-
-    override fun newDomainData(id: Int): com.github.vhromada.catalog.domain.Cheat {
-        return CheatUtils.newCheatDomain(id)
-    }
-
-    override fun getRepositoryData(id: Int): com.github.vhromada.catalog.domain.Cheat? {
-        return CheatUtils.getCheat(entityManager, id)
-    }
-
-    override fun getParentName(): String {
-        return "Game"
-    }
-
-    override fun getChildName(): String {
-        return "Cheat"
-    }
-
-    override fun assertDataListDeepEquals(expected: List<Cheat>, actual: List<com.github.vhromada.catalog.domain.Cheat>) {
-        CheatUtils.assertCheatListDeepEquals(expected, actual)
-    }
-
-    override fun assertDataDeepEquals(expected: Cheat, actual: com.github.vhromada.catalog.domain.Cheat) {
-        CheatUtils.assertCheatDeepEquals(expected, actual)
-    }
-
-    override fun assertDataDomainDeepEquals(expected: com.github.vhromada.catalog.domain.Cheat, actual: com.github.vhromada.catalog.domain.Cheat) {
-        CheatUtils.assertCheatDeepEquals(expected, actual)
-    }
-
-    override fun assertUpdateRepositoryData() {
         assertSoftly {
-            it.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount())
-            it.assertThat(getRepositoryParentDataCount()).isEqualTo(getDefaultParentDataCount())
-            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT - CheatDataUtils.CHEAT_DATA_CHEAT_COUNT)
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
         }
     }
 
-    override fun assertRemoveRepositoryData() {
+    /**
+     * Test method for [CheatFacade.find] with bad game ID.
+     */
+    @Test
+    fun findBadGameId() {
+        val result = facade.find(parent = Int.MAX_VALUE)
+
         assertSoftly {
-            it.assertThat(getRepositoryChildDataCount()).isEqualTo(getDefaultChildDataCount() - 1)
-            it.assertThat(getRepositoryParentDataCount()).isEqualTo(getDefaultParentDataCount())
-            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT - CheatDataUtils.CHEAT_DATA_CHEAT_COUNT)
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(GAME_NOT_EXIST_EVENT))
+        }
+
+        assertSoftly {
+            it.assertThat(CheatUtils.getCheatsCount(entityManager = entityManager)).isEqualTo(CheatUtils.CHEATS_COUNT)
+            it.assertThat(GameUtils.getGamesCount(entityManager = entityManager)).isEqualTo(GameUtils.GAMES_COUNT)
+            it.assertThat(CheatDataUtils.getCheatDataCount(entityManager = entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
         }
     }
 
-    override fun assertReferences() {
-        super.assertReferences()
+    companion object {
 
-        assertThat(CheatDataUtils.getCheatDataCount(entityManager)).isEqualTo(CheatDataUtils.CHEAT_DATA_COUNT)
+        /**
+         * Event for not existing cheat
+         */
+        private val CHEAT_NOT_EXIST_EVENT = Event(severity = Severity.ERROR, key = "CHEAT_NOT_EXIST", message = "Cheat doesn't exist.")
+
+        /**
+         * Event for not existing game
+         */
+        private val GAME_NOT_EXIST_EVENT = Event(severity = Severity.ERROR, key = "GAME_NOT_EXIST", message = "Game doesn't exist.")
+
     }
 
 }

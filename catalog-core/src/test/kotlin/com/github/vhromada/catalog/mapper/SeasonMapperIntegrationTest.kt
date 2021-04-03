@@ -3,7 +3,6 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Season
 import com.github.vhromada.catalog.utils.SeasonUtils
-import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,17 +22,17 @@ class SeasonMapperIntegrationTest {
      * Instance of [SeasonMapper]
      */
     @Autowired
-    private lateinit var mapper: Mapper<Season, com.github.vhromada.catalog.domain.Season>
+    private lateinit var mapper: SeasonMapper
 
     /**
      * Test method for [SeasonMapper.map].
      */
     @Test
     fun map() {
-        val season = SeasonUtils.newSeason(1)
+        val season = SeasonUtils.newSeason(id = 1)
         val seasonDomain = mapper.map(season)
 
-        SeasonUtils.assertSeasonDeepEquals(season, seasonDomain)
+        SeasonUtils.assertSeasonDeepEquals(expected = season, actual = seasonDomain)
     }
 
     /**
@@ -41,10 +40,10 @@ class SeasonMapperIntegrationTest {
      */
     @Test
     fun mapBack() {
-        val seasonDomain = SeasonUtils.newSeasonDomain(1)
+        val seasonDomain = SeasonUtils.newSeasonDomain(id = 1)
         val season = mapper.mapBack(seasonDomain)
 
-        SeasonUtils.assertSeasonDeepEquals(season, seasonDomain)
+        SeasonUtils.assertSeasonDeepEquals(expected = seasonDomain, actual = season)
     }
 
 }

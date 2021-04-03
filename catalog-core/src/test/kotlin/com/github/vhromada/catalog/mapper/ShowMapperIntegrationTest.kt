@@ -3,7 +3,6 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.catalog.utils.ShowUtils
-import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,17 +22,17 @@ class ShowMapperIntegrationTest {
      * Instance of [ShowMapper]
      */
     @Autowired
-    private lateinit var mapper: Mapper<Show, com.github.vhromada.catalog.domain.Show>
+    private lateinit var mapper: ShowMapper
 
     /**
      * Test method for [ShowMapper.map].
      */
     @Test
     fun map() {
-        val show = ShowUtils.newShow(1)
+        val show = ShowUtils.newShow(id = 1)
         val showDomain = mapper.map(show)
 
-        ShowUtils.assertShowDeepEquals(show, showDomain)
+        ShowUtils.assertShowDeepEquals(expected = show, actual = showDomain)
     }
 
     /**
@@ -41,10 +40,10 @@ class ShowMapperIntegrationTest {
      */
     @Test
     fun mapBack() {
-        val showDomain = ShowUtils.newShowDomain(1)
+        val showDomain = ShowUtils.newShowDomain(id = 1)
         val show = mapper.mapBack(showDomain)
 
-        ShowUtils.assertShowDeepEquals(show, showDomain)
+        ShowUtils.assertShowDeepEquals(expected = showDomain, actual = show)
     }
 
 }

@@ -15,71 +15,71 @@ import javax.validation.constraints.Size
  */
 @Imdb
 data class ShowFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Czech name
+     */
+    @field:NotBlank
+    val czechName: String?,
 
-        /**
-         * Czech name
-         */
-        @field:NotBlank
-        val czechName: String?,
+    /**
+     * Original name
+     */
+    @field:NotBlank
+    val originalName: String?,
 
-        /**
-         * Original name
-         */
-        @field:NotBlank
-        val originalName: String?,
+    /**
+     * URL to ČSFD page about show
+     */
+    val csfd: String?,
 
-        /**
-         * URL to ČSFD page about show
-         */
-        val csfd: String?,
+    /**
+     * True if IMDB is selected
+     */
+    val imdb: Boolean,
 
-        /**
-         * True if IMDB is selected
-         */
-        val imdb: Boolean,
+    /**
+     * IMDB code
+     */
+    @field:ImdbCode
+    val imdbCode: String?,
 
-        /**
-         * IMDB code
-         */
-        @field:ImdbCode
-        val imdbCode: String?,
+    /**
+     * URL to english Wikipedia page about show
+     */
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about show
-         */
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about show
+     */
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about show
-         */
-        val wikiCz: String?,
+    /**
+     * Picture's ID
+     */
+    val picture: Int?,
 
-        /**
-         * Picture's ID
-         */
-        val picture: Int?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
+    /**
+     * Position
+     */
+    val position: Int?,
 
-        /**
-         * Position
-         */
-        val position: Int?,
-
-        /**
-         * Genres
-         */
-        @field:NotNull
-        @field:Size(min = 1)
-        val genres: List<Int?>?) : Serializable {
+    /**
+     * Genres
+     */
+    @field:NotNull
+    @field:Size(min = 1)
+    val genres: List<Int?>?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

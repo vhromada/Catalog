@@ -4,7 +4,6 @@ import com.github.vhromada.catalog.entity.Music
 import com.github.vhromada.catalog.facade.MusicFacade
 import com.github.vhromada.catalog.facade.SongFacade
 import com.github.vhromada.catalog.web.domain.MusicData
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.MusicFO
 import com.github.vhromada.common.entity.Time
 import com.github.vhromada.common.mapper.Mapper
@@ -26,9 +25,10 @@ import javax.validation.Valid
 @Controller("musicController")
 @RequestMapping("/music")
 class MusicController(
-        private val musicFacade: MusicFacade,
-        private val songFacade: SongFacade,
-        private val musicMapper: Mapper<Music, MusicFO>) : AbstractResultController() {
+    private val musicFacade: MusicFacade,
+    private val songFacade: SongFacade,
+    private val musicMapper: Mapper<Music, MusicFO>
+) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -71,26 +71,18 @@ class MusicController(
      * @param model model
      * @param id    ID of showing music
      * @return view for page with detail of music
-     * @throws IllegalRequestException if music doesn't exist
      */
     @GetMapping("/{id}/detail")
     fun showDetail(model: Model, @PathVariable("id") id: Int): String {
-        val result = musicFacade.get(id)
-        processResults(result)
+        val musicResult = musicFacade.get(id = id)
+        val songsResult = songFacade.find(parent = id)
+        processResults(musicResult, songsResult)
 
-        val music = result.data
-        if (music != null) {
-            val songsResult = songFacade.find(music)
-            processResults(songsResult)
+        val length = songsResult.data!!.sumBy { it.length!! }
+        model.addAttribute("music", MusicData(music = musicResult.data!!, songsCount = songsResult.data!!.size, totalLength = Time(length = length)))
+        model.addAttribute("title", "Music detail")
 
-            val length = songsResult.data!!.sumBy { it.length!! }
-            model.addAttribute("music", MusicData(music = music, songsCount = songsResult.data!!.size, totalLength = Time(length)))
-            model.addAttribute("title", "Music detail")
-
-            return "music/detail"
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return "music/detail"
     }
 
     /**
@@ -101,14 +93,16 @@ class MusicController(
      */
     @GetMapping("/add")
     fun showAdd(model: Model): String {
-        val music = MusicFO(id = null,
-                name = null,
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = null,
-                note = null,
-                position = null)
-        return createFormView(model, music, "Add music", "add")
+        val music = MusicFO(
+            id = null,
+            name = null,
+            wikiEn = null,
+            wikiCz = null,
+            mediaCount = null,
+            note = null,
+            position = null
+        )
+        return createFormView(model = model, music = music, title = "Add music", action = "add")
     }
 
     /**
@@ -125,9 +119,9 @@ class MusicController(
         require(music.id == null) { "ID must be null." }
 
         if (errors.hasErrors()) {
-            return createFormView(model, music, "Add music", "add")
+            return createFormView(model = model, music = music, title = "Add music", action = "add")
         }
-        processResults(musicFacade.add(musicMapper.mapBack(music)))
+        processResults(musicFacade.add(data = musicMapper.mapBack(source = music)))
 
         return LIST_REDIRECT_URL
     }
@@ -148,19 +142,13 @@ class MusicController(
      * @param model model
      * @param id    ID of editing music
      * @return view for page for editing music
-     * @throws IllegalRequestException if music doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("id") id: Int): String {
         val result = musicFacade.get(id)
         processResults(result)
 
-        val music = result.data
-        return if (music != null) {
-            createFormView(model, musicMapper.map(music), "Edit music", "edit")
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return createFormView(model = model, music = musicMapper.map(source = result.data!!), title = "Edit music", action = "edit")
     }
 
     /**
@@ -171,16 +159,15 @@ class MusicController(
      * @param errors errors
      * @return view for redirect to page with list of music (no errors) or view for page for editing music (errors)
      * @throws IllegalArgumentException if ID is null
-     * @throws IllegalRequestException  if music doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["update"])
     fun processEdit(model: Model, @ModelAttribute("music") @Valid music: MusicFO, errors: Errors): String {
         require(music.id != null) { "ID mustn't be null." }
 
         if (errors.hasErrors()) {
-            return createFormView(model, music, "Edit music", "edit")
+            return createFormView(model = model, music = music, title = "Edit music", action = "edit")
         }
-        processResults(musicFacade.update(processMusic(musicMapper.mapBack(music))))
+        processResults(musicFacade.update(data = musicMapper.mapBack(source = music)))
 
         return LIST_REDIRECT_URL
     }
@@ -200,11 +187,10 @@ class MusicController(
      *
      * @param id ID of duplicating music
      * @return view for redirect to page with list of music
-     * @throws IllegalRequestException if music doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("id") id: Int): String {
-        processResults(musicFacade.duplicate(getMusic(id)))
+        processResults(musicFacade.duplicate(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -214,11 +200,10 @@ class MusicController(
      *
      * @param id ID of removing music
      * @return view for redirect to page with list of music
-     * @throws IllegalRequestException if music doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
-        processResults(musicFacade.remove(getMusic(id)))
+        processResults(musicFacade.remove(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -228,11 +213,10 @@ class MusicController(
      *
      * @param id ID of moving music
      * @return view for redirect to page with list of music
-     * @throws IllegalRequestException if music doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
-        processResults(musicFacade.moveUp(getMusic(id)))
+        processResults(musicFacade.moveUp(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -242,11 +226,10 @@ class MusicController(
      *
      * @param id ID of moving music
      * @return view for redirect to page with list of music
-     * @throws IllegalRequestException if music doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
-        processResults(musicFacade.moveDown(getMusic(id)))
+        processResults(musicFacade.moveDown(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -261,43 +244,6 @@ class MusicController(
         processResults(musicFacade.updatePositions())
 
         return LIST_REDIRECT_URL
-    }
-
-    /**
-     * Returns music with ID.
-     *
-     * @param id ID
-     * @return music with ID
-     * @throws IllegalRequestException if music doesn't exist
-     */
-    private fun getMusic(id: Int): Music {
-        val music = Music(id = id,
-                name = null,
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = null,
-                note = null,
-                position = null)
-
-        return processMusic(music)
-    }
-
-    /**
-     * Returns processed music.
-     *
-     * @param music music for processing
-     * @return processed music
-     * @throws IllegalRequestException if music doesn't exist
-     */
-    private fun processMusic(music: Music): Music {
-        val musicResult = musicFacade.get(music.id!!)
-        processResults(musicResult)
-
-        if (musicResult.data != null) {
-            return music
-        }
-
-        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
     }
 
     /**
@@ -323,11 +269,6 @@ class MusicController(
          * Redirect URL to list
          */
         private const val LIST_REDIRECT_URL = "redirect:/music/list"
-
-        /**
-         * Message for illegal request
-         */
-        private const val ILLEGAL_REQUEST_MESSAGE = "Music doesn't exist."
 
     }
 

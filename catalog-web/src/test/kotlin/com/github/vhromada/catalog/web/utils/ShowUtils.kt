@@ -1,4 +1,4 @@
-package com.github.vhromada.catalog.web.common
+package com.github.vhromada.catalog.web.utils
 
 import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.catalog.web.fo.ShowFO
@@ -17,18 +17,20 @@ object ShowUtils {
      * @return FO for show
      */
     fun getShowFO(): ShowFO {
-        return ShowFO(id = CatalogUtils.ID,
-                czechName = "czName",
-                originalName = "origName",
-                csfd = "Csfd",
-                imdb = true,
-                imdbCode = "1000",
-                wikiEn = CatalogUtils.EN_WIKI,
-                wikiCz = CatalogUtils.CZ_WIKI,
-                picture = CatalogUtils.ID,
-                note = CatalogUtils.NOTE,
-                position = CatalogUtils.POSITION,
-                genres = listOf(CatalogUtils.ID))
+        return ShowFO(
+            id = TestConstants.ID,
+            czechName = "czName",
+            originalName = "origName",
+            csfd = "Csfd",
+            imdb = true,
+            imdbCode = "1000",
+            wikiEn = TestConstants.EN_WIKI,
+            wikiCz = TestConstants.CZ_WIKI,
+            picture = TestConstants.ID,
+            note = TestConstants.NOTE,
+            position = TestConstants.POSITION,
+            genres = listOf(TestConstants.ID)
+        )
     }
 
     /**
@@ -37,17 +39,19 @@ object ShowUtils {
      * @return show
      */
     fun getShow(): Show {
-        return Show(id = CatalogUtils.ID,
-                czechName = "czName",
-                originalName = "origName",
-                csfd = "Csfd",
-                imdbCode = 1000,
-                wikiEn = CatalogUtils.EN_WIKI,
-                wikiCz = CatalogUtils.CZ_WIKI,
-                picture = CatalogUtils.ID,
-                note = CatalogUtils.NOTE,
-                position = CatalogUtils.POSITION,
-                genres = listOf(GenreUtils.getGenre()))
+        return Show(
+            id = TestConstants.ID,
+            czechName = "czName",
+            originalName = "origName",
+            csfd = "Csfd",
+            imdbCode = 1000,
+            wikiEn = TestConstants.EN_WIKI,
+            wikiCz = TestConstants.CZ_WIKI,
+            picture = TestConstants.ID,
+            note = TestConstants.NOTE,
+            position = TestConstants.POSITION,
+            genres = listOf(GenreUtils.getGenre())
+        )
     }
 
     /**
@@ -56,23 +60,19 @@ object ShowUtils {
      * @param expected expected FO for show
      * @param actual   actual show
      */
-    fun assertShowDeepEquals(expected: ShowFO?, actual: Show?) {
+    fun assertShowDeepEquals(expected: ShowFO, actual: Show) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.czechName).isEqualTo(expected.czechName)
             it.assertThat(actual.originalName).isEqualTo(expected.originalName)
             it.assertThat(actual.csfd).isEqualTo(expected.csfd)
-            CatalogUtils.assertImdbCodeDeepEquals(expected.imdb, expected.imdbCode, actual.imdbCode)
+            ImdbUtils.assertImdbCodeDeepEquals(softly = it, expectedImdb = expected.imdb, expectedImdbCode = expected.imdbCode, actualImdbCode = actual.imdbCode)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
             it.assertThat(actual.picture).isEqualTo(expected.picture)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
-            GenreUtils.assertGenresDeepEquals(expected.genres, actual.genres)
+            it.assertThat(actual.genres).isNull()
         }
     }
 
@@ -82,24 +82,20 @@ object ShowUtils {
      * @param expected expected show
      * @param actual   actual FO for show
      */
-    fun assertShowDeepEquals(expected: Show?, actual: ShowFO?) {
+    fun assertShowDeepEquals(expected: Show, actual: ShowFO) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.czechName).isEqualTo(expected.czechName)
             it.assertThat(actual.originalName).isEqualTo(expected.originalName)
             it.assertThat(actual.csfd).isEqualTo(expected.csfd)
-            CatalogUtils.assertImdbDeepEquals(expected.imdbCode, actual.imdb, actual.imdbCode)
+            ImdbUtils.assertImdbDeepEquals(softly = it, expectedImdbCode = expected.imdbCode!!, actualImdb = actual.imdb, actualImdbCode = actual.imdbCode)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
             it.assertThat(actual.picture).isEqualTo(expected.picture)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
-            GenreUtils.assertGenreListDeepEquals(expected.genres, actual.genres)
         }
+        GenreUtils.assertGenresDeepEquals(expected = expected.genres, actual = actual.genres)
     }
 
 }

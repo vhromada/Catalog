@@ -2,7 +2,6 @@ package com.github.vhromada.catalog.web.controller
 
 import com.github.vhromada.catalog.entity.Picture
 import com.github.vhromada.catalog.facade.PictureFacade
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
@@ -24,7 +23,9 @@ import java.io.IOException
  */
 @Controller("pictureController")
 @RequestMapping("/pictures")
-class PictureController(private val pictureFacade: PictureFacade) : AbstractResultController() {
+class PictureController(
+    private val pictureFacade: PictureFacade
+) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -63,13 +64,13 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractResu
      */
     @GetMapping("/{id}")
     operator fun get(@PathVariable("id") id: Int): ResponseEntity<Resource> {
-        val picture = pictureFacade.get(id)
+        val picture = pictureFacade.get(id = id)
         processResults(picture)
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"picture.jpg\"")
-                .header(HttpHeaders.CONTENT_TYPE, "image/jpg")
-                .body(ByteArrayResource(picture.data!!.content!!))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"picture.jpg\"")
+            .header(HttpHeaders.CONTENT_TYPE, "image/jpg")
+            .body(ByteArrayResource(picture.data!!.content!!))
     }
 
     /**
@@ -96,10 +97,12 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractResu
     @Throws(IOException::class)
     fun processAdd(@RequestParam("file") file: MultipartFile): String {
         if (!file.isEmpty) {
-            val picture = Picture(id = null,
-                    content = file.bytes,
-                    position = null)
-            processResults(pictureFacade.add(picture))
+            val picture = Picture(
+                id = null,
+                content = file.bytes,
+                position = null
+            )
+            processResults(pictureFacade.add(data = picture))
         }
 
         return LIST_REDIRECT_URL
@@ -120,11 +123,10 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractResu
      *
      * @param id ID of removing picture
      * @return view for redirect to page with list of pictures
-     * @throws IllegalRequestException if picture doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
-        processResults(pictureFacade.remove(getPicture(id)))
+        processResults(pictureFacade.remove(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -134,11 +136,10 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractResu
      *
      * @param id ID of moving picture
      * @return view for redirect to page with list of pictures
-     * @throws IllegalRequestException if picture doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
-        processResults(pictureFacade.moveUp(getPicture(id)))
+        processResults(pictureFacade.moveUp(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -148,11 +149,10 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractResu
      *
      * @param id ID of moving picture
      * @return view for redirect to page with list of pictures
-     * @throws IllegalRequestException if picture doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
-        processResults(pictureFacade.moveDown(getPicture(id)))
+        processResults(pictureFacade.moveDown(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -169,34 +169,7 @@ class PictureController(private val pictureFacade: PictureFacade) : AbstractResu
         return LIST_REDIRECT_URL
     }
 
-    /**
-     * Returns picture with ID.
-     *
-     * @param id ID
-     * @return picture with ID
-     * @throws IllegalRequestException if picture doesn't exist
-     */
-    private fun getPicture(id: Int): Picture {
-        val picture = Picture(id = id,
-                content = null,
-                position = null)
-
-        val pictureResult = pictureFacade.get(picture.id!!)
-        processResults(pictureResult)
-
-        if (pictureResult.data != null) {
-            return picture
-        }
-
-        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-    }
-
     companion object {
-
-        /**
-         * Message for illegal request
-         */
-        private const val ILLEGAL_REQUEST_MESSAGE = "Picture doesn't exist."
 
         /**
          * Redirect URL to list

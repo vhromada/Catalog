@@ -33,16 +33,16 @@ class CatalogSecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers("/login", "/login/error", "/registration").permitAll()
-                .antMatchers("/css/**", "/js/**").permitAll()
-                .antMatchers("/logout").authenticated()
-                .antMatchers("/accounts", "/accounts/", "/accounts/list", "/accounts/**/roles/**").hasAnyRole("ADMIN")
-                .anyRequest().hasAnyRole("ADMIN", "USER")
+            .antMatchers("/login", "/login/error", "/registration").permitAll()
+            .antMatchers("/css/**", "/js/**").permitAll()
+            .antMatchers("/logout").authenticated()
+            .antMatchers("/accounts", "/accounts/", "/accounts/list", "/accounts/**/roles/**").hasAnyRole("ADMIN")
+            .anyRequest().hasAnyRole("ADMIN", "USER")
         http.formLogin()
-                .loginPage("/login")
-                .failureUrl("/login/error")
+            .loginPage("/login")
+            .failureUrl("/login/error")
         http.exceptionHandling()
-                .accessDeniedPage("/access-denied")
+            .accessDeniedPage("/access-denied")
     }
 
 }

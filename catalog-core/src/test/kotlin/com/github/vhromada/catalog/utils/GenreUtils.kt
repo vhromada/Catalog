@@ -11,7 +11,7 @@ import javax.persistence.EntityManager
  * @return updated genre
  */
 fun com.github.vhromada.catalog.domain.Genre.updated(): com.github.vhromada.catalog.domain.Genre {
-    return copy(name = "Name", audit = AuditUtils.newAudit())
+    return copy(name = "Name")
 }
 
 /**
@@ -47,8 +47,8 @@ object GenreUtils {
      */
     fun getGenres(): List<com.github.vhromada.catalog.domain.Genre> {
         val genres = mutableListOf<com.github.vhromada.catalog.domain.Genre>()
-        for (i in 0 until GENRES_COUNT) {
-            genres.add(getGenreDomain(i + 1))
+        for (i in 1..GENRES_COUNT) {
+            genres.add(getGenreDomain(index = i))
         }
 
         return genres
@@ -61,8 +61,8 @@ object GenreUtils {
      * @return genre
      */
     fun newGenreDomain(id: Int?): com.github.vhromada.catalog.domain.Genre {
-        return com.github.vhromada.catalog.domain.Genre(id = id, name = "", position = if (id == null) null else id - 1, audit = null)
-                .updated()
+        return com.github.vhromada.catalog.domain.Genre(id = id, name = "", position = if (id == null) null else id - 1)
+            .updated()
     }
 
     /**
@@ -73,7 +73,7 @@ object GenreUtils {
      */
     fun newGenre(id: Int?): Genre {
         return Genre(id = id, name = "", position = if (id == null) null else id - 1)
-                .updated()
+            .updated()
     }
 
     /**
@@ -83,7 +83,8 @@ object GenreUtils {
      * @return genre for index
      */
     fun getGenreDomain(index: Int): com.github.vhromada.catalog.domain.Genre {
-        return com.github.vhromada.catalog.domain.Genre(id = index, name = "Genre $index name", position = index - 1, audit = AuditUtils.getAudit())
+        return com.github.vhromada.catalog.domain.Genre(id = index, name = "Genre $index name", position = index + 9)
+            .fillAudit(audit = AuditUtils.getAudit())
     }
 
     /**
@@ -93,7 +94,7 @@ object GenreUtils {
      * @return genre for index
      */
     fun getGenre(index: Int): Genre {
-        return Genre(id = index, name = "Genre $index name", position = index - 1)
+        return Genre(id = index, name = "Genre $index name", position = index + 9)
     }
 
     /**
@@ -115,9 +116,11 @@ object GenreUtils {
      * @return genre with updated fields
      */
     fun updateGenre(entityManager: EntityManager, id: Int): com.github.vhromada.catalog.domain.Genre {
-        return getGenre(entityManager, id)!!
-                .updated()
-                .copy(position = POSITION)
+        val genre = getGenre(entityManager = entityManager, id = id)!!
+        return genre
+            .updated()
+            .copy(position = POSITION)
+            .fillAudit(audit = genre)
     }
 
     /**
@@ -126,6 +129,7 @@ object GenreUtils {
      * @param entityManager entity manager
      * @return count of genres
      */
+    @Suppress("JpaQlInspection")
     fun getGenresCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(g.id) FROM Genre g", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -136,15 +140,11 @@ object GenreUtils {
      * @param expected expected list of genres
      * @param actual   actual list of genres
      */
-    fun assertGenresDeepEquals(expected: List<com.github.vhromada.catalog.domain.Genre?>?, actual: List<com.github.vhromada.catalog.domain.Genre?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertDomainGenresDeepEquals(expected: List<com.github.vhromada.catalog.domain.Genre>, actual: List<com.github.vhromada.catalog.domain.Genre>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertGenreDeepEquals(expected[i], actual[i])
+                assertGenreDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -155,17 +155,13 @@ object GenreUtils {
      * @param expected expected genre
      * @param actual   actual genre
      */
-    fun assertGenreDeepEquals(expected: com.github.vhromada.catalog.domain.Genre?, actual: com.github.vhromada.catalog.domain.Genre?) {
+    fun assertGenreDeepEquals(expected: com.github.vhromada.catalog.domain.Genre, actual: com.github.vhromada.catalog.domain.Genre) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.name).isEqualTo(expected.name)
             it.assertThat(actual.position).isEqualTo(expected.position)
+            AuditUtils.assertAuditDeepEquals(softly = it, expected = expected, actual = actual)
         }
-        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
@@ -174,15 +170,11 @@ object GenreUtils {
      * @param expected expected list of genres
      * @param actual   actual list of genres
      */
-    fun assertGenreListDeepEquals(expected: List<Genre?>?, actual: List<com.github.vhromada.catalog.domain.Genre?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertGenresDeepEquals(expected: List<Genre>, actual: List<com.github.vhromada.catalog.domain.Genre>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertGenreDeepEquals(expected[i], actual[i])
+                assertGenreDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -193,13 +185,42 @@ object GenreUtils {
      * @param expected expected genre
      * @param actual   actual genre
      */
-    fun assertGenreDeepEquals(expected: Genre?, actual: com.github.vhromada.catalog.domain.Genre?) {
+    fun assertGenreDeepEquals(expected: Genre, actual: com.github.vhromada.catalog.domain.Genre) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
+            it.assertThat(actual.id).isEqualTo(expected.id)
+            it.assertThat(actual.name).isEqualTo(expected.name)
+            it.assertThat(actual.position).isEqualTo(expected.position)
+            it.assertThat(actual.createdUser).isNull()
+            it.assertThat(actual.createdTime).isNull()
+            it.assertThat(actual.updatedUser).isNull()
+            it.assertThat(actual.updatedTime).isNull()
         }
+    }
+
+    /**
+     * Asserts genres deep equals.
+     *
+     * @param expected expected list of genres
+     * @param actual   actual list of genres
+     */
+    fun assertGenreListDeepEquals(expected: List<com.github.vhromada.catalog.domain.Genre>, actual: List<Genre>) {
+        assertThat(expected.size).isEqualTo(actual.size)
+        if (expected.isNotEmpty()) {
+            for (i in expected.indices) {
+                assertGenreDeepEquals(expected = expected[i], actual = actual[i])
+            }
+        }
+    }
+
+    /**
+     * Asserts genre deep equals.
+     *
+     * @param expected expected genre
+     * @param actual   actual genre
+     */
+    fun assertGenreDeepEquals(expected: com.github.vhromada.catalog.domain.Genre, actual: Genre) {
         assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.name).isEqualTo(expected.name)
             it.assertThat(actual.position).isEqualTo(expected.position)
         }

@@ -5,25 +5,26 @@ import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.facade.impl.CheatFacadeImpl
 import com.github.vhromada.catalog.utils.CheatUtils
 import com.github.vhromada.catalog.utils.GameUtils
-import com.github.vhromada.common.facade.MovableChildFacade
+import com.github.vhromada.catalog.utils.TestConstants
+import com.github.vhromada.common.mapper.Mapper
 import com.github.vhromada.common.result.Event
 import com.github.vhromada.common.result.Result
 import com.github.vhromada.common.result.Severity
 import com.github.vhromada.common.result.Status
-import com.github.vhromada.common.test.facade.MovableChildFacadeTest
-import com.github.vhromada.common.test.utils.TestConstants
-import com.github.vhromada.common.validator.ValidationType
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.github.vhromada.common.service.ChildService
+import com.github.vhromada.common.service.ParentService
+import com.github.vhromada.common.validator.Validator
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.SoftAssertions.assertSoftly
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Optional
 
 /**
@@ -31,212 +32,395 @@ import java.util.Optional
  *
  * @author Vladimir Hromada
  */
-class CheatFacadeTest : MovableChildFacadeTest<Cheat, com.github.vhromada.catalog.domain.Cheat, Game, com.github.vhromada.catalog.domain.Game>() {
+@ExtendWith(MockitoExtension::class)
+class CheatFacadeTest {
 
+    /**
+     * Instance of [ChildService] for cheats
+     */
+    @Mock
+    private lateinit var cheatService: ChildService<com.github.vhromada.catalog.domain.Cheat>
+
+    /**
+     * Instance of [ParentService] for games
+     */
+    @Mock
+    private lateinit var gameService: ParentService<com.github.vhromada.catalog.domain.Game>
+
+    /**
+     * Instance of [Mapper] for cheats
+     */
+    @Mock
+    private lateinit var mapper: Mapper<Cheat, com.github.vhromada.catalog.domain.Cheat>
+
+    /**
+     * Instance of [Validator] for cheats
+     */
+    @Mock
+    private lateinit var cheatValidator: Validator<Cheat, com.github.vhromada.catalog.domain.Cheat>
+
+    /**
+     * Instance of [Validator] for games
+     */
+    @Mock
+    private lateinit var gameValidator: Validator<Game, com.github.vhromada.catalog.domain.Game>
+
+    /**
+     * Instance of [CheatFacade]
+     */
+    private lateinit var facade: CheatFacade
+
+    /**
+     * Initializes facade.
+     */
+    @BeforeEach
+    fun setUp() {
+        facade = CheatFacadeImpl(cheatService = cheatService, gameService = gameService, mapper = mapper, cheatValidator = cheatValidator, gameValidator = gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.get] with existing cheat.
+     */
     @Test
-    override fun add() {
-        val parentEntity = newParentEntity(1)
-        val childEntity = newChildEntity(null)
-        val childDomain = newChildDomain(null)
-        val argumentCaptor = argumentCaptorParentDomain()
-        val childArgumentCaptor = argumentCaptor<Cheat>()
+    fun getExistingCheat() {
+        val entity = CheatUtils.newCheat(id = 1)
+        val domain = CheatUtils.newCheatDomain(id = 1)
 
-        whenever(service.get(any())).thenReturn(Optional.of(GameUtils.newGameDomain(1)))
-        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ACCOUNT)
-        whenever(timeProvider.getTime()).thenReturn(TestConstants.TIME)
-        whenever(mapper.map(anyChildEntity())).thenReturn(childDomain)
-        whenever(parentMovableValidator.validate(anyParentEntity(), any())).thenReturn(Result())
-        whenever(childMovableValidator.validate(anyChildEntity(), any())).thenReturn(Result())
+        whenever(cheatService.get(id = any())).thenReturn(Optional.of(domain))
+        whenever(mapper.mapBack(source = any<com.github.vhromada.catalog.domain.Cheat>())).thenReturn(entity)
+        whenever(cheatValidator.validateExists(data = any())).thenReturn(Result())
 
-        val result = getFacade().add(parentEntity, childEntity)
+        val result = facade.get(id = entity.id!!)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.data).isEqualTo(entity)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        verify(cheatService).get(id = entity.id!!)
+        verify(mapper).mapBack(source = domain)
+        verify(cheatValidator).validateExists(data = Optional.of(domain))
+        verifyNoMoreInteractions(cheatService, mapper, cheatValidator)
+        verifyZeroInteractions(gameService, gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.get] with not existing cheat.
+     */
+    @Test
+    fun getNotExistingCheat() {
+        whenever(cheatService.get(id = any())).thenReturn(Optional.empty())
+        whenever(cheatValidator.validateExists(data = any())).thenReturn(TestConstants.INVALID_DATA_RESULT)
+
+        val result = facade.get(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(TestConstants.INVALID_DATA_RESULT.events())
+        }
+
+        verify(cheatService).get(id = Int.MAX_VALUE)
+        verify(cheatValidator).validateExists(data = Optional.empty())
+        verifyNoMoreInteractions(cheatService, cheatValidator)
+        verifyZeroInteractions(gameService, mapper, gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.update].
+     */
+    @Test
+    fun update() {
+        val entity = CheatUtils.newCheat(id = 1)
+        val domain = CheatUtils.newCheatDomain(id = 1)
+
+        whenever(cheatService.get(id = any())).thenReturn(Optional.of(domain))
+        whenever(mapper.map(source = any<Cheat>())).thenReturn(domain)
+        whenever(cheatValidator.validate(data = any(), update = any())).thenReturn(Result())
+        whenever(cheatValidator.validateExists(data = any())).thenReturn(Result())
+
+        val result = facade.update(data = entity)
 
         assertSoftly {
             it.assertThat(result.status).isEqualTo(Status.OK)
             it.assertThat(result.events()).isEmpty()
         }
 
-        verify(service, times(2)).get(parentEntity.id!!)
-        verify(service).update(argumentCaptor.capture())
-        verify(accountProvider, times(2)).getAccount()
-        verify(timeProvider, times(2)).getTime()
-        verify(parentMovableValidator).validate(parentEntity, ValidationType.EXISTS)
-        verify(childMovableValidator).validate(childArgumentCaptor.capture(), eq(ValidationType.NEW), eq(ValidationType.DEEP))
-        verify(mapper).map(childArgumentCaptor.capture())
-        verifyNoMoreInteractions(service, accountProvider, timeProvider, mapper, parentMovableValidator, childMovableValidator)
-
-        assertParentDeepEquals(newParentDomainWithChildren(1, listOf(newChildDomain(1), childDomain)), argumentCaptor.lastValue)
-        childArgumentCaptor.allValues.forEach {
-            assertCheatDeepEquals(childEntity, it)
-        }
-    }
-
-    @Test
-    override fun addInvalidData() {
-        val parentEntity = GameUtils.newGame(null)
-        val childEntity = newChildEntity(null)
-        val childArgumentCaptor = argumentCaptor<Cheat>()
-        val invalidParentResult = Result.error<Unit>("PARENT_INVALID", "Parent must be valid.")
-        val invalidChildResult = Result.error<Unit>("CHILD_INVALID", "Child must be valid.")
-
-        whenever(parentMovableValidator.validate(anyParentEntity(), any())).thenReturn(invalidParentResult)
-        whenever(childMovableValidator.validate(anyChildEntity(), any())).thenReturn(invalidChildResult)
-
-        val result = getFacade().add(parentEntity, childEntity)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(invalidParentResult.events()[0], invalidChildResult.events()[0]))
-        }
-
-        verify(parentMovableValidator).validate(parentEntity, ValidationType.EXISTS)
-        verify(childMovableValidator).validate(childArgumentCaptor.capture(), eq(ValidationType.NEW), eq(ValidationType.DEEP))
-        verifyNoMoreInteractions(parentMovableValidator, childMovableValidator)
-        verifyZeroInteractions(service, accountProvider, timeProvider, mapper)
-
-        assertCheatDeepEquals(childEntity, childArgumentCaptor.lastValue)
-    }
-
-    @Test
-    fun addInvalidCheatData() {
-        val parentEntity = GameUtils.newGame(Int.MAX_VALUE)
-        val childEntity = newChildEntity(null)
-        val childArgumentCaptor = argumentCaptor<Cheat>()
-
-        whenever(service.get(any())).thenReturn(Optional.of(newParentDomain(1)))
-        whenever(parentMovableValidator.validate(anyParentEntity(), any())).thenReturn(Result())
-        whenever(childMovableValidator.validate(anyChildEntity(), any())).thenReturn(Result())
-
-        val result = getFacade().add(parentEntity, childEntity)
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "GAME_CHEAT_EXIST", "Game already has cheat.")))
-        }
-
-        verify(service).get(parentEntity.id!!)
-        verify(parentMovableValidator).validate(parentEntity, ValidationType.EXISTS)
-        verify(childMovableValidator).validate(childArgumentCaptor.capture(), eq(ValidationType.NEW), eq(ValidationType.DEEP))
-        verifyNoMoreInteractions(service, parentMovableValidator, childMovableValidator)
-        verifyZeroInteractions(accountProvider, timeProvider, mapper)
-
-        assertCheatDeepEquals(childEntity, childArgumentCaptor.lastValue)
-    }
-
-    @Test
-    override fun duplicate() {
-        val result = getFacade().duplicate(newChildEntity(Int.MAX_VALUE))
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "CHEAT_NOT_DUPLICABLE", "Cheat can't be duplicated.")))
-        }
-
-        verifyZeroInteractions(service, accountProvider, timeProvider, mapper, parentMovableValidator, childMovableValidator)
-    }
-
-    @Test
-    override fun duplicateInvalidData() {
-        // no test
-    }
-
-    @Test
-    override fun moveUp() {
-        val result = getFacade().moveUp(newChildEntity(Int.MAX_VALUE))
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "CHEAT_NOT_MOVABLE", "Cheat can't be moved up.")))
-        }
-
-        verifyZeroInteractions(service, accountProvider, timeProvider, mapper, parentMovableValidator, childMovableValidator)
-    }
-
-    @Test
-    override fun moveUpInvalidData() {
-        // no test
-    }
-
-    @Test
-    override fun moveDown() {
-        val result = getFacade().moveDown(newChildEntity(Int.MAX_VALUE))
-
-        assertSoftly {
-            it.assertThat(result.status).isEqualTo(Status.ERROR)
-            it.assertThat(result.events()).isEqualTo(listOf(Event(Severity.ERROR, "CHEAT_NOT_MOVABLE", "Cheat can't be moved down.")))
-        }
-
-        verifyZeroInteractions(service, accountProvider, timeProvider, mapper, parentMovableValidator, childMovableValidator)
-    }
-
-    @Test
-    override fun moveDownInvalidData() {
-        // no test
-    }
-
-    override fun getFacade(): MovableChildFacade<Cheat, Game> {
-        return CheatFacadeImpl(service, accountProvider, timeProvider, mapper, parentMovableValidator, childMovableValidator)
-    }
-
-    override fun newParentEntity(id: Int): Game {
-        return GameUtils.newGame(id)
-    }
-
-    override fun newParentDomain(id: Int): com.github.vhromada.catalog.domain.Game {
-        return GameUtils.newGameWithCheat(id)
-    }
-
-    @Suppress("SameParameterValue")
-    override fun newParentDomainWithChildren(id: Int, children: List<com.github.vhromada.catalog.domain.Cheat>): com.github.vhromada.catalog.domain.Game {
-        return newParentDomain(id)
-                .copy(cheat = children[0])
-    }
-
-    override fun newChildEntity(id: Int?): Cheat {
-        return CheatUtils.newCheat(id)
-    }
-
-    override fun newChildDomain(id: Int?): com.github.vhromada.catalog.domain.Cheat {
-        return CheatUtils.newCheatWithData(id)
-    }
-
-    override fun getParentRemovedData(parent: com.github.vhromada.catalog.domain.Game, child: com.github.vhromada.catalog.domain.Cheat): com.github.vhromada.catalog.domain.Game {
-        return parent.copy(cheat = null)
-    }
-
-    override fun anyParentEntity(): Game {
-        return any()
-    }
-
-    override fun anyChildEntity(): Cheat {
-        return any()
-    }
-
-    override fun anyChildDomain(): com.github.vhromada.catalog.domain.Cheat {
-        return any()
-    }
-
-    override fun argumentCaptorParentDomain(): KArgumentCaptor<com.github.vhromada.catalog.domain.Game> {
-        return argumentCaptor()
-    }
-
-    override fun assertParentDeepEquals(expected: com.github.vhromada.catalog.domain.Game, actual: com.github.vhromada.catalog.domain.Game) {
-        GameUtils.assertGameDeepEquals(expected, actual)
+        verify(cheatService).get(id = entity.id!!)
+        verify(cheatService).update(data = domain)
+        verify(mapper).map(source = entity)
+        verify(cheatValidator).validate(data = entity, update = true)
+        verify(cheatValidator).validateExists(data = Optional.of(domain))
+        verifyNoMoreInteractions(cheatService, mapper, cheatValidator)
+        verifyZeroInteractions(gameService, gameValidator)
     }
 
     /**
-     * Assert cheat deep equals.
-     *
-     * @param expected expected cheat
-     * @param actual   actual cheat
+     * Test method for [CheatFacade.update] with invalid cheat.
      */
-    private fun assertCheatDeepEquals(expected: Cheat, actual: Cheat) {
+    @Test
+    fun updateInvalidCheat() {
+        val entity = CheatUtils.newCheat(id = Int.MAX_VALUE)
+
+        whenever(cheatValidator.validate(data = any(), update = any())).thenReturn(TestConstants.INVALID_DATA_RESULT)
+
+        val result = facade.update(data = entity)
+
         assertSoftly {
-            it.assertThat(actual.id).isEqualTo(expected.id)
-            it.assertThat(actual.gameSetting).isEqualTo(expected.gameSetting)
-            it.assertThat(actual.cheatSetting).isEqualTo(expected.cheatSetting)
-            it.assertThat(actual.data).isEqualTo(expected.data)
-            it.assertThat(actual.position).isNull()
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(TestConstants.INVALID_DATA_RESULT.events())
         }
+
+        verify(cheatValidator).validate(data = entity, update = true)
+        verifyNoMoreInteractions(cheatValidator)
+        verifyZeroInteractions(cheatService, gameService, mapper, gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.update] with not existing cheat.
+     */
+    @Test
+    fun updateNotExistingCheat() {
+        val entity = CheatUtils.newCheat(id = Int.MAX_VALUE)
+
+        whenever(cheatService.get(id = any())).thenReturn(Optional.empty())
+        whenever(cheatValidator.validate(data = any(), update = any())).thenReturn(Result())
+        whenever(cheatValidator.validateExists(data = any())).thenReturn(TestConstants.INVALID_DATA_RESULT)
+
+        val result = facade.update(data = entity)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(TestConstants.INVALID_DATA_RESULT.events())
+        }
+
+        verify(cheatService).get(id = entity.id!!)
+        verify(cheatValidator).validate(data = entity, update = true)
+        verify(cheatValidator).validateExists(data = Optional.empty())
+        verifyNoMoreInteractions(cheatService, cheatValidator)
+        verifyZeroInteractions(gameService, mapper, gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.remove].
+     */
+    @Test
+    fun remove() {
+        val domain = CheatUtils.newCheatDomain(id = 1)
+
+        whenever(cheatService.get(id = any())).thenReturn(Optional.of(domain))
+        whenever(cheatValidator.validateExists(data = any())).thenReturn(Result())
+
+        val result = facade.remove(id = 1)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        verify(cheatService).get(id = 1)
+        verify(cheatService).remove(data = domain)
+        verify(cheatValidator).validateExists(data = Optional.of(domain))
+        verifyNoMoreInteractions(cheatService, cheatValidator)
+        verifyZeroInteractions(gameService, mapper, gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.remove] with invalid cheat.
+     */
+    @Test
+    fun removeInvalidCheat() {
+        whenever(cheatService.get(id = any())).thenReturn(Optional.empty())
+        whenever(cheatValidator.validateExists(data = any())).thenReturn(TestConstants.INVALID_DATA_RESULT)
+
+        val result = facade.remove(id = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(TestConstants.INVALID_DATA_RESULT.events())
+        }
+
+        verify(cheatService).get(id = Int.MAX_VALUE)
+        verify(cheatValidator).validateExists(data = Optional.empty())
+        verifyNoMoreInteractions(cheatService, cheatValidator)
+        verifyZeroInteractions(gameService, mapper, gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.duplicate].
+     */
+    @Test
+    fun duplicate() {
+        val result = facade.duplicate(id = 1)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_NOT_DUPLICABLE", message = "Cheat can't be duplicated.")))
+        }
+
+        verifyZeroInteractions(cheatService, gameService, mapper, cheatValidator, gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.moveUp].
+     */
+    @Test
+    fun moveUp() {
+        val result = facade.moveUp(id = 1)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_NOT_MOVABLE", message = "Cheat can't be moved up.")))
+        }
+
+        verifyZeroInteractions(cheatService, gameService, mapper, cheatValidator, gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.moveDown].
+     */
+    @Test
+    fun moveDown() {
+        val result = facade.moveDown(id = 1)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(listOf(Event(severity = Severity.ERROR, key = "CHEAT_NOT_MOVABLE", message = "Cheat can't be moved down.")))
+        }
+
+        verifyZeroInteractions(cheatService, gameService, mapper, cheatValidator, gameValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.add].
+     */
+    @Test
+    fun add() {
+        val entity = CheatUtils.newCheat(id = 1)
+        val domain = CheatUtils.newCheatDomain(id = 1)
+        val game = GameUtils.newGameDomain(id = 2)
+
+        whenever(gameService.get(id = any())).thenReturn(Optional.of(game))
+        whenever(mapper.map(source = any<Cheat>())).thenReturn(domain)
+        whenever(cheatValidator.validate(data = any(), update = any())).thenReturn(Result())
+        whenever(gameValidator.validateExists(data = any())).thenReturn(Result())
+
+        val result = facade.add(parent = 2, data = entity)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        verify(gameService).get(id = 2)
+        verify(gameService).update(data = game)
+        verify(mapper).map(source = entity)
+        verify(cheatValidator).validate(data = entity, update = false)
+        verify(gameValidator).validateExists(data = Optional.of(game))
+        verifyNoMoreInteractions(gameService, mapper, cheatValidator, gameValidator)
+        verifyZeroInteractions(cheatService)
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with invalid game.
+     */
+    @Test
+    fun addInvalidGame() {
+        val entity = CheatUtils.newCheat(id = 1)
+
+        whenever(gameService.get(id = any())).thenReturn(Optional.empty())
+        whenever(cheatValidator.validate(data = any(), update = any())).thenReturn(Result())
+        whenever(gameValidator.validateExists(data = any())).thenReturn(TestConstants.INVALID_DATA_RESULT)
+
+        val result = facade.add(parent = 2, data = entity)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(TestConstants.INVALID_DATA_RESULT.events())
+        }
+
+        verify(gameService).get(id = 2)
+        verify(cheatValidator).validate(data = entity, update = false)
+        verify(gameValidator).validateExists(data = Optional.empty())
+        verifyNoMoreInteractions(gameService, cheatValidator, gameValidator)
+        verifyZeroInteractions(cheatService, mapper)
+    }
+
+    /**
+     * Test method for [CheatFacade.add] with invalid cheat.
+     */
+    @Test
+    fun addInvalidCheat() {
+        val entity = CheatUtils.newCheat(id = Int.MAX_VALUE)
+        val game = GameUtils.newGameDomain(id = 2)
+
+        whenever(gameService.get(id = any())).thenReturn(Optional.of(game))
+        whenever(cheatValidator.validate(data = any(), update = any())).thenReturn(TestConstants.INVALID_DATA_RESULT)
+        whenever(gameValidator.validateExists(data = any())).thenReturn(Result())
+
+        val result = facade.add(parent = 2, data = entity)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(TestConstants.INVALID_DATA_RESULT.events())
+        }
+
+        verify(gameService).get(id = 2)
+        verify(cheatValidator).validate(data = entity, update = false)
+        verify(gameValidator).validateExists(data = Optional.of(game))
+        verifyNoMoreInteractions(gameService, cheatValidator, gameValidator)
+        verifyZeroInteractions(cheatService, mapper)
+    }
+
+    /**
+     * Test method for [CheatFacade.find].
+     */
+    @Test
+    fun find() {
+        val entityList = listOf(CheatUtils.newCheat(id = 1), CheatUtils.newCheat(id = 2))
+        val domainList = listOf(CheatUtils.newCheatDomain(id = 1), CheatUtils.newCheatDomain(id = 2))
+        val game = GameUtils.newGameDomain(id = 2)
+
+        whenever(cheatService.find(parent = any())).thenReturn(domainList)
+        whenever(gameService.get(id = any())).thenReturn(Optional.of(game))
+        whenever(mapper.mapBack(source = any<List<com.github.vhromada.catalog.domain.Cheat>>())).thenReturn(entityList)
+        whenever(gameValidator.validateExists(data = any())).thenReturn(Result())
+
+        val result = facade.find(parent = 2)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.OK)
+            it.assertThat(result.data).isEqualTo(entityList)
+            it.assertThat(result.events()).isEmpty()
+        }
+
+        verify(cheatService).find(parent = 2)
+        verify(gameService).get(id = 2)
+        verify(mapper).mapBack(source = domainList)
+        verify(gameValidator).validateExists(data = Optional.of(game))
+        verifyNoMoreInteractions(cheatService, gameService, mapper, gameValidator)
+        verifyZeroInteractions(cheatValidator)
+    }
+
+    /**
+     * Test method for [CheatFacade.find] with invalid game.
+     */
+    @Test
+    fun findInvalidGame() {
+        whenever(gameService.get(id = any())).thenReturn(Optional.empty())
+        whenever(gameValidator.validateExists(data = any())).thenReturn(TestConstants.INVALID_DATA_RESULT)
+
+        val result = facade.find(parent = Int.MAX_VALUE)
+
+        assertSoftly {
+            it.assertThat(result.status).isEqualTo(Status.ERROR)
+            it.assertThat(result.events()).isEqualTo(TestConstants.INVALID_DATA_RESULT.events())
+        }
+
+        verify(gameService).get(id = Int.MAX_VALUE)
+        verify(gameValidator).validateExists(data = Optional.empty())
+        verifyNoMoreInteractions(gameService, gameValidator)
+        verifyZeroInteractions(cheatService, mapper, cheatValidator)
     }
 
 }

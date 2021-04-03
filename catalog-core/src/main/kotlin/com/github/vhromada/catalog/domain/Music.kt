@@ -1,7 +1,8 @@
 package com.github.vhromada.catalog.domain
 
 import com.github.vhromada.common.domain.Audit
-import com.github.vhromada.common.domain.AuditEntity
+import com.github.vhromada.common.entity.Movable
+import com.github.vhromada.common.utils.sorted
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.util.Objects
@@ -12,7 +13,6 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
 import javax.persistence.OrderBy
 import javax.persistence.SequenceGenerator
@@ -26,62 +26,64 @@ import javax.persistence.Table
 @Entity
 @Table(name = "music")
 data class Music(
+    /**
+     * ID
+     */
+    @Id
+    @SequenceGenerator(name = "music_generator", sequenceName = "music_sq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "music_generator")
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        @Id
-        @SequenceGenerator(name = "music_generator", sequenceName = "music_sq", allocationSize = 1)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "music_generator")
-        override var id: Int?,
+    /**
+     * Name
+     */
+    @Column(name = "music_name")
+    val name: String,
 
-        /**
-         * Name
-         */
-        @Column(name = "music_name")
-        val name: String,
+    /**
+     * URL to english Wikipedia page about music
+     */
+    @Column(name = "wiki_en")
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about music
-         */
-        @Column(name = "wiki_en")
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about music
+     */
+    @Column(name = "wiki_cz")
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about music
-         */
-        @Column(name = "wiki_cz")
-        val wikiCz: String?,
+    /**
+     * Count of media
+     */
+    @Column(name = "media_count")
+    val mediaCount: Int,
 
-        /**
-         * Count of media
-         */
-        @Column(name = "media_count")
-        val mediaCount: Int,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
+    /**
+     * Position
+     */
+    override var position: Int?,
 
-        /**
-         * Position
-         */
-        override var position: Int?,
+    /**
+     * Songs
+     */
+    @OneToMany(mappedBy = "music", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OrderBy("position, id")
+    @Fetch(FetchMode.SELECT)
+    val songs: MutableList<Song>
+) : Audit(), Movable {
 
-        /**
-         * Songs
-         */
-        @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
-        @JoinColumn(name = "music", referencedColumnName = "id")
-        @OrderBy("position, id")
-        @Fetch(FetchMode.SELECT)
-        val songs: List<Song>,
+    override fun updatePosition(position: Int) {
+        super.updatePosition(position)
 
-        /**
-         * Audit
-         */
-        override var audit: Audit?) : AuditEntity(audit) {
+        for (i in songs.sorted().indices) {
+            songs[i].updatePosition(i)
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

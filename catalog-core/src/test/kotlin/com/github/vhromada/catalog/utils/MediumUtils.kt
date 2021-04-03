@@ -24,8 +24,8 @@ object MediumUtils {
      */
     fun getMedia(): List<com.github.vhromada.catalog.domain.Medium> {
         val media = mutableListOf<com.github.vhromada.catalog.domain.Medium>()
-        for (i in 0 until MEDIA_COUNT) {
-            media.add(getMedium(i + 1))
+        for (i in 1..MEDIA_COUNT) {
+            media.add(getMediumDomain(index = i))
         }
 
         return media
@@ -38,7 +38,7 @@ object MediumUtils {
      * @return medium
      */
     fun newMediumDomain(id: Int?): com.github.vhromada.catalog.domain.Medium {
-        return com.github.vhromada.catalog.domain.Medium(id = id, number = 1, length = 10, audit = null)
+        return com.github.vhromada.catalog.domain.Medium(id = id, number = 1, length = 10)
     }
 
     /**
@@ -57,10 +57,11 @@ object MediumUtils {
      * @param index index
      * @return medium for index
      */
-    fun getMedium(index: Int): com.github.vhromada.catalog.domain.Medium {
+    fun getMediumDomain(index: Int): com.github.vhromada.catalog.domain.Medium {
         val lengthMultiplier = 100
 
-        return com.github.vhromada.catalog.domain.Medium(id = index, number = if (index < 4) 1 else 2, length = index * lengthMultiplier, audit = AuditUtils.getAudit())
+        return com.github.vhromada.catalog.domain.Medium(id = index, number = if (index < 4) 1 else 2, length = index * lengthMultiplier)
+            .fillAudit(AuditUtils.getAudit())
     }
 
     /**
@@ -69,6 +70,7 @@ object MediumUtils {
      * @param entityManager entity manager
      * @return count of media
      */
+    @Suppress("JpaQlInspection")
     fun getMediaCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(m.id) FROM Medium m", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -79,15 +81,11 @@ object MediumUtils {
      * @param expected expected list of media
      * @param actual   actual list of media
      */
-    fun assertMediaDeepEquals(expected: List<com.github.vhromada.catalog.domain.Medium?>?, actual: List<com.github.vhromada.catalog.domain.Medium?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertDomainMediaDeepEquals(expected: List<com.github.vhromada.catalog.domain.Medium>, actual: List<com.github.vhromada.catalog.domain.Medium>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertMediumDeepEquals(expected[i], actual[i])
+                assertMediumDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -98,17 +96,13 @@ object MediumUtils {
      * @param expected expected medium
      * @param actual   actual medium
      */
-    private fun assertMediumDeepEquals(expected: com.github.vhromada.catalog.domain.Medium?, actual: com.github.vhromada.catalog.domain.Medium?) {
+    private fun assertMediumDeepEquals(expected: com.github.vhromada.catalog.domain.Medium, actual: com.github.vhromada.catalog.domain.Medium) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.number).isEqualTo(expected.number)
             it.assertThat(actual.length).isEqualTo(expected.length)
+            AuditUtils.assertAuditDeepEquals(softly = it, expected = expected, actual = actual)
         }
-        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
@@ -117,15 +111,11 @@ object MediumUtils {
      * @param expected expected list of media
      * @param actual   actual list of media
      */
-    fun assertMediumListDeepEquals(expected: List<Medium?>?, actual: List<com.github.vhromada.catalog.domain.Medium?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertMediaDeepEquals(expected: List<Medium>, actual: List<com.github.vhromada.catalog.domain.Medium>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertMediumDeepEquals(expected[i], actual[i])
+                assertMediumDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -136,13 +126,42 @@ object MediumUtils {
      * @param expected expected medium
      * @param actual   actual medium
      */
-    private fun assertMediumDeepEquals(expected: Medium?, actual: com.github.vhromada.catalog.domain.Medium?) {
+    private fun assertMediumDeepEquals(expected: Medium, actual: com.github.vhromada.catalog.domain.Medium) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
+            it.assertThat(actual.id).isEqualTo(expected.id)
+            it.assertThat(actual.number).isEqualTo(expected.number)
+            it.assertThat(actual.length).isEqualTo(expected.length)
+            it.assertThat(actual.createdUser).isNull()
+            it.assertThat(actual.createdTime).isNull()
+            it.assertThat(actual.updatedUser).isNull()
+            it.assertThat(actual.updatedTime).isNull()
         }
+    }
+
+    /**
+     * Asserts media deep equals.
+     *
+     * @param expected expected list of media
+     * @param actual   actual list of media
+     */
+    fun assertMediumListDeepEquals(expected: List<com.github.vhromada.catalog.domain.Medium>, actual: List<Medium>) {
+        assertThat(expected.size).isEqualTo(actual.size)
+        if (expected.isNotEmpty()) {
+            for (i in expected.indices) {
+                assertMediumDeepEquals(expected = expected[i], actual = actual[i])
+            }
+        }
+    }
+
+    /**
+     * Asserts medium deep equals.
+     *
+     * @param expected expected medium
+     * @param actual   actual medium
+     */
+    private fun assertMediumDeepEquals(expected: com.github.vhromada.catalog.domain.Medium, actual: Medium) {
         assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.number).isEqualTo(expected.number)
             it.assertThat(actual.length).isEqualTo(expected.length)
         }

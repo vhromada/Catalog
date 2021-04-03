@@ -10,46 +10,46 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class Season(
+    /**
+     * ID
+     */
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        override var id: Int?,
+    /**
+     * Number of season
+     */
+    val number: Int?,
 
-        /**
-         * Number of season
-         */
-        val number: Int?,
+    /**
+     * Starting year
+     */
+    val startYear: Int?,
 
-        /**
-         * Starting year
-         */
-        val startYear: Int?,
+    /**
+     * Ending year
+     */
+    val endYear: Int?,
 
-        /**
-         * Ending year
-         */
-        val endYear: Int?,
+    /**
+     * Language
+     */
+    val language: Language?,
 
-        /**
-         * Language
-         */
-        val language: Language?,
+    /**
+     * Subtitles
+     */
+    val subtitles: List<Language?>?,
 
-        /**
-         * Subtitles
-         */
-        val subtitles: List<Language?>?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        override var position: Int?) : Movable {
+    /**
+     * Position
+     */
+    override var position: Int?
+) : Movable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

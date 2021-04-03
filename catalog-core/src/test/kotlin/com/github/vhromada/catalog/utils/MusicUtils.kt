@@ -12,7 +12,7 @@ import javax.persistence.EntityManager
  * @return updated music
  */
 fun com.github.vhromada.catalog.domain.Music.updated(): com.github.vhromada.catalog.domain.Music {
-    return copy(name = "Name", wikiEn = "enWiki", wikiCz = "czWiki", mediaCount = 1, note = "Note", audit = AuditUtils.newAudit())
+    return copy(name = "Name", wikiEn = "enWiki", wikiCz = "czWiki", mediaCount = 1, note = "Note")
 }
 
 /**
@@ -51,10 +51,10 @@ object MusicUtils {
      *
      * @return music
      */
-    fun getMusic(): List<com.github.vhromada.catalog.domain.Music> {
+    fun getMusicList(): List<com.github.vhromada.catalog.domain.Music> {
         val music = ArrayList<com.github.vhromada.catalog.domain.Music>()
-        for (i in 0 until MUSIC_COUNT) {
-            music.add(getMusic(i + 1))
+        for (i in 1..MUSIC_COUNT) {
+            music.add(getMusicDomain(index = i))
         }
 
         return music
@@ -68,16 +68,15 @@ object MusicUtils {
      */
     fun newMusicDomain(id: Int?): com.github.vhromada.catalog.domain.Music {
         return com.github.vhromada.catalog.domain.Music(
-                id = id,
-                name = "",
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = 0,
-                note = null,
-                position = if (id == null) null else id - 1,
-                songs = emptyList(),
-                audit = null)
-                .updated()
+            id = id,
+            name = "",
+            wikiEn = null,
+            wikiCz = null,
+            mediaCount = 0,
+            note = null,
+            position = if (id == null) null else id - 1,
+            songs = mutableListOf()
+        ).updated()
     }
 
     /**
@@ -86,9 +85,9 @@ object MusicUtils {
      * @param id ID
      * @return music with songs
      */
-    fun newMusicWithSongs(id: Int?): com.github.vhromada.catalog.domain.Music {
-        return newMusicDomain(id)
-                .copy(songs = listOf(SongUtils.newSongDomain(id)))
+    fun newMusicDomainWithSongs(id: Int?): com.github.vhromada.catalog.domain.Music {
+        return newMusicDomain(id = id)
+            .copy(songs = mutableListOf(SongUtils.newSongDomain(id = id)))
     }
 
     /**
@@ -99,14 +98,14 @@ object MusicUtils {
      */
     fun newMusic(id: Int?): Music {
         return Music(
-                id = id,
-                name = "",
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = 0,
-                note = null,
-                position = if (id == null) null else id - 1)
-                .updated()
+            id = id,
+            name = "",
+            wikiEn = null,
+            wikiCz = null,
+            mediaCount = 0,
+            note = null,
+            position = if (id == null) null else id - 1
+        ).updated()
     }
 
     /**
@@ -115,17 +114,17 @@ object MusicUtils {
      * @param index index
      * @return music for index
      */
-    fun getMusic(index: Int): com.github.vhromada.catalog.domain.Music {
+    fun getMusicDomain(index: Int): com.github.vhromada.catalog.domain.Music {
         return com.github.vhromada.catalog.domain.Music(
-                id = index,
-                name = "$MUSIC$index name",
-                wikiEn = "$MUSIC$index English Wikipedia",
-                wikiCz = "$MUSIC$index Czech Wikipedia",
-                mediaCount = index * 10,
-                note = if (index == 2) MUSIC + "2 note" else "",
-                position = index - 1,
-                songs = SongUtils.getSongs(index),
-                audit = AuditUtils.getAudit())
+            id = index,
+            name = "$MUSIC$index name",
+            wikiEn = "$MUSIC$index English Wikipedia",
+            wikiCz = "$MUSIC$index Czech Wikipedia",
+            mediaCount = index * 10,
+            note = if (index == 2) MUSIC + "2 note" else "",
+            position = index + 9,
+            songs = SongUtils.getSongs(music = index)
+        ).fillAudit(audit = AuditUtils.getAudit())
     }
 
     /**
@@ -147,9 +146,11 @@ object MusicUtils {
      * @return music with updated fields
      */
     fun updateMusic(entityManager: EntityManager, id: Int): com.github.vhromada.catalog.domain.Music {
-        return getMusic(entityManager, id)!!
-                .updated()
-                .copy(position = POSITION)
+        val music = getMusic(entityManager = entityManager, id = id)!!
+        return music
+            .updated()
+            .copy(position = POSITION)
+            .fillAudit(audit = music)
     }
 
     /**
@@ -158,6 +159,7 @@ object MusicUtils {
      * @param entityManager entity manager
      * @return count of music
      */
+    @Suppress("JpaQlInspection")
     fun getMusicCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(m.id) FROM Music m", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -168,15 +170,11 @@ object MusicUtils {
      * @param expected expected list of music
      * @param actual   actual list of music
      */
-    fun assertMusicDeepEquals(expected: List<com.github.vhromada.catalog.domain.Music?>?, actual: List<com.github.vhromada.catalog.domain.Music?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertDomainMusicDeepEquals(expected: List<com.github.vhromada.catalog.domain.Music>, actual: List<com.github.vhromada.catalog.domain.Music>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertMusicDeepEquals(expected[i], actual[i])
+                assertMusicDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -184,25 +182,24 @@ object MusicUtils {
     /**
      * Asserts music deep equals.
      *
-     * @param expected expected music
-     * @param actual   actual music
+     * @param expected   expected music
+     * @param actual     actual music
+     * @param checkSongs true if songs should be checked
      */
-    fun assertMusicDeepEquals(expected: com.github.vhromada.catalog.domain.Music?, actual: com.github.vhromada.catalog.domain.Music?) {
+    fun assertMusicDeepEquals(expected: com.github.vhromada.catalog.domain.Music, actual: com.github.vhromada.catalog.domain.Music, checkSongs: Boolean = true) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.name).isEqualTo(expected.name)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
             it.assertThat(actual.mediaCount).isEqualTo(expected.mediaCount)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
+            AuditUtils.assertAuditDeepEquals(softly = it, expected = expected, actual = actual)
         }
-        SongUtils.assertSongsDeepEquals(expected!!.songs, actual!!.songs)
-        AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+        if (checkSongs) {
+            SongUtils.assertDomainSongsDeepEquals(expected = expected.songs, actual = actual.songs)
+        }
     }
 
     /**
@@ -211,15 +208,11 @@ object MusicUtils {
      * @param expected expected list of music
      * @param actual   actual list of music
      */
-    fun assertMusicListDeepEquals(expected: List<Music?>?, actual: List<com.github.vhromada.catalog.domain.Music?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertMusicDeepEquals(expected: List<Music>, actual: List<com.github.vhromada.catalog.domain.Music>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertMusicDeepEquals(expected[i], actual[i])
+                assertMusicDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -230,13 +223,47 @@ object MusicUtils {
      * @param expected expected music
      * @param actual   actual music
      */
-    fun assertMusicDeepEquals(expected: Music?, actual: com.github.vhromada.catalog.domain.Music?) {
+    fun assertMusicDeepEquals(expected: Music, actual: com.github.vhromada.catalog.domain.Music) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
+            it.assertThat(actual.id).isEqualTo(expected.id)
+            it.assertThat(actual.name).isEqualTo(expected.name)
+            it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
+            it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
+            it.assertThat(actual.mediaCount).isEqualTo(expected.mediaCount)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
+            it.assertThat(actual.songs).isEmpty()
+            it.assertThat(actual.createdUser).isNull()
+            it.assertThat(actual.createdTime).isNull()
+            it.assertThat(actual.updatedUser).isNull()
+            it.assertThat(actual.updatedTime).isNull()
         }
+    }
+
+    /**
+     * Asserts music deep equals.
+     *
+     * @param expected expected list of music
+     * @param actual   actual list of music
+     */
+    fun assertMusicListDeepEquals(expected: List<com.github.vhromada.catalog.domain.Music>, actual: List<Music>) {
+        assertThat(expected.size).isEqualTo(actual.size)
+        if (expected.isNotEmpty()) {
+            for (i in expected.indices) {
+                assertMusicDeepEquals(expected = expected[i], actual = actual[i])
+            }
+        }
+    }
+
+    /**
+     * Asserts music deep equals.
+     *
+     * @param expected expected music
+     * @param actual   actual music
+     */
+    fun assertMusicDeepEquals(expected: com.github.vhromada.catalog.domain.Music, actual: Music) {
         assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.name).isEqualTo(expected.name)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)

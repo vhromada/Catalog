@@ -10,61 +10,61 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class Program(
+    /**
+     * ID
+     */
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        override var id: Int?,
+    /**
+     * Name
+     */
+    val name: String?,
 
-        /**
-         * Name
-         */
-        val name: String?,
+    /**
+     * URL to english Wikipedia page about program
+     */
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about program
-         */
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about program
+     */
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about program
-         */
-        val wikiCz: String?,
+    /**
+     * Count of media
+     */
+    val mediaCount: Int?,
 
-        /**
-         * Count of media
-         */
-        val mediaCount: Int?,
+    /**
+     * Format
+     */
+    val format: Format?,
 
-        /**
-         * Format
-         */
-        val format: Format?,
+    /**
+     * True if there is crack
+     */
+    val crack: Boolean?,
 
-        /**
-         * True if there is crack
-         */
-        val crack: Boolean?,
+    /**
+     * True if there is serial key
+     */
+    val serialKey: Boolean?,
 
-        /**
-         * True if there is serial key
-         */
-        val serialKey: Boolean?,
+    /**
+     * Other data
+     */
+    val otherData: String?,
 
-        /**
-         * Other data
-         */
-        val otherData: String?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        override var position: Int?) : Movable {
+    /**
+     * Position
+     */
+    override var position: Int?
+) : Movable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -19,96 +19,96 @@ import javax.validation.constraints.Size
  */
 @Imdb
 data class MovieFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Czech name
+     */
+    @field:NotBlank
+    val czechName: String?,
 
-        /**
-         * Czech name
-         */
-        @field:NotBlank
-        val czechName: String?,
+    /**
+     * Original name
+     */
+    @field:NotBlank
+    val originalName: String?,
 
-        /**
-         * Original name
-         */
-        @field:NotBlank
-        val originalName: String?,
+    /**
+     * Year
+     */
+    @field:DateRange(Constants.MIN_YEAR)
+    val year: String?,
 
-        /**
-         * Year
-         */
-        @field:DateRange(Constants.MIN_YEAR)
-        val year: String?,
+    /**
+     * Language
+     */
+    @field:NotNull
+    val language: Language?,
 
-        /**
-         * Language
-         */
-        @field:NotNull
-        val language: Language?,
+    /**
+     * Subtitles
+     */
+    val subtitles: List<Language>?,
 
-        /**
-         * Subtitles
-         */
-        val subtitles: List<Language>?,
+    /**
+     * Media
+     */
+    @field:NotNull
+    @field:Size(min = 1)
+    @field:Valid
+    var media: List<TimeFO?>?,
 
-        /**
-         * Media
-         */
-        @field:NotNull
-        @field:Size(min = 1)
-        @field:Valid
-        var media: List<TimeFO?>?,
+    /**
+     * URL to ČSFD page about movie
+     */
+    val csfd: String?,
 
-        /**
-         * URL to ČSFD page about movie
-         */
-        val csfd: String?,
+    /**
+     * True if IMDB is selected
+     */
+    val imdb: Boolean,
 
-        /**
-         * True if IMDB is selected
-         */
-        val imdb: Boolean,
+    /**
+     * IMDB code
+     */
+    @field:ImdbCode
+    val imdbCode: String?,
 
-        /**
-         * IMDB code
-         */
-        @field:ImdbCode
-        val imdbCode: String?,
+    /**
+     * URL to english Wikipedia page about movie
+     */
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about movie
-         */
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about movie
+     */
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about movie
-         */
-        val wikiCz: String?,
+    /**
+     * Picture's ID
+     */
+    val picture: Int?,
 
-        /**
-         * Picture's ID
-         */
-        val picture: Int?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
+    /**
+     * Position
+     */
+    val position: Int?,
 
-        /**
-         * Position
-         */
-        val position: Int?,
-
-        /**
-         * Genres
-         */
-        @field:NotNull
-        @field:Size(min = 1)
-        val genres: List<Int?>?) : Serializable {
+    /**
+     * Genres
+     */
+    @field:NotNull
+    @field:Size(min = 1)
+    val genres: List<Int?>?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

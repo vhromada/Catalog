@@ -2,7 +2,7 @@ package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.entity.Cheat
 import com.github.vhromada.catalog.entity.Game
-import com.github.vhromada.common.facade.MovableChildFacade
+import com.github.vhromada.common.facade.ChildFacade
 import com.github.vhromada.common.result.Result
 
 /**
@@ -10,14 +10,13 @@ import com.github.vhromada.common.result.Result
  *
  * @author Vladimir Hromada
  */
-interface CheatFacade : MovableChildFacade<Cheat, Game> {
+interface CheatFacade : ChildFacade<Cheat, Game> {
 
     /**
      * Adds cheat. Sets new ID.
      * <br></br>
      * Validation errors:
      *
-     *  * Game ID is null
      *  * Game doesn't exist in data storage
      *  * Cheat ID isn't null
      *  * Setting for game is null
@@ -30,11 +29,11 @@ interface CheatFacade : MovableChildFacade<Cheat, Game> {
      *  * Description is empty string
      *  * Game has already cheat in data storage
      *
-     * @param parent  game
+     * @param parent  game ID
      * @param data    cheat
      * @return result with validation errors
      */
-    override fun add(parent: Game, data: Cheat): Result<Unit>
+    override fun add(parent: Int, data: Cheat): Result<Unit>
 
     /**
      * Updates cheat.
@@ -64,10 +63,10 @@ interface CheatFacade : MovableChildFacade<Cheat, Game> {
      *
      *  * Cheat can't be duplicate
      *
-     * @param data cheat
+     * @param id ID
      * @return result with validation errors
      */
-    override fun duplicate(data: Cheat): Result<Unit>
+    override fun duplicate(id: Int): Result<Unit>
 
     /**
      * Moves cheat one position up.
@@ -76,10 +75,10 @@ interface CheatFacade : MovableChildFacade<Cheat, Game> {
      *
      *  * Cheat can't be moved up
      *
-     * @param data cheat
+     * @param id ID
      * @return result with validation errors
      */
-    override fun moveUp(data: Cheat): Result<Unit>
+    override fun moveUp(id: Int): Result<Unit>
 
     /**
      * Moves cheat one position down.
@@ -88,9 +87,9 @@ interface CheatFacade : MovableChildFacade<Cheat, Game> {
      *
      *  * Cheat can't be moved down
      *
-     * @param data cheat
+     * @param id ID
      * @return result with validation errors
      */
-    override fun moveDown(data: Cheat): Result<Unit>
+    override fun moveDown(id: Int): Result<Unit>
 
 }

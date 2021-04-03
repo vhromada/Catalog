@@ -11,7 +11,7 @@ import javax.persistence.EntityManager
  * @return updated cheat's data
  */
 fun com.github.vhromada.catalog.domain.CheatData.updated(): com.github.vhromada.catalog.domain.CheatData {
-    return copy(action = "action", description = "description", audit = AuditUtils.newAudit())
+    return copy(action = "action", description = "description")
 }
 
 /**
@@ -41,6 +41,21 @@ object CheatDataUtils {
     const val CHEAT_DATA_CHEAT_COUNT = 3
 
     /**
+     * Returns cheat's data for cheat.
+     *
+     * @param cheat cheat
+     * @return cheat's data for cheat
+     */
+    fun getCheatDataList(cheat: Int): List<com.github.vhromada.catalog.domain.CheatData> {
+        val cheatData = mutableListOf<com.github.vhromada.catalog.domain.CheatData>()
+        for (i in 1..CHEAT_DATA_CHEAT_COUNT) {
+            cheatData.add(getCheatDataDomain(cheatIndex = cheat, cheatDataIndex = i))
+        }
+
+        return cheatData
+    }
+
+    /**
      * Returns cheat's data.
      *
      * @param id ID
@@ -48,11 +63,10 @@ object CheatDataUtils {
      */
     fun newCheatDataDomain(id: Int?): com.github.vhromada.catalog.domain.CheatData {
         return com.github.vhromada.catalog.domain.CheatData(
-                id = id,
-                action = "Action",
-                description = "Description",
-                audit = null)
-                .updated()
+            id = id,
+            action = "Action",
+            description = "Description"
+        ).updated()
     }
 
     /**
@@ -63,25 +77,10 @@ object CheatDataUtils {
      */
     fun newCheatData(id: Int?): CheatData {
         return CheatData(
-                id = id,
-                action = "Action",
-                description = "Description")
-                .updated()
-    }
-
-    /**
-     * Returns cheat's data for cheat.
-     *
-     * @param cheat cheat
-     * @return cheat's data for cheat
-     */
-    fun getCheatDataList(cheat: Int): List<com.github.vhromada.catalog.domain.CheatData> {
-        val cheatData = mutableListOf<com.github.vhromada.catalog.domain.CheatData>()
-        for (i in 1..CHEAT_DATA_CHEAT_COUNT) {
-            cheatData.add(getCheatData(cheat, i))
-        }
-
-        return cheatData
+            id = id,
+            action = "Action",
+            description = "Description"
+        ).updated()
     }
 
     /**
@@ -90,11 +89,11 @@ object CheatDataUtils {
      * @param index index
      * @return cheat's data for index
      */
-    fun getCheatData(index: Int): com.github.vhromada.catalog.domain.CheatData {
+    fun getCheatDataDomain(index: Int): com.github.vhromada.catalog.domain.CheatData {
         val cheatIndex = (index - 1) / CHEAT_DATA_CHEAT_COUNT + 1
         val cheatDataIndex = (index - 1) % CHEAT_DATA_CHEAT_COUNT + 1
 
-        return getCheatData(cheatIndex, cheatDataIndex)
+        return getCheatDataDomain(cheatIndex = cheatIndex, cheatDataIndex = cheatDataIndex)
     }
 
     /**
@@ -104,12 +103,12 @@ object CheatDataUtils {
      * @param cheatDataIndex cheat's data index
      * @return cheat's data for indexes
      */
-    private fun getCheatData(cheatIndex: Int, cheatDataIndex: Int): com.github.vhromada.catalog.domain.CheatData {
+    private fun getCheatDataDomain(cheatIndex: Int, cheatDataIndex: Int): com.github.vhromada.catalog.domain.CheatData {
         return com.github.vhromada.catalog.domain.CheatData(
-                id = (cheatIndex - 1) * CHEAT_DATA_CHEAT_COUNT + cheatDataIndex,
-                action = "Cheat $cheatIndex Data $cheatDataIndex action",
-                description = "Cheat $cheatIndex Data $cheatDataIndex description",
-                audit = AuditUtils.getAudit())
+            id = (cheatIndex - 1) * CHEAT_DATA_CHEAT_COUNT + cheatDataIndex,
+            action = "Cheat $cheatIndex Data $cheatDataIndex action",
+            description = "Cheat $cheatIndex Data $cheatDataIndex description"
+        ).fillAudit(audit = AuditUtils.getAudit())
     }
 
     /**
@@ -129,6 +128,7 @@ object CheatDataUtils {
      * @param entityManager entity manager
      * @return count of cheat's data
      */
+    @Suppress("JpaQlInspection")
     fun getCheatDataCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(c.id) FROM CheatData c", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -139,15 +139,11 @@ object CheatDataUtils {
      * @param expected expected list of cheat's data
      * @param actual   actual list of cheat's data
      */
-    fun assertCheatDataDeepEquals(expected: List<com.github.vhromada.catalog.domain.CheatData?>?, actual: List<com.github.vhromada.catalog.domain.CheatData?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertDomainCheatDataDeepEquals(expected: List<com.github.vhromada.catalog.domain.CheatData>, actual: List<com.github.vhromada.catalog.domain.CheatData>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertCheatDataDeepEquals(expected[i], actual[i])
+                assertCheatDataDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -158,17 +154,13 @@ object CheatDataUtils {
      * @param expected expected cheat's data
      * @param actual   actual cheat's data
      */
-    fun assertCheatDataDeepEquals(expected: com.github.vhromada.catalog.domain.CheatData?, actual: com.github.vhromada.catalog.domain.CheatData?) {
+    fun assertCheatDataDeepEquals(expected: com.github.vhromada.catalog.domain.CheatData, actual: com.github.vhromada.catalog.domain.CheatData) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.action).isEqualTo(expected.action)
             it.assertThat(actual.description).isEqualTo(expected.description)
+            AuditUtils.assertAuditDeepEquals(softly = it, expected = expected, actual = actual)
         }
-        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
     }
 
     /**
@@ -177,15 +169,11 @@ object CheatDataUtils {
      * @param expected expected list of cheat's data
      * @param actual   actual list of cheat's data
      */
-    fun assertCheatDataListDeepEquals(expected: List<CheatData?>?, actual: List<com.github.vhromada.catalog.domain.CheatData?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertCheatDataDeepEquals(expected: List<CheatData>, actual: List<com.github.vhromada.catalog.domain.CheatData>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertCheatDataDeepEquals(expected[i], actual[i])
+                assertCheatDataDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -196,13 +184,42 @@ object CheatDataUtils {
      * @param expected expected cheat's data
      * @param actual   actual cheat's data
      */
-    fun assertCheatDataDeepEquals(expected: CheatData?, actual: com.github.vhromada.catalog.domain.CheatData?) {
+    fun assertCheatDataDeepEquals(expected: CheatData, actual: com.github.vhromada.catalog.domain.CheatData) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
+            it.assertThat(actual.id).isEqualTo(expected.id)
+            it.assertThat(actual.action).isEqualTo(expected.action)
+            it.assertThat(actual.description).isEqualTo(expected.description)
+            it.assertThat(actual.createdUser).isNull()
+            it.assertThat(actual.createdTime).isNull()
+            it.assertThat(actual.updatedUser).isNull()
+            it.assertThat(actual.updatedTime).isNull()
         }
+    }
+
+    /**
+     * Asserts cheat's data deep equals.
+     *
+     * @param expected expected list of cheat's data
+     * @param actual   actual list of cheat's data
+     */
+    fun assertCheatDataListDeepEquals(expected: List<com.github.vhromada.catalog.domain.CheatData>, actual: List<CheatData>) {
+        assertThat(expected.size).isEqualTo(actual.size)
+        if (expected.isNotEmpty()) {
+            for (i in expected.indices) {
+                assertCheatDataDeepEquals(expected = expected[i], actual = actual[i])
+            }
+        }
+    }
+
+    /**
+     * Asserts cheat's data deep equals.
+     *
+     * @param expected expected cheat's data
+     * @param actual   actual cheat's data
+     */
+    fun assertCheatDataDeepEquals(expected: com.github.vhromada.catalog.domain.CheatData, actual: CheatData) {
         assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.action).isEqualTo(expected.action)
             it.assertThat(actual.description).isEqualTo(expected.description)
         }

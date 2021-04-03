@@ -29,9 +29,9 @@ class TimeController {
     @GetMapping("/{time}")
     fun getTime(@PathVariable time: Int): String {
         if (time < 0) {
-            throw InputException("TIME_NEGATIVE", "Time mustn't be negative number.")
+            throw InputException(key = "TIME_NEGATIVE", message = "Time mustn't be negative number.")
         }
-        return Time(time).toString()
+        return Time(length = time).toString()
     }
 
 }

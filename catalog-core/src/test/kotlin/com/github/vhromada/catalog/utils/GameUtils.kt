@@ -12,21 +12,22 @@ import javax.persistence.EntityManager
  * @return updated game
  */
 fun com.github.vhromada.catalog.domain.Game.updated(): com.github.vhromada.catalog.domain.Game {
-    return copy(name = "Name",
-            wikiEn = "enWiki",
-            wikiCz = "czWiki",
-            mediaCount = 1,
-            format = Format.STEAM,
-            crack = true,
-            serialKey = true,
-            patch = true,
-            trainer = true,
-            trainerData = true,
-            editor = true,
-            saves = true,
-            otherData = "Other data",
-            note = "Note",
-            audit = AuditUtils.newAudit())
+    return copy(
+        name = "Name",
+        wikiEn = "enWiki",
+        wikiCz = "czWiki",
+        mediaCount = 1,
+        format = Format.STEAM,
+        crack = true,
+        serialKey = true,
+        patch = true,
+        trainer = true,
+        trainerData = true,
+        editor = true,
+        saves = true,
+        otherData = "Other data",
+        note = "Note"
+    )
 }
 
 /**
@@ -35,20 +36,22 @@ fun com.github.vhromada.catalog.domain.Game.updated(): com.github.vhromada.catal
  * @return updated game
  */
 fun Game.updated(): Game {
-    return copy(name = "Name",
-            wikiEn = "enWiki",
-            wikiCz = "czWiki",
-            mediaCount = 1,
-            format = Format.STEAM,
-            crack = true,
-            serialKey = true,
-            patch = true,
-            trainer = true,
-            trainerData = true,
-            editor = true,
-            saves = true,
-            otherData = "Other data",
-            note = "Note")
+    return copy(
+        name = "Name",
+        wikiEn = "enWiki",
+        wikiCz = "czWiki",
+        mediaCount = 1,
+        format = Format.STEAM,
+        crack = true,
+        serialKey = true,
+        patch = true,
+        trainer = true,
+        trainerData = true,
+        editor = true,
+        saves = true,
+        otherData = "Other data",
+        note = "Note"
+    )
 }
 
 /**
@@ -80,8 +83,8 @@ object GameUtils {
      */
     fun getGames(): List<com.github.vhromada.catalog.domain.Game> {
         val games = mutableListOf<com.github.vhromada.catalog.domain.Game>()
-        for (i in 0 until GAMES_COUNT) {
-            games.add(getGame(i + 1))
+        for (i in 1..GAMES_COUNT) {
+            games.add(getGameDomain(index = i))
         }
 
         return games
@@ -95,25 +98,24 @@ object GameUtils {
      */
     fun newGameDomain(id: Int?): com.github.vhromada.catalog.domain.Game {
         return com.github.vhromada.catalog.domain.Game(
-                id = id,
-                name = "",
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = 0,
-                format = Format.STEAM,
-                cheat = null,
-                crack = false,
-                serialKey = false,
-                patch = false,
-                trainer = false,
-                trainerData = false,
-                editor = false,
-                saves = false,
-                otherData = null,
-                note = null,
-                position = if (id == null) null else id - 1,
-                audit = null)
-                .updated()
+            id = id,
+            name = "",
+            wikiEn = null,
+            wikiCz = null,
+            mediaCount = 0,
+            format = Format.STEAM,
+            cheat = null,
+            crack = false,
+            serialKey = false,
+            patch = false,
+            trainer = false,
+            trainerData = false,
+            editor = false,
+            saves = false,
+            otherData = null,
+            note = null,
+            position = if (id == null) null else id - 1
+        ).updated()
     }
 
     /**
@@ -122,9 +124,9 @@ object GameUtils {
      * @param id ID
      * @return game with cheat
      */
-    fun newGameWithCheat(id: Int?): com.github.vhromada.catalog.domain.Game {
+    fun newGameDomainWithCheat(id: Int?): com.github.vhromada.catalog.domain.Game {
         return newGameDomain(id)
-                .copy(cheat = CheatUtils.newCheatWithData(id))
+            .copy(cheat = CheatUtils.newCheatDomainWithData(id = id))
     }
 
     /**
@@ -135,23 +137,23 @@ object GameUtils {
      */
     fun newGame(id: Int?): Game {
         return Game(
-                id = id,
-                name = "",
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = 0,
-                format = Format.STEAM,
-                crack = false,
-                serialKey = false,
-                patch = false,
-                trainer = false,
-                trainerData = false,
-                editor = false,
-                saves = false,
-                otherData = null,
-                note = null,
-                position = if (id == null) null else id - 1)
-                .updated()
+            id = id,
+            name = "",
+            wikiEn = null,
+            wikiCz = null,
+            mediaCount = 0,
+            format = Format.STEAM,
+            crack = false,
+            serialKey = false,
+            patch = false,
+            trainer = false,
+            trainerData = false,
+            editor = false,
+            saves = false,
+            otherData = null,
+            note = null,
+            position = if (id == null) null else id - 1
+        ).updated()
     }
 
     /**
@@ -160,26 +162,26 @@ object GameUtils {
      * @param index index
      * @return game for index
      */
-    fun getGame(index: Int): com.github.vhromada.catalog.domain.Game {
+    fun getGameDomain(index: Int): com.github.vhromada.catalog.domain.Game {
         return com.github.vhromada.catalog.domain.Game(
-                id = index,
-                name = "$GAME$index name",
-                wikiEn = "$GAME$index English Wikipedia",
-                wikiCz = "$GAME$index Czech Wikipedia",
-                mediaCount = index,
-                format = getFormat(index),
-                cheat = if (index == 1) null else CheatUtils.getCheat(index - 1),
-                crack = index != 1,
-                serialKey = index != 1,
-                patch = index != 1,
-                trainer = index != 1,
-                trainerData = index == 3,
-                editor = index == 3,
-                saves = index == 3,
-                otherData = if (index == 3) GAME + "3 other data" else "",
-                note = if (index == 3) GAME + "3 note" else "",
-                position = index - 1,
-                audit = AuditUtils.getAudit())
+            id = index,
+            name = "$GAME$index name",
+            wikiEn = "$GAME$index English Wikipedia",
+            wikiCz = "$GAME$index Czech Wikipedia",
+            mediaCount = index,
+            format = getFormat(index = index),
+            cheat = if (index == 1) null else CheatUtils.getCheatDomain(index = index - 1),
+            crack = index != 1,
+            serialKey = index != 1,
+            patch = index != 1,
+            trainer = index != 1,
+            trainerData = index == 3,
+            editor = index == 3,
+            saves = index == 3,
+            otherData = if (index == 3) GAME + "3 other data" else "",
+            note = if (index == 3) GAME + "3 note" else "",
+            position = index + 9
+        ).fillAudit(audit = AuditUtils.getAudit())
     }
 
     /**
@@ -216,9 +218,11 @@ object GameUtils {
      * @return game with updated fields
      */
     fun updateGame(entityManager: EntityManager, id: Int): com.github.vhromada.catalog.domain.Game {
-        return getGame(entityManager, id)!!
-                .updated()
-                .copy(position = POSITION)
+        val game = getGame(entityManager = entityManager, id = id)!!
+        return game
+            .updated()
+            .copy(position = POSITION)
+            .fillAudit(audit = game)
     }
 
     /**
@@ -227,6 +231,7 @@ object GameUtils {
      * @param entityManager entity manager
      * @return count of games
      */
+    @Suppress("JpaQlInspection")
     fun getGamesCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(g.id) FROM Game g", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -237,15 +242,11 @@ object GameUtils {
      * @param expected expected list of games
      * @param actual   actual list of games
      */
-    fun assertGamesDeepEquals(expected: List<com.github.vhromada.catalog.domain.Game?>?, actual: List<com.github.vhromada.catalog.domain.Game?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertDomainGamesDeepEquals(expected: List<com.github.vhromada.catalog.domain.Game>, actual: List<com.github.vhromada.catalog.domain.Game>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertGameDeepEquals(expected[i], actual[i])
+                assertGameDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -256,13 +257,9 @@ object GameUtils {
      * @param expected expected game
      * @param actual   actual game
      */
-    fun assertGameDeepEquals(expected: com.github.vhromada.catalog.domain.Game?, actual: com.github.vhromada.catalog.domain.Game?) {
+    fun assertGameDeepEquals(expected: com.github.vhromada.catalog.domain.Game, actual: com.github.vhromada.catalog.domain.Game) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.name).isEqualTo(expected.name)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
@@ -278,8 +275,13 @@ object GameUtils {
             it.assertThat(actual.otherData).isEqualTo(expected.otherData)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
+            AuditUtils.assertAuditDeepEquals(softly = it, expected = expected, actual = actual)
         }
-        AuditUtils.assertAuditDeepEquals(expected!!.audit, actual!!.audit)
+        if (expected.cheat == null) {
+            assertThat(actual.cheat).isNull()
+        } else {
+            CheatUtils.assertCheatDeepEquals(expected = expected.cheat!!, actual = actual.cheat!!)
+        }
     }
 
     /**
@@ -288,15 +290,11 @@ object GameUtils {
      * @param expected expected list of games
      * @param actual   actual list of games
      */
-    fun assertGameListDeepEquals(expected: List<Game?>?, actual: List<com.github.vhromada.catalog.domain.Game?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertGamesDeepEquals(expected: List<Game>, actual: List<com.github.vhromada.catalog.domain.Game>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertGameDeepEquals(expected[i], actual[i])
+                assertGameDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -307,13 +305,56 @@ object GameUtils {
      * @param expected expected game
      * @param actual   actual game
      */
-    fun assertGameDeepEquals(expected: Game?, actual: com.github.vhromada.catalog.domain.Game?) {
+    fun assertGameDeepEquals(expected: Game, actual: com.github.vhromada.catalog.domain.Game) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
+            it.assertThat(actual.id).isEqualTo(expected.id)
+            it.assertThat(actual.name).isEqualTo(expected.name)
+            it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
+            it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
+            it.assertThat(actual.mediaCount).isEqualTo(expected.mediaCount)
+            it.assertThat(actual.format).isEqualTo(expected.format)
+            it.assertThat(actual.cheat).isNull()
+            it.assertThat(actual.crack).isEqualTo(expected.crack)
+            it.assertThat(actual.serialKey).isEqualTo(expected.serialKey)
+            it.assertThat(actual.patch).isEqualTo(expected.patch)
+            it.assertThat(actual.trainer).isEqualTo(expected.trainer)
+            it.assertThat(actual.trainerData).isEqualTo(expected.trainerData)
+            it.assertThat(actual.editor).isEqualTo(expected.editor)
+            it.assertThat(actual.saves).isEqualTo(expected.saves)
+            it.assertThat(actual.otherData).isEqualTo(expected.otherData)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
+            it.assertThat(actual.createdUser).isNull()
+            it.assertThat(actual.createdTime).isNull()
+            it.assertThat(actual.updatedUser).isNull()
+            it.assertThat(actual.updatedTime).isNull()
         }
+    }
+
+    /**
+     * Asserts games deep equals.
+     *
+     * @param expected expected list of games
+     * @param actual   actual list of games
+     */
+    fun assertGameListDeepEquals(expected: List<com.github.vhromada.catalog.domain.Game>, actual: List<Game>) {
+        assertThat(expected.size).isEqualTo(actual.size)
+        if (expected.isNotEmpty()) {
+            for (i in expected.indices) {
+                assertGameDeepEquals(expected = expected[i], actual = actual[i])
+            }
+        }
+    }
+
+    /**
+     * Asserts game deep equals.
+     *
+     * @param expected expected game
+     * @param actual   actual game
+     */
+    fun assertGameDeepEquals(expected: com.github.vhromada.catalog.domain.Game, actual: Game) {
         assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.name).isEqualTo(expected.name)
             it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
             it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)

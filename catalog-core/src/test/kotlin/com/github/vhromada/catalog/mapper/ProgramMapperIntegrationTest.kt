@@ -3,7 +3,6 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Program
 import com.github.vhromada.catalog.utils.ProgramUtils
-import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,17 +22,17 @@ class ProgramMapperIntegrationTest {
      * Instance of [ProgramMapper]
      */
     @Autowired
-    private lateinit var mapper: Mapper<Program, com.github.vhromada.catalog.domain.Program>
+    private lateinit var mapper: ProgramMapper
 
     /**
      * Test method for [ProgramMapper.map].
      */
     @Test
     fun map() {
-        val program = ProgramUtils.newProgram(1)
+        val program = ProgramUtils.newProgram(id = 1)
         val programDomain = mapper.map(program)
 
-        ProgramUtils.assertProgramDeepEquals(program, programDomain)
+        ProgramUtils.assertProgramDeepEquals(expected = program, actual = programDomain)
     }
 
     /**
@@ -41,10 +40,10 @@ class ProgramMapperIntegrationTest {
      */
     @Test
     fun mapBack() {
-        val programDomain = ProgramUtils.newProgramDomain(1)
+        val programDomain = ProgramUtils.newProgramDomain(id = 1)
         val program = mapper.mapBack(programDomain)
 
-        ProgramUtils.assertProgramDeepEquals(program, programDomain)
+        ProgramUtils.assertProgramDeepEquals(expected = programDomain, actual = program)
     }
 
 }

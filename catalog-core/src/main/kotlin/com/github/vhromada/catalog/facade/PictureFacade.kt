@@ -1,7 +1,7 @@
 package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.entity.Picture
-import com.github.vhromada.common.facade.MovableParentFacade
+import com.github.vhromada.common.facade.ParentFacade
 import com.github.vhromada.common.result.Result
 
 /**
@@ -9,7 +9,7 @@ import com.github.vhromada.common.result.Result
  *
  * @author Vladimir Hromada
  */
-interface PictureFacade : MovableParentFacade<Picture> {
+interface PictureFacade : ParentFacade<Picture> {
 
     /**
      * Adds picture. Sets new ID and position.

@@ -13,64 +13,64 @@ import javax.validation.constraints.NotNull
  * @author Vladimir Hromada
  */
 data class ProgramFO(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Name
+     */
+    @field:NotBlank
+    val name: String?,
 
-        /**
-         * Name
-         */
-        @field:NotBlank
-        val name: String?,
+    /**
+     * URL to english Wikipedia page about program
+     */
+    val wikiEn: String?,
 
-        /**
-         * URL to english Wikipedia page about program
-         */
-        val wikiEn: String?,
+    /**
+     * URL to czech Wikipedia page about program
+     */
+    val wikiCz: String?,
 
-        /**
-         * URL to czech Wikipedia page about program
-         */
-        val wikiCz: String?,
+    /**
+     * Count of media
+     */
+    @field:Range(min = 1, max = 100)
+    val mediaCount: String?,
 
-        /**
-         * Count of media
-         */
-        @field:Range(min = 1, max = 100)
-        val mediaCount: String?,
+    /**
+     * Format
+     */
+    @field:NotNull
+    val format: Format?,
 
-        /**
-         * Format
-         */
-        @field:NotNull
-        val format: Format?,
+    /**
+     * True if there is crack
+     */
+    val crack: Boolean?,
 
-        /**
-         * True if there is crack
-         */
-        val crack: Boolean?,
+    /**
+     * True if there is serial key
+     */
+    val serialKey: Boolean?,
 
-        /**
-         * True if there is serial key
-         */
-        val serialKey: Boolean?,
+    /**
+     * Other data
+     */
+    val otherData: String?,
 
-        /**
-         * Other data
-         */
-        val otherData: String?,
+    /**
+     * Note
+     */
+    val note: String?,
 
-        /**
-         * Note
-         */
-        val note: String?,
-
-        /**
-         * Position
-         */
-        val position: Int?) : Serializable {
+    /**
+     * Position
+     */
+    val position: Int?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

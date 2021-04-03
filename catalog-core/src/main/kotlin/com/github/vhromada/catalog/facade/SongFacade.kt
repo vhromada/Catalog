@@ -2,7 +2,7 @@ package com.github.vhromada.catalog.facade
 
 import com.github.vhromada.catalog.entity.Music
 import com.github.vhromada.catalog.entity.Song
-import com.github.vhromada.common.facade.MovableChildFacade
+import com.github.vhromada.common.facade.ChildFacade
 import com.github.vhromada.common.result.Result
 
 /**
@@ -10,14 +10,13 @@ import com.github.vhromada.common.result.Result
  *
  * @author Vladimir Hromada
  */
-interface SongFacade : MovableChildFacade<Song, Music> {
+interface SongFacade : ChildFacade<Song, Music> {
 
     /**
      * Adds song. Sets new ID and position.
      * <br></br>
      * Validation errors:
      *
-     *  * Music ID is null
      *  * Music doesn't exist in data storage
      *  * Song ID isn't null
      *  * Song position isn't null
@@ -27,11 +26,11 @@ interface SongFacade : MovableChildFacade<Song, Music> {
      *  * Length of song is negative value
      *  * Note is null
      *
-     * @param parent music
+     * @param parent music ID
      * @param data   song
      * @return result with validation errors
      */
-    override fun add(parent: Music, data: Song): Result<Unit>
+    override fun add(parent: Int, data: Song): Result<Unit>
 
     /**
      * Updates song.

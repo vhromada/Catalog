@@ -15,7 +15,12 @@ dependencies {
     api("io.github.microutils:kotlin-logging")
     api("org.flywaydb:flyway-core")
     implementation("com.github.vhromada.common:common-account:$commonVersion")
-    testImplementation("com.github.vhromada.common:common-test:$commonVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
+    testImplementation(kotlin("test-junit5"))
+    testImplementation("org.mockito:mockito-junit-jupiter")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin")
     testImplementation("com.h2database:h2")
 }
 
@@ -24,3 +29,4 @@ tasks.jar {
         attributes["Implementation-Title"] = "Core"
     }
 }
+

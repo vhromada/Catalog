@@ -3,26 +3,32 @@ package com.github.vhromada.catalog.service
 import com.github.vhromada.catalog.domain.Genre
 import com.github.vhromada.catalog.repository.GenreRepository
 import com.github.vhromada.catalog.utils.GenreUtils
+import com.github.vhromada.catalog.utils.TestConstants
 import com.github.vhromada.common.provider.AccountProvider
-import com.github.vhromada.common.provider.TimeProvider
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.test.service.MovableServiceTest
-import com.github.vhromada.common.test.utils.TestConstants
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.SoftAssertions.assertSoftly
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.springframework.data.jpa.repository.JpaRepository
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.junit.jupiter.MockitoExtension
+import java.util.Optional
 
 /**
  * A class represents test for class [GenreService].
  *
  * @author Vladimir Hromada
  */
-class GenreServiceTest : MovableServiceTest<Genre>() {
+@ExtendWith(MockitoExtension::class)
+class GenreServiceTest {
 
     /**
      * Instance of [GenreRepository]
@@ -37,67 +43,418 @@ class GenreServiceTest : MovableServiceTest<Genre>() {
     private lateinit var accountProvider: AccountProvider
 
     /**
-     * Instance of [TimeProvider]
+     * Instance of [GenreService]
      */
-    @Mock
-    private lateinit var timeProvider: TimeProvider
+    private lateinit var service: GenreService
 
-    override fun getRepository(): JpaRepository<Genre, Int> {
-        return repository
+    /**
+     * Initializes service.
+     */
+    @BeforeEach
+    fun setUp() {
+        service = GenreService(genreRepository = repository, accountProvider = accountProvider)
     }
 
-    override fun getAccountProvider(): AccountProvider {
-        return accountProvider
+    /**
+     * Test method for [GenreService.get] with existing genre for admin.
+     */
+    @Test
+    fun getExistingAdmin() {
+        val genre = GenreUtils.newGenreDomain(id = 1)
+
+        whenever(repository.findById(any())).thenReturn(Optional.of(genre))
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ADMIN)
+
+        val result = service.get(id = genre.id!!)
+
+        assertThat(result).contains(genre)
+
+        verify(repository).findById(genre.id!!)
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
     }
 
-    override fun getTimeProvider(): TimeProvider {
-        return timeProvider
+    /**
+     * Test method for [GenreService.get] with existing genre for account.
+     */
+    @Test
+    fun getExistingAccount() {
+        val genre = GenreUtils.newGenreDomain(id = 1)
+
+        whenever(repository.findByIdAndCreatedUser(id = any(), user = any())).thenReturn(Optional.of(genre))
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ACCOUNT)
+
+        val result = service.get(id = genre.id!!)
+
+        assertThat(result).isPresent
+        assertThat(result.get()).isEqualTo(genre)
+
+        verify(repository).findByIdAndCreatedUser(id = genre.id!!, user = TestConstants.ACCOUNT.uuid!!)
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
     }
 
-    override fun getService(): MovableService<Genre> {
-        return GenreService(repository, accountProvider, timeProvider, cache)
+    /**
+     * Test method for [GenreService.get] with not existing genre for admin.
+     */
+    @Test
+    fun getNotExistingAdmin() {
+        whenever(repository.findById(any())).thenReturn(Optional.empty())
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ADMIN)
+
+        val result = service.get(id = Int.MAX_VALUE)
+
+        assertThat(result).isNotPresent
+
+        verify(repository).findById(Int.MAX_VALUE)
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
     }
 
-    override fun getCacheKey(): String {
-        return "genres${TestConstants.ACCOUNT.id}"
+    /**
+     * Test method for [GenreService.get] with not existing genre for account.
+     */
+    @Test
+    fun getNotExistingAccount() {
+        whenever(repository.findByIdAndCreatedUser(id = any(), user = any())).thenReturn(Optional.empty())
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ACCOUNT)
+
+        val result = service.get(id = Int.MAX_VALUE)
+
+        assertThat(result).isNotPresent
+
+        verify(repository).findByIdAndCreatedUser(id = Int.MAX_VALUE, user = TestConstants.ACCOUNT.uuid!!)
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
     }
 
-    override fun getItem1(): Genre {
-        return GenreUtils.newGenreDomain(1)
-    }
+    /**
+     * Test method for [GenreService.add].
+     */
+    @Test
+    fun add() {
+        val genre = GenreUtils.newGenreDomain(id = null)
 
-    override fun getItem2(): Genre {
-        return GenreUtils.newGenreDomain(2)
-    }
+        whenever(repository.save(anyDomain())).thenAnswer(setIdAndPosition())
 
-    override fun getAddItem(): Genre {
-        return GenreUtils.newGenreDomain(null)
-    }
+        val result = service.add(data = genre)
 
-    override fun getCopyItem(): Genre {
-        return GenreUtils.newGenreDomain(null)
-                .copy(position = 0)
-    }
+        assertSoftly {
+            it.assertThat(genre.id).isEqualTo(1)
+            it.assertThat(genre.position).isEqualTo(2)
+        }
 
-    override fun initAllDataMock(data: List<Genre>) {
-        whenever(repository.findByAuditCreatedUser(any())).thenReturn(data)
-    }
-
-    override fun verifyAllDataMock() {
-        verify(repository).findByAuditCreatedUser(TestConstants.ACCOUNT_UUID)
+        verify(repository, times(2)).save(genre)
         verifyNoMoreInteractions(repository)
+        verifyZeroInteractions(accountProvider)
+        assertThat(result).isSameAs(genre)
     }
 
-    override fun anyItem(): Genre {
+    /**
+     * Test method for [GenreService.update].
+     */
+    @Test
+    fun update() {
+        val genre = GenreUtils.newGenreDomain(id = 1)
+
+        whenever(repository.save(anyDomain())).thenAnswer(copy())
+
+        val result = service.update(data = genre)
+
+        verify(repository).save(genre)
+        verifyNoMoreInteractions(repository)
+        verifyZeroInteractions(accountProvider)
+        assertThat(result).isSameAs(genre)
+    }
+
+    /**
+     * Test method for [GenreService.remove].
+     */
+    @Test
+    fun remove() {
+        val genre = GenreUtils.newGenreDomain(id = 1)
+
+        service.remove(data = genre)
+
+        verify(repository).delete(genre)
+        verifyNoMoreInteractions(repository)
+        verifyZeroInteractions(accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.duplicate].
+     */
+    @Test
+    fun duplicate() {
+        val copyArgumentCaptor = argumentCaptor<Genre>()
+        val expectedGenre = GenreUtils.newGenreDomain(id = 1)
+            .copy(id = null)
+
+        whenever(repository.save(anyDomain())).thenAnswer(copy())
+
+        val result = service.duplicate(data = GenreUtils.newGenreDomain(id = 1))
+
+        verify(repository).save(copyArgumentCaptor.capture())
+        verifyNoMoreInteractions(repository)
+        verifyZeroInteractions(accountProvider)
+        assertThat(result).isSameAs(copyArgumentCaptor.lastValue)
+        GenreUtils.assertGenreDeepEquals(expected = expectedGenre, actual = result)
+    }
+
+    /**
+     * Test method for [GenreService.moveUp] for admin.
+     */
+    @Test
+    fun moveUpAdmin() {
+        val genre1 = GenreUtils.newGenreDomain(id = 1)
+        val genre2 = GenreUtils.newGenreDomain(id = 2)
+        val position1 = genre1.position
+        val position2 = genre2.position
+
+        whenever(repository.findAll()).thenReturn(listOf(genre1, genre2))
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ADMIN)
+
+        service.moveUp(data = genre2)
+
+        assertSoftly {
+            it.assertThat(genre1.position).isEqualTo(position2)
+            it.assertThat(genre2.position).isEqualTo(position1)
+        }
+
+        verify(repository).findAll()
+        verify(repository).saveAll(listOf(genre2, genre1))
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.moveUp] for account.
+     */
+    @Test
+    fun moveUpAccount() {
+        val genre1 = GenreUtils.newGenreDomain(id = 1)
+        val genre2 = GenreUtils.newGenreDomain(id = 2)
+        val position1 = genre1.position
+        val position2 = genre2.position
+
+        whenever(repository.findByCreatedUser(user = any())).thenReturn(listOf(genre1, genre2))
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ACCOUNT)
+
+        service.moveUp(data = genre2)
+
+        assertSoftly {
+            it.assertThat(genre1.position).isEqualTo(position2)
+            it.assertThat(genre2.position).isEqualTo(position1)
+        }
+
+        verify(repository).findByCreatedUser(user = TestConstants.ACCOUNT.uuid!!)
+        verify(repository).saveAll(listOf(genre2, genre1))
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.moveDown] for admin.
+     */
+    @Test
+    fun moveDownAdmin() {
+        val genre1 = GenreUtils.newGenreDomain(id = 1)
+        val genre2 = GenreUtils.newGenreDomain(id = 2)
+        val position1 = genre1.position
+        val position2 = genre2.position
+
+        whenever(repository.findAll()).thenReturn(listOf(genre1, genre2))
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ADMIN)
+
+        service.moveDown(data = genre1)
+
+        assertSoftly {
+            it.assertThat(genre1.position).isEqualTo(position2)
+            it.assertThat(genre2.position).isEqualTo(position1)
+        }
+
+        verify(repository).findAll()
+        verify(repository).saveAll(listOf(genre1, genre2))
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.moveDown] for account.
+     */
+    @Test
+    fun moveDownAccount() {
+        val genre1 = GenreUtils.newGenreDomain(id = 1)
+        val genre2 = GenreUtils.newGenreDomain(id = 2)
+        val position1 = genre1.position
+        val position2 = genre2.position
+
+        whenever(repository.findByCreatedUser(user = any())).thenReturn(listOf(genre1, genre2))
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ACCOUNT)
+
+        service.moveDown(data = genre1)
+
+        assertSoftly {
+            it.assertThat(genre1.position).isEqualTo(position2)
+            it.assertThat(genre2.position).isEqualTo(position1)
+        }
+
+        verify(repository).findByCreatedUser(user = TestConstants.ACCOUNT.uuid!!)
+        verify(repository).saveAll(listOf(genre1, genre2))
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.newData] for admin.
+     */
+    @Test
+    fun newDataAdmin() {
+        val genres = listOf(GenreUtils.newGenreDomain(id = 1), GenreUtils.newGenreDomain(id = 2))
+
+        whenever(repository.findAll()).thenReturn(genres)
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ADMIN)
+
+        service.newData()
+
+        verify(repository).findAll()
+        verify(repository).deleteAll(genres)
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.newData] for account.
+     */
+    @Test
+    fun newDataAccount() {
+        val genres = listOf(GenreUtils.newGenreDomain(id = 1), GenreUtils.newGenreDomain(id = 2))
+
+        whenever(repository.findByCreatedUser(user = any())).thenReturn(genres)
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ACCOUNT)
+
+        service.newData()
+
+        verify(repository).findByCreatedUser(user = TestConstants.ACCOUNT.uuid!!)
+        verify(repository).deleteAll(genres)
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.getAll] for admin.
+     */
+    @Test
+    fun getAllAdmin() {
+        val genres = listOf(GenreUtils.newGenreDomain(id = 1), GenreUtils.newGenreDomain(id = 2))
+
+        whenever(repository.findAll()).thenReturn(genres)
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ADMIN)
+
+        val result = service.getAll()
+
+        assertThat(result).isEqualTo(genres)
+
+        verify(repository).findAll()
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.getAll] for account.
+     */
+    @Test
+    fun getAllAccount() {
+        val genres = listOf(GenreUtils.newGenreDomain(id = 1), GenreUtils.newGenreDomain(id = 2))
+
+        whenever(repository.findByCreatedUser(user = any())).thenReturn(genres)
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ACCOUNT)
+
+        val result = service.getAll()
+
+        assertThat(result).isEqualTo(genres)
+
+        verify(repository).findByCreatedUser(user = TestConstants.ACCOUNT.uuid!!)
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.updatePositions] for admin.
+     */
+    @Test
+    fun updatePositionsAdmin() {
+        val genres = listOf(GenreUtils.newGenreDomain(id = 1), GenreUtils.newGenreDomain(id = 2))
+
+        whenever(repository.findAll()).thenReturn(genres)
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ADMIN)
+
+        service.updatePositions()
+
+        for (i in genres.indices) {
+            assertThat(genres[i].position).isEqualTo(i)
+        }
+
+        verify(repository).findAll()
+        verify(repository).saveAll(genres)
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Test method for [GenreService.updatePositions] for account.
+     */
+    @Test
+    fun updatePositionsAccount() {
+        val genres = listOf(GenreUtils.newGenreDomain(id = 1), GenreUtils.newGenreDomain(id = 2))
+
+        whenever(repository.findByCreatedUser(user = any())).thenReturn(genres)
+        whenever(accountProvider.getAccount()).thenReturn(TestConstants.ACCOUNT)
+
+        service.updatePositions()
+
+        for (i in genres.indices) {
+            assertThat(genres[i].position).isEqualTo(i)
+        }
+
+        verify(repository).findByCreatedUser(user = TestConstants.ACCOUNT.uuid!!)
+        verify(repository).saveAll(genres)
+        verify(accountProvider).getAccount()
+        verifyNoMoreInteractions(repository, accountProvider)
+    }
+
+    /**
+     * Returns any mock for domain genre.
+     *
+     * @return any mock for domain genre
+     */
+    private fun anyDomain(): Genre {
         return any()
     }
 
-    override fun argumentCaptorItem(): KArgumentCaptor<Genre> {
-        return argumentCaptor()
+    /**
+     * Sets ID and position.
+     *
+     * @return mocked answer
+     */
+    private fun setIdAndPosition(): (InvocationOnMock) -> Genre {
+        return {
+            val item = it.arguments[0] as Genre
+            item.id = 1
+            item.position = 2
+            item
+        }
     }
 
-    override fun assertDataDeepEquals(expected: Genre, actual: Genre) {
-        GenreUtils.assertGenreDeepEquals(expected, actual)
+    /**
+     * Copying answer.
+     *
+     * @return mocked answer
+     */
+    private fun copy(): (InvocationOnMock) -> Any {
+        return {
+            it.arguments[0]
+        }
     }
 
 }

@@ -9,13 +9,13 @@ import com.github.vhromada.catalog.entity.Game
  * @author Vladimir Hromada
  */
 data class GameData(
+    /**
+     * Game
+     */
+    val game: Game,
 
-        /**
-         * Game
-         */
-        val game: Game,
-
-        /**
-         * Cheat
-         */
-        val cheat: Cheat?)
+    /**
+     * Cheat
+     */
+    val cheat: Cheat?
+)

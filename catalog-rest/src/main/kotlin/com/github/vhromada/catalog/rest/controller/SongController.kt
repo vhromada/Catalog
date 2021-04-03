@@ -1,7 +1,7 @@
 package com.github.vhromada.catalog.rest.controller
 
-import com.github.vhromada.catalog.entity.Music
 import com.github.vhromada.catalog.entity.Song
+import com.github.vhromada.catalog.facade.MusicFacade
 import com.github.vhromada.catalog.facade.SongFacade
 import com.github.vhromada.common.web.controller.AbstractController
 import org.springframework.http.HttpStatus
@@ -22,23 +22,30 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController("songController")
 @RequestMapping("/catalog/music/{musicId}/songs")
-class SongController(private val songFacade: SongFacade) : AbstractController() {
+class SongController(
+    private val songFacade: SongFacade,
+    private val musicFacade: MusicFacade
+) : AbstractController() {
 
     /**
-     * Returns song with ID or null if there isn't such song.
+     * Returns song with ID.
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Music doesn't exist in data storage
+     *  * Song doesn't exist in data storage
      *
      * @param musicId music ID
      * @param songId  song ID
-     * @return song with ID or null if there isn't such song
+     * @return song with ID
      */
     @GetMapping("/{songId}")
-    fun getSong(@PathVariable("musicId") musicId: Int,
-                @PathVariable("songId") songId: Int): Song? {
-        return processResult(songFacade.get(songId))
+    fun getSong(
+        @PathVariable("musicId") musicId: Int,
+        @PathVariable("songId") songId: Int
+    ): Song {
+        processResult(result = musicFacade.get(id = musicId))
+        return processResult(result = songFacade.get(id = songId))!!
     }
 
     /**
@@ -46,7 +53,6 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * Music ID is null
      *  * Music doesn't exist in data storage
      *  * Song ID isn't null
      *  * Song position isn't null
@@ -60,10 +66,11 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      */
     @PutMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    fun add(@PathVariable("musicId") musicId: Int,
-            @RequestBody song: Song) {
-        val music = Music(id = musicId, name = null, wikiEn = null, wikiCz = null, mediaCount = null, note = null, position = null)
-        processResult(songFacade.add(music, song))
+    fun add(
+        @PathVariable("musicId") musicId: Int,
+        @RequestBody song: Song
+    ) {
+        processResult(result = songFacade.add(parent = musicId, data = song))
     }
 
     /**
@@ -71,6 +78,7 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
+     *  * Music doesn't exist in data storage
      *  * ID isn't null
      *  * Position is null
      *  * Name is null
@@ -84,9 +92,12 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      */
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun update(@PathVariable("musicId") musicId: Int,
-               @RequestBody song: Song) {
-        processResult(songFacade.update(song))
+    fun update(
+        @PathVariable("musicId") musicId: Int,
+        @RequestBody song: Song
+    ) {
+        processResult(result = musicFacade.get(id = musicId))
+        processResult(result = songFacade.update(data = song))
     }
 
     /**
@@ -94,6 +105,7 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
+     *  * Music doesn't exist in data storage
      *  * Song doesn't exist in data storage
      *
      * @param musicId music ID
@@ -101,10 +113,12 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      */
     @DeleteMapping("/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun remove(@PathVariable("musicId") musicId: Int,
-               @PathVariable("id") id: Int) {
-        val song = Song(id = id, name = null, length = null, note = null, position = null)
-        processResult(songFacade.remove(song))
+    fun remove(
+        @PathVariable("musicId") musicId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = musicFacade.get(id = musicId))
+        processResult(result = songFacade.remove(id = id))
     }
 
     /**
@@ -112,17 +126,20 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Music doesn't exist in data storage
      *  * Song doesn't exist in data storage
      *
      * @param musicId music ID
-     * @param song    song
+     * @param id      ID
      */
-    @PostMapping("/duplicate")
+    @PostMapping("/duplicate/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun duplicate(@PathVariable("musicId") musicId: Int,
-                  @RequestBody song: Song) {
-        processResult(songFacade.duplicate(song))
+    fun duplicate(
+        @PathVariable("musicId") musicId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = musicFacade.get(id = musicId))
+        processResult(result = songFacade.duplicate(id = id))
     }
 
     /**
@@ -130,18 +147,21 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Music doesn't exist in data storage
      *  * Song can't be moved up
      *  * Song doesn't exist in data storage
      *
      * @param musicId music ID
-     * @param song    song
+     * @param id      ID
      */
-    @PostMapping("/moveUp")
+    @PostMapping("/moveUp/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveUp(@PathVariable("musicId") musicId: Int,
-               @RequestBody song: Song) {
-        processResult(songFacade.moveUp(song))
+    fun moveUp(
+        @PathVariable("musicId") musicId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = musicFacade.get(id = musicId))
+        processResult(result = songFacade.moveUp(id = id))
     }
 
     /**
@@ -149,18 +169,21 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
+     *  * Music doesn't exist in data storage
      *  * Song can't be moved down
      *  * Song doesn't exist in data storage
      *
      * @param musicId music ID
-     * @param song    song
+     * @param id      ID
      */
-    @PostMapping("/moveDown")
+    @PostMapping("/moveDown/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun moveDown(@PathVariable("musicId") musicId: Int,
-                 @RequestBody song: Song) {
-        processResult(songFacade.moveDown(song))
+    fun moveDown(
+        @PathVariable("musicId") musicId: Int,
+        @PathVariable("id") id: Int
+    ) {
+        processResult(result = musicFacade.get(id = musicId))
+        processResult(result = songFacade.moveDown(id = id))
     }
 
     /**
@@ -168,7 +191,6 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      * <br></br>
      * Validation errors:
      *
-     *  * ID is null
      *  * Music doesn't exist in data storage
      *
      * @param musicId music ID
@@ -176,8 +198,7 @@ class SongController(private val songFacade: SongFacade) : AbstractController() 
      */
     @GetMapping
     fun findSongsByMusic(@PathVariable("musicId") musicId: Int): List<Song> {
-        val music = Music(id = musicId, name = null, wikiEn = null, wikiCz = null, mediaCount = null, note = null, position = null)
-        return processResult(songFacade.find(music))!!
+        return processResult(result = songFacade.find(parent = musicId))!!
     }
 
 }

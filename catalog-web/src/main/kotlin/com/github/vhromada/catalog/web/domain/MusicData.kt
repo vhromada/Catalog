@@ -11,21 +11,21 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class MusicData(
+    /**
+     * Music
+     */
+    val music: Music,
 
-        /**
-         * Music
-         */
-        val music: Music,
+    /**
+     * Count of songs
+     */
+    val songsCount: Int,
 
-        /**
-         * Count of songs
-         */
-        val songsCount: Int,
-
-        /**
-         * Total length
-         */
-        val totalLength: Time) : Serializable {
+    /**
+     * Total length
+     */
+    val totalLength: Time
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

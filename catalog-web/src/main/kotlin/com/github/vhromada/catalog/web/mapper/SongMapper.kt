@@ -15,19 +15,23 @@ import org.springframework.stereotype.Component
 class SongMapper(private val timeMapper: Mapper<Int, TimeFO>) : Mapper<Song, SongFO> {
 
     override fun map(source: Song): SongFO {
-        return SongFO(id = source.id,
-                name = source.name,
-                length = timeMapper.map(source.length!!),
-                note = source.note,
-                position = source.position)
+        return SongFO(
+            id = source.id,
+            name = source.name,
+            length = timeMapper.map(source = source.length!!),
+            note = source.note,
+            position = source.position
+        )
     }
 
     override fun mapBack(source: SongFO): Song {
-        return Song(id = source.id,
-                name = source.name,
-                length = timeMapper.mapBack(source.length!!),
-                note = source.note,
-                position = source.position)
+        return Song(
+            id = source.id,
+            name = source.name,
+            length = timeMapper.mapBack(source = source.length!!),
+            note = source.note,
+            position = source.position
+        )
     }
 
 }

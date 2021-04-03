@@ -9,21 +9,21 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class Genre(
+    /**
+     * ID
+     */
+    override var id: Int?,
 
-        /**
-         * ID
-         */
-        override var id: Int?,
+    /**
+     * Name
+     */
+    val name: String?,
 
-        /**
-         * Name
-         */
-        val name: String?,
-
-        /**
-         * Position
-         */
-        override var position: Int?) : Movable {
+    /**
+     * Position
+     */
+    override var position: Int?
+) : Movable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

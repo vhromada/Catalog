@@ -3,7 +3,6 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Episode
 import com.github.vhromada.catalog.utils.EpisodeUtils
-import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,17 +22,17 @@ class EpisodeMapperIntegrationTest {
      * Instance of [EpisodeMapper]
      */
     @Autowired
-    private lateinit var mapper: Mapper<Episode, com.github.vhromada.catalog.domain.Episode>
+    private lateinit var mapper: EpisodeMapper
 
     /**
      * Test method for [EpisodeMapper.map].
      */
     @Test
     fun map() {
-        val episode = EpisodeUtils.newEpisode(1)
+        val episode = EpisodeUtils.newEpisode(id = 1)
         val episodeDomain = mapper.map(episode)
 
-        EpisodeUtils.assertEpisodeDeepEquals(episode, episodeDomain)
+        EpisodeUtils.assertEpisodeDeepEquals(expected = episode, actual = episodeDomain)
     }
 
     /**
@@ -41,10 +40,10 @@ class EpisodeMapperIntegrationTest {
      */
     @Test
     fun mapBack() {
-        val episodeDomain = EpisodeUtils.newEpisodeDomain(1)
+        val episodeDomain = EpisodeUtils.newEpisodeDomain(id = 1)
         val episode = mapper.mapBack(episodeDomain)
 
-        EpisodeUtils.assertEpisodeDeepEquals(episode, episodeDomain)
+        EpisodeUtils.assertEpisodeDeepEquals(expected = episodeDomain, actual = episode)
     }
 
 }

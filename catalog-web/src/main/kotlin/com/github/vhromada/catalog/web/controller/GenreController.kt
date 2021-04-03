@@ -2,7 +2,6 @@ package com.github.vhromada.catalog.web.controller
 
 import com.github.vhromada.catalog.entity.Genre
 import com.github.vhromada.catalog.facade.GenreFacade
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.GenreFO
 import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
@@ -23,8 +22,9 @@ import javax.validation.Valid
 @Controller("genreController")
 @RequestMapping("/genres")
 class GenreController(
-        private val genreFacade: GenreFacade,
-        private val genreMapper: Mapper<Genre, GenreFO>) : AbstractResultController() {
+    private val genreFacade: GenreFacade,
+    private val genreMapper: Mapper<Genre, GenreFO>
+) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -63,7 +63,7 @@ class GenreController(
      */
     @GetMapping("/add")
     fun showAdd(model: Model): String {
-        return createFormView(model, GenreFO(id = null, name = null, position = null), "Add genre", "add")
+        return createFormView(model = model, genre = GenreFO(id = null, name = null, position = null), title = "Add genre", action = "add")
     }
 
     /**
@@ -80,9 +80,9 @@ class GenreController(
         require(genre.id == null) { "ID must be null." }
 
         if (errors.hasErrors()) {
-            return createFormView(model, genre, "Add genre", "add")
+            return createFormView(model = model, genre = genre, title = "Add genre", action = "add")
         }
-        processResults(genreFacade.add(genreMapper.mapBack(genre)))
+        processResults(genreFacade.add(data = genreMapper.mapBack(source = genre)))
 
         return LIST_REDIRECT_URL
     }
@@ -103,19 +103,13 @@ class GenreController(
      * @param model model
      * @param id    ID of editing genre
      * @return view for page for editing genre
-     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("id") id: Int): String {
-        val result = genreFacade.get(id)
+        val result = genreFacade.get(id = id)
         processResults(result)
 
-        val genre = result.data
-        return if (genre != null) {
-            createFormView(model, genreMapper.map(genre), "Edit genre", "edit")
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return createFormView(model = model, genre = genreMapper.map(source = result.data!!), title = "Edit genre", action = "edit")
     }
 
     /**
@@ -126,16 +120,15 @@ class GenreController(
      * @param errors errors
      * @return view for redirect to page with list of genres (no errors) or view for page for editing genre (errors)
      * @throws IllegalArgumentException if ID is null
-     * @throws IllegalRequestException  if genre doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["update"])
     fun processEdit(model: Model, @ModelAttribute("genre") @Valid genre: GenreFO, errors: Errors): String {
         require(genre.id != null) { "ID mustn't be null." }
 
         if (errors.hasErrors()) {
-            return createFormView(model, genre, "Edit genre", "edit")
+            return createFormView(model = model, genre = genre, title = "Edit genre", action = "edit")
         }
-        processResults(genreFacade.update(processGenre(genreMapper.mapBack(genre))))
+        processResults(genreFacade.update(data = genreMapper.mapBack(source = genre)))
 
         return LIST_REDIRECT_URL
     }
@@ -155,11 +148,10 @@ class GenreController(
      *
      * @param id ID of duplicating genre
      * @return view for redirect to page with list of genres
-     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("id") id: Int): String {
-        processResults(genreFacade.duplicate(getGenre(id)))
+        processResults(genreFacade.duplicate(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -169,11 +161,10 @@ class GenreController(
      *
      * @param id ID of removing genre
      * @return view for redirect to page with list of genres
-     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
-        processResults(genreFacade.remove(getGenre(id)))
+        processResults(genreFacade.remove(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -183,11 +174,10 @@ class GenreController(
      *
      * @param id ID of moving genre
      * @return view for redirect to page with list of genres
-     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
-        processResults(genreFacade.moveUp(getGenre(id)))
+        processResults(genreFacade.moveUp(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -197,11 +187,10 @@ class GenreController(
      *
      * @param id ID of moving genre
      * @return view for redirect to page with list of genres
-     * @throws IllegalRequestException if genre doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
-        processResults(genreFacade.moveDown(getGenre(id)))
+        processResults(genreFacade.moveDown(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -216,37 +205,6 @@ class GenreController(
         processResults(genreFacade.updatePositions())
 
         return LIST_REDIRECT_URL
-    }
-
-    /**
-     * Returns genre with ID.
-     *
-     * @param id ID
-     * @return genre with ID
-     * @throws IllegalRequestException if genre doesn't exist
-     */
-    private fun getGenre(id: Int): Genre {
-        val genre = Genre(id = id, name = null, position = null)
-
-        return processGenre(genre)
-    }
-
-    /**
-     * Returns processed genre.
-     *
-     * @param genre genre for processing
-     * @return processed genre
-     * @throws IllegalRequestException if genre doesn't exist
-     */
-    private fun processGenre(genre: Genre): Genre {
-        val genreResult = genreFacade.get(genre.id!!)
-        processResults(genreResult)
-
-        if (genreResult.data != null) {
-            return genre
-        }
-
-        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
     }
 
     /**
@@ -267,11 +225,6 @@ class GenreController(
     }
 
     companion object {
-
-        /**
-         * Message for illegal request
-         */
-        private const val ILLEGAL_REQUEST_MESSAGE = "Genre doesn't exist."
 
         /**
          * Redirect URL to list

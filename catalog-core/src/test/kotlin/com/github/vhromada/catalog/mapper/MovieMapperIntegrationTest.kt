@@ -3,7 +3,6 @@ package com.github.vhromada.catalog.mapper
 import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.entity.Movie
 import com.github.vhromada.catalog.utils.MovieUtils
-import com.github.vhromada.common.mapper.Mapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,17 +22,17 @@ class MovieMapperIntegrationTest {
      * Instance of [MovieMapper]
      */
     @Autowired
-    private lateinit var mapper: Mapper<Movie, com.github.vhromada.catalog.domain.Movie>
+    private lateinit var mapper: MovieMapper
 
     /**
      * Test method for [MovieMapper.map].
      */
     @Test
     fun map() {
-        val movie = MovieUtils.newMovie(1)
+        val movie = MovieUtils.newMovie(id = 1)
         val movieDomain = mapper.map(movie)
 
-        MovieUtils.assertMovieDeepEquals(movie, movieDomain)
+        MovieUtils.assertMovieDeepEquals(expected = movie, actual = movieDomain)
     }
 
     /**
@@ -41,10 +40,10 @@ class MovieMapperIntegrationTest {
      */
     @Test
     fun mapBack() {
-        val movieDomain = MovieUtils.newMovieDomain(1)
+        val movieDomain = MovieUtils.newMovieDomain(id = 1)
         val movie = mapper.mapBack(movieDomain)
 
-        MovieUtils.assertMovieDeepEquals(movie, movieDomain)
+        MovieUtils.assertMovieDeepEquals(expected = movieDomain, actual = movie)
     }
 
 }

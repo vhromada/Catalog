@@ -10,9 +10,10 @@ import javax.validation.constraints.Size
  * @author Vladimir Hromada
  */
 data class RoleFO(
-        /**
-         * Roles
-         */
-        @field:NotNull
-        @field:Size(min = 1)
-        val roles: List<String>?) : Serializable
+    /**
+     * Roles
+     */
+    @field:NotNull
+    @field:Size(min = 1)
+    val roles: List<String>?
+) : Serializable

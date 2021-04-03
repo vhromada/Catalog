@@ -1,12 +1,10 @@
 package com.github.vhromada.catalog.web.controller
 
 import com.github.vhromada.catalog.entity.Season
-import com.github.vhromada.catalog.entity.Show
 import com.github.vhromada.catalog.facade.EpisodeFacade
 import com.github.vhromada.catalog.facade.SeasonFacade
 import com.github.vhromada.catalog.facade.ShowFacade
 import com.github.vhromada.catalog.web.domain.SeasonData
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.SeasonFO
 import com.github.vhromada.common.entity.Language
 import com.github.vhromada.common.entity.Time
@@ -29,10 +27,11 @@ import javax.validation.Valid
 @Controller("seasonController")
 @RequestMapping("/shows/{showId}/seasons")
 class SeasonController(
-        private val showFacade: ShowFacade,
-        private val seasonFacade: SeasonFacade,
-        private val episodeFacade: EpisodeFacade,
-        private val seasonMapper: Mapper<Season, SeasonFO>) : AbstractResultController() {
+    private val showFacade: ShowFacade,
+    private val seasonFacade: SeasonFacade,
+    private val episodeFacade: EpisodeFacade,
+    private val seasonMapper: Mapper<Season, SeasonFO>
+) : AbstractResultController() {
 
     /**
      * Shows page with list of seasons.
@@ -40,16 +39,13 @@ class SeasonController(
      * @param model  model
      * @param showId show ID
      * @return view for page with list of seasons
-     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("", "/list")
     fun showList(model: Model, @PathVariable("showId") showId: Int): String {
-        val show = getShow(showId)
+        val result = seasonFacade.find(parent = showId)
+        processResults(result)
 
-        val seasonsResult = seasonFacade.find(show)
-        processResults(seasonsResult)
-
-        model.addAttribute("seasons", seasonsResult.data)
+        model.addAttribute("seasons", result.data)
         model.addAttribute("show", showId)
         model.addAttribute("title", "Seasons")
 
@@ -63,30 +59,20 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of showing season
      * @return view for page with detail of season
-     * @throws IllegalRequestException if show doesn't exist
-     * or season doesn't exist
      */
     @GetMapping("/{id}/detail")
     fun showDetail(model: Model, @PathVariable("showId") showId: Int, @PathVariable("id") id: Int): String {
-        getShow(showId)
+        val showResult = showFacade.get(id = showId)
+        val seasonResult = seasonFacade.get(id = id)
+        val episodesResult = episodeFacade.find(parent = id)
+        processResults(showResult, seasonResult, episodesResult)
 
-        val result = seasonFacade.get(id)
-        processResults(result)
+        val length = episodesResult.data!!.sumBy { it.length!! }
+        model.addAttribute("season", SeasonData(showId = showId, season = seasonResult.data!!, episodesCount = episodesResult.data!!.size, totalLength = Time(length = length)))
+        model.addAttribute("show", showId)
+        model.addAttribute("title", "Season detail")
 
-        val season = result.data
-        if (season != null) {
-            val episodesResult = episodeFacade.find(season)
-            processResults(episodesResult)
-
-            val length = episodesResult.data!!.sumBy { it.length!! }
-            model.addAttribute("season", SeasonData(showId = showId, season = season, episodesCount = episodesResult.data!!.size, totalLength = Time(length)))
-            model.addAttribute("show", showId)
-            model.addAttribute("title", "Season detail")
-
-            return "season/detail"
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return "season/detail"
     }
 
     /**
@@ -95,21 +81,22 @@ class SeasonController(
      * @param model  model
      * @param showId show ID
      * @return view for page for adding season
-     * @throws IllegalRequestException if show doesn't exist
      */
     @GetMapping("/add")
     fun showAdd(model: Model, @PathVariable("showId") showId: Int): String {
-        getShow(showId)
+        processResults(showFacade.get(id = showId))
 
-        val season = SeasonFO(id = null,
-                number = null,
-                startYear = null,
-                endYear = null,
-                language = null,
-                subtitles = null,
-                note = null,
-                position = null)
-        return createFormView(model, season, showId, "Add season", "add")
+        val season = SeasonFO(
+            id = null,
+            number = null,
+            startYear = null,
+            endYear = null,
+            language = null,
+            subtitles = null,
+            note = null,
+            position = null
+        )
+        return createFormView(model = model, season = season, showId = showId, title = "Add season", action = "add")
     }
 
     /**
@@ -121,21 +108,17 @@ class SeasonController(
      * @param errors   errors
      * @return view for redirect to page with list of seasons (no errors) or view for page for adding season (errors)
      * @throws IllegalArgumentException if ID isn't null
-     * @throws IllegalRequestException  if show doesn't exist
      */
     @PostMapping(value = ["/add"], params = ["create"])
     fun processAdd(model: Model, @PathVariable("showId") showId: Int, @ModelAttribute("season") @Valid season: SeasonFO, errors: Errors): String {
         require(season.id == null) { "ID must be null." }
 
-        val show = getShow(showId)
-
         if (errors.hasErrors()) {
-            return createFormView(model, season, showId, "Add season", "add")
+            return createFormView(model = model, season = season, showId = showId, title = "Add season", action = "add")
         }
+        processResults(seasonFacade.add(parent = showId, seasonMapper.mapBack(season)))
 
-        processResults(seasonFacade.add(show, seasonMapper.mapBack(season)))
-
-        return getListRedirectUrl(showId)
+        return getListRedirectUrl(showId = showId)
     }
 
     /**
@@ -143,11 +126,10 @@ class SeasonController(
      *
      * @param showId show ID
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException if show doesn't exist
      */
     @PostMapping(value = ["/add"], params = ["cancel"])
     fun cancelAdd(@PathVariable("showId") showId: Int): String {
-        return cancel(showId)
+        return cancel(showId = showId)
     }
 
     /**
@@ -157,22 +139,14 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of editing season
      * @return view for page for editing season
-     * @throws IllegalRequestException if show doesn't exist
-     * or season doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("showId") showId: Int, @PathVariable("id") id: Int): String {
-        getShow(showId)
+        val showResult = showFacade.get(id = showId)
+        val seasonResult = seasonFacade.get(id = id)
+        processResults(showResult, seasonResult)
 
-        val result = seasonFacade.get(id)
-        processResults(result)
-
-        val season = result.data
-        return if (season != null) {
-            createFormView(model, seasonMapper.map(season), showId, "Edit season", "edit")
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return createFormView(model = model, season = seasonMapper.map(source = seasonResult.data!!), showId = showId, title = "Edit season", action = "edit")
     }
 
     /**
@@ -184,21 +158,18 @@ class SeasonController(
      * @param errors   errors
      * @return view for redirect to page with list of seasons (no errors) or view for page for editing season (errors)
      * @throws IllegalArgumentException if ID is null
-     * @throws IllegalRequestException if show doesn't exist
-     * or season doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["update"])
     fun processEdit(model: Model, @PathVariable("showId") showId: Int, @ModelAttribute("season") @Valid season: SeasonFO, errors: Errors): String {
         require(season.id != null) { "ID mustn't be null." }
-        getShow(showId)
 
         if (errors.hasErrors()) {
-            return createFormView(model, season, showId, "Edit season", "edit")
+            return createFormView(model = model, season = season, showId = showId, title = "Edit season", action = "edit")
         }
+        processResults(showFacade.get(id = showId))
+        processResults(seasonFacade.update(data = seasonMapper.mapBack(source = season)))
 
-        processResults(seasonFacade.update(processSeason(seasonMapper.mapBack(season))))
-
-        return getListRedirectUrl(showId)
+        return getListRedirectUrl(showId = showId)
     }
 
     /**
@@ -206,11 +177,10 @@ class SeasonController(
      *
      * @param showId show ID
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException if show doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["cancel"])
     fun cancelEdit(@PathVariable("showId") showId: Int): String {
-        return cancel(showId)
+        return cancel(showId = showId)
     }
 
     /**
@@ -219,14 +189,12 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of duplicating season
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException if show doesn't exist
-     * or season doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("showId") showId: Int, @PathVariable("id") id: Int): String {
-        processResults(seasonFacade.duplicate(getSeason(showId, id)))
+        processResults(seasonFacade.duplicate(id = id))
 
-        return getListRedirectUrl(showId)
+        return getListRedirectUrl(showId = showId)
     }
 
     /**
@@ -235,14 +203,12 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of removing season
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException if show doesn't exist
-     * or season doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("showId") showId: Int, @PathVariable("id") id: Int): String {
-        processResults(seasonFacade.remove(getSeason(showId, id)))
+        processResults(seasonFacade.remove(id = id))
 
-        return getListRedirectUrl(showId)
+        return getListRedirectUrl(showId = showId)
     }
 
     /**
@@ -251,14 +217,12 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of moving season
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException if show doesn't exist
-     * or season doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("showId") showId: Int, @PathVariable("id") id: Int): String {
-        processResults(seasonFacade.moveUp(getSeason(showId, id)))
+        processResults(seasonFacade.moveUp(id = id))
 
-        return getListRedirectUrl(showId)
+        return getListRedirectUrl(showId = showId)
     }
 
     /**
@@ -267,14 +231,12 @@ class SeasonController(
      * @param showId show ID
      * @param id     ID of moving season
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException if show doesn't exist
-     * or season doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("showId") showId: Int, @PathVariable("id") id: Int): String {
-        processResults(seasonFacade.moveDown(getSeason(showId, id)))
+        processResults(seasonFacade.moveDown(id = id))
 
-        return getListRedirectUrl(showId)
+        return getListRedirectUrl(showId = showId)
     }
 
     /**
@@ -282,68 +244,11 @@ class SeasonController(
      *
      * @param showId show ID
      * @return view for redirect to page with list of seasons
-     * @throws IllegalRequestException if show doesn't exist
      */
     private fun cancel(showId: Int): String {
-        getShow(showId)
+        processResults(showFacade.get(id = showId))
 
-        return getListRedirectUrl(showId)
-    }
-
-    /**
-     * Returns show.
-     *
-     * @param id show ID
-     * @return show
-     * @throws IllegalRequestException if show doesn't exist
-     */
-    private fun getShow(id: Int): Show {
-        val showResult = showFacade.get(id)
-        processResults(showResult)
-
-        return showResult.data ?: throw IllegalRequestException("Show doesn't exist.")
-    }
-
-    /**
-     * Returns season with ID.
-     *
-     * @param showId show ID
-     * @param id     ID
-     * @return season with ID
-     * @throws IllegalRequestException if show doesn't exist
-     * or season doesn't exist
-     */
-    private fun getSeason(showId: Int, id: Int): Season {
-        getShow(showId)
-
-        val season = Season(id = id,
-                number = null,
-                startYear = null,
-                endYear = null,
-                language = null,
-                subtitles = null,
-                note = null,
-                position = null)
-
-        return processSeason(season)
-    }
-
-    /**
-     * Returns processed season.
-     *
-     * @param season season for processing
-     * @return processed season
-     * @throws IllegalRequestException if season doesn't exist
-     */
-    private fun processSeason(season: Season): Season {
-        val seasonResult = seasonFacade.get(season.id!!)
-        processResults(seasonResult)
-
-        if (seasonResult.data != null) {
-            return season
-        }
-
-        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
+        return getListRedirectUrl(showId = showId)
     }
 
     /**
@@ -375,15 +280,6 @@ class SeasonController(
      */
     private fun getListRedirectUrl(showId: Int): String {
         return "redirect:/shows/$showId/seasons/list"
-    }
-
-    companion object {
-
-        /**
-         * Message for illegal request
-         */
-        private const val ILLEGAL_REQUEST_MESSAGE = "Season doesn't exist."
-
     }
 
 }

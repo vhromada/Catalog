@@ -14,25 +14,29 @@ import org.springframework.stereotype.Component
 class SeasonMapper : Mapper<Season, SeasonFO> {
 
     override fun map(source: Season): SeasonFO {
-        return SeasonFO(id = source.id,
-                number = source.number.toString(),
-                startYear = source.startYear.toString(),
-                endYear = source.endYear.toString(),
-                language = source.language,
-                subtitles = source.subtitles!!.filterNotNull(),
-                note = source.note,
-                position = source.position)
+        return SeasonFO(
+            id = source.id,
+            number = source.number.toString(),
+            startYear = source.startYear.toString(),
+            endYear = source.endYear.toString(),
+            language = source.language,
+            subtitles = source.subtitles!!.filterNotNull(),
+            note = source.note,
+            position = source.position
+        )
     }
 
     override fun mapBack(source: SeasonFO): Season {
-        return Season(id = source.id,
-                number = source.number!!.toInt(),
-                startYear = source.startYear!!.toInt(),
-                endYear = source.endYear!!.toInt(),
-                language = source.language,
-                subtitles = source.subtitles,
-                note = source.note,
-                position = source.position)
+        return Season(
+            id = source.id,
+            number = source.number!!.toInt(),
+            startYear = source.startYear!!.toInt(),
+            endYear = source.endYear!!.toInt(),
+            language = source.language,
+            subtitles = source.subtitles,
+            note = source.note,
+            position = source.position
+        )
     }
 
 }

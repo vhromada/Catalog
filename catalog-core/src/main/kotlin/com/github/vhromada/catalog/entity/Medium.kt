@@ -9,21 +9,21 @@ import java.util.Objects
  * @author Vladimir Hromada
  */
 data class Medium(
+    /**
+     * ID
+     */
+    val id: Int?,
 
-        /**
-         * ID
-         */
-        val id: Int?,
+    /**
+     * Number
+     */
+    val number: Int?,
 
-        /**
-         * Number
-         */
-        val number: Int?,
-
-        /**
-         * Length
-         */
-        val length: Int?) : Serializable {
+    /**
+     * Length
+     */
+    val length: Int?
+) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

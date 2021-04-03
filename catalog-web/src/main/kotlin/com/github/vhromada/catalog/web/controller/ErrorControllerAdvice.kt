@@ -1,6 +1,5 @@
 package com.github.vhromada.catalog.web.controller
 
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import mu.KotlinLogging
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -28,19 +27,7 @@ class ErrorControllerAdvice {
      */
     @ExceptionHandler(IllegalArgumentException::class)
     fun processKnownException(model: Model, exception: Exception): String {
-        return processException(model, exception, "There was error in working with data.")
-    }
-
-    /**
-     * Shows page for exception in request.
-     *
-     * @param model     model
-     * @param exception exception
-     * @return view for exception in request
-     */
-    @ExceptionHandler(IllegalRequestException::class)
-    fun processRequestException(model: Model, exception: Exception): String {
-        return processException(model, exception, "There was illegal changes in pages or call on non existing data.")
+        return processException(model = model, exception = exception, errorMessage = "There was error in working with data.")
     }
 
     /**
@@ -52,7 +39,7 @@ class ErrorControllerAdvice {
      */
     @ExceptionHandler(Exception::class)
     fun processUnknownException(model: Model, exception: Exception): String {
-        return processException(model, exception, "There was unexpected error.")
+        return processException(model = model, exception = exception, errorMessage = "There was unexpected error.")
     }
 
     /**
@@ -66,7 +53,7 @@ class ErrorControllerAdvice {
     private fun processException(model: Model, exception: Exception, errorMessage: String): String {
         logger.error(exception) { "Web exception" }
 
-        return process(model, errorMessage)
+        return process(model = model, errorMessage = errorMessage)
     }
 
     /**

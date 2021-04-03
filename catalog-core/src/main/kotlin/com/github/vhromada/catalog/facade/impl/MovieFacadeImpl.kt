@@ -1,16 +1,16 @@
 package com.github.vhromada.catalog.facade.impl
 
+import com.github.vhromada.catalog.entity.Genre
 import com.github.vhromada.catalog.entity.Medium
 import com.github.vhromada.catalog.entity.Movie
+import com.github.vhromada.catalog.entity.Picture
 import com.github.vhromada.catalog.facade.MovieFacade
 import com.github.vhromada.common.entity.Time
-import com.github.vhromada.common.facade.AbstractMovableParentFacade
+import com.github.vhromada.common.facade.AbstractParentFacade
 import com.github.vhromada.common.mapper.Mapper
-import com.github.vhromada.common.provider.AccountProvider
-import com.github.vhromada.common.provider.TimeProvider
 import com.github.vhromada.common.result.Result
-import com.github.vhromada.common.service.MovableService
-import com.github.vhromada.common.validator.MovableValidator
+import com.github.vhromada.common.service.ParentService
+import com.github.vhromada.common.validator.Validator
 import org.springframework.stereotype.Component
 import kotlin.math.min
 
@@ -21,35 +21,90 @@ import kotlin.math.min
  */
 @Component("movieFacade")
 class MovieFacadeImpl(
-        movieService: MovableService<com.github.vhromada.catalog.domain.Movie>,
-        accountProvider: AccountProvider,
-        timeProvider: TimeProvider,
-        mapper: Mapper<Movie, com.github.vhromada.catalog.domain.Movie>,
-        movieValidator: MovableValidator<Movie>
-) : AbstractMovableParentFacade<Movie, com.github.vhromada.catalog.domain.Movie>(movieService, accountProvider, timeProvider, mapper, movieValidator), MovieFacade {
+    private val movieService: ParentService<com.github.vhromada.catalog.domain.Movie>,
+    private val pictureService: ParentService<com.github.vhromada.catalog.domain.Picture>,
+    private val genreService: ParentService<com.github.vhromada.catalog.domain.Genre>,
+    mapper: Mapper<Movie, com.github.vhromada.catalog.domain.Movie>,
+    movieValidator: Validator<Movie, com.github.vhromada.catalog.domain.Movie>,
+    private val pictureValidator: Validator<Picture, com.github.vhromada.catalog.domain.Picture>,
+    private val genreValidator: Validator<Genre, com.github.vhromada.catalog.domain.Genre>
+) : AbstractParentFacade<Movie, com.github.vhromada.catalog.domain.Movie>(parentService = movieService, mapper = mapper, validator = movieValidator), MovieFacade {
+
+    override fun updateData(data: Movie): Result<Unit> {
+        val storedMovie = movieService.get(id = data.id!!)
+        val validationResult = validator.validateExists(data = storedMovie)
+        val pictureValidationResult = getPicture(movie = data)
+        val genresValidationResult = getGenres(movie = data)
+        if (validationResult.isOk() && pictureValidationResult.isOk() && genresValidationResult.isOk()) {
+            val movie = mapper.map(source = data)
+                .copy(media = getUpdatedMedia(originalMedia = storedMovie.get().media, updatedMedia = data.media!!))
+            movie.createdUser = storedMovie.get().createdUser
+            movie.createdTime = storedMovie.get().createdTime
+            movieService.update(data = movie)
+        }
+        return Result.of(validationResult, pictureValidationResult, genresValidationResult)
+    }
+
+    @Suppress("DuplicatedCode")
+    override fun addData(data: Movie): Result<Unit> {
+        val pictureValidationResult = getPicture(movie = data)
+        val genresValidationResult = getGenres(movie = data)
+        if (pictureValidationResult.isOk() && genresValidationResult.isOk()) {
+            val movie = mapper.map(source = data)
+                .copy(genres = genresValidationResult.data!!)
+            movieService.add(data = movie)
+        }
+        return Result.of(pictureValidationResult, genresValidationResult)
+    }
 
     override fun getTotalMediaCount(): Result<Int> {
-        return Result.of(service.getAll().sumBy { it.media.size })
+        return Result.of(data = movieService.getAll().sumBy { it.media.size })
     }
 
     override fun getTotalLength(): Result<Time> {
-        return Result.of(Time(service.getAll().sumBy { it.media.sumBy { m -> m.length } }))
+        return Result.of(data = Time(length = movieService.getAll().sumBy { it.media.sumBy { m -> m.length } }))
     }
 
-    override fun getDataForAdd(data: Movie): com.github.vhromada.catalog.domain.Movie {
-        val movie = super.getDataForAdd(data)
-        for (medium in movie.media) {
-            medium.audit = getAudit()
+    /**
+     * Returns result with picture and validation errors.
+     *
+     * @param movie movie
+     * @returns result with picture and validation errors
+     */
+    private fun getPicture(movie: Movie): Result<com.github.vhromada.catalog.domain.Picture> {
+        if (movie.picture == null) {
+            return Result()
         }
-
-        return movie
+        val picture = pictureService.get(id = movie.picture)
+        val validationResult = pictureValidator.validateExists(data = picture)
+        return if (validationResult.isOk()) {
+            Result.of(data = picture.get())
+        } else {
+            Result.of(validationResult)
+        }
     }
 
-    override fun getDataForUpdate(data: Movie): com.github.vhromada.catalog.domain.Movie {
-        val movie = super.getDataForUpdate(data)
-        val media = getUpdatedMedia(service.get(data.id!!).get().media, data.media!!)
-
-        return movie.copy(media = media)
+    /**
+     * Returns result with genres and validation errors.
+     *
+     * @param movie movie
+     * @returns result with genres and validation errors
+     */
+    @Suppress("DuplicatedCode")
+    private fun getGenres(movie: Movie): Result<MutableList<com.github.vhromada.catalog.domain.Genre>> {
+        val genres = mutableListOf<com.github.vhromada.catalog.domain.Genre>()
+        val result = Result.of(genres)
+        movie.genres!!.filterNotNull()
+            .map { genreService.get(id = it.id!!) }
+            .forEach {
+                val validationResult = genreValidator.validateExists(data = it)
+                if (validationResult.isOk()) {
+                    genres.add(it.get())
+                } else {
+                    result.addEvents(eventList = validationResult.events())
+                }
+            }
+        return result
     }
 
     /**
@@ -59,40 +114,27 @@ class MovieFacadeImpl(
      * @param updatedMedia  updated media
      * @return updated media
      */
-    @Suppress("DuplicatedCode")
     private fun getUpdatedMedia(originalMedia: List<com.github.vhromada.catalog.domain.Medium>, updatedMedia: List<Medium?>): List<com.github.vhromada.catalog.domain.Medium> {
         val result = mutableListOf<com.github.vhromada.catalog.domain.Medium>()
-        val audit = getAudit()
 
         var index = 0
         val max = min(originalMedia.size, updatedMedia.size)
         while (index < max) {
-            val medium = getUpdatedMedium(updatedMedia, index)
-            medium.id = originalMedia[index].id
-            medium.audit = originalMedia[index].audit
-            medium.modify(audit)
+            val originalMedium = originalMedia[index]
+            val updatedMedium = updatedMedia[index]!!
+            val medium = com.github.vhromada.catalog.domain.Medium(id = originalMedium.id, number = index + 1, length = updatedMedium.length!!)
+            medium.createdUser = originalMedium.createdUser
+            medium.createdTime = originalMedium.createdTime
             result.add(medium)
             index++
         }
         while (index < updatedMedia.size) {
-            val medium = getUpdatedMedium(updatedMedia, index)
-            medium.audit = audit
+            val medium = com.github.vhromada.catalog.domain.Medium(id = null, number = index + 1, length = updatedMedia[index]!!.length!!)
             result.add(medium)
             index++
         }
 
         return result
-    }
-
-    /**
-     * Returns updated medium.
-     *
-     * @param updatedMedia list of updated media
-     * @param index        index
-     * @return updated medium
-     */
-    private fun getUpdatedMedium(updatedMedia: List<Medium?>, index: Int): com.github.vhromada.catalog.domain.Medium {
-        return com.github.vhromada.catalog.domain.Medium(id = null, number = index + 1, length = updatedMedia[index]!!.length!!, audit = null)
     }
 
 }

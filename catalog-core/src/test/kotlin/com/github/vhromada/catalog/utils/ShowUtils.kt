@@ -12,14 +12,15 @@ import javax.persistence.EntityManager
  * @return updated show
  */
 fun com.github.vhromada.catalog.domain.Show.updated(): com.github.vhromada.catalog.domain.Show {
-    return copy(czechName = "czName",
-            originalName = "origName",
-            csfd = "Csfd",
-            imdbCode = 1000,
-            wikiEn = "enWiki",
-            wikiCz = "czWiki",
-            note = "Note",
-            audit = AuditUtils.newAudit())
+    return copy(
+        czechName = "czName",
+        originalName = "origName",
+        csfd = "Csfd",
+        imdbCode = 1000,
+        wikiEn = "enWiki",
+        wikiCz = "czWiki",
+        note = "Note"
+    )
 }
 
 /**
@@ -28,13 +29,15 @@ fun com.github.vhromada.catalog.domain.Show.updated(): com.github.vhromada.catal
  * @return updated show
  */
 fun Show.updated(): Show {
-    return copy(czechName = "czName",
-            originalName = "origName",
-            csfd = "Csfd",
-            imdbCode = 1000,
-            wikiEn = "enWiki",
-            wikiCz = "czWiki",
-            note = "Note")
+    return copy(
+        czechName = "czName",
+        originalName = "origName",
+        csfd = "Csfd",
+        imdbCode = 1000,
+        wikiEn = "enWiki",
+        wikiCz = "czWiki",
+        note = "Note"
+    )
 }
 
 /**
@@ -66,8 +69,8 @@ object ShowUtils {
      */
     fun getShows(): List<com.github.vhromada.catalog.domain.Show> {
         val shows = mutableListOf<com.github.vhromada.catalog.domain.Show>()
-        for (i in 0 until SHOWS_COUNT) {
-            shows.add(getShow(i + 1))
+        for (i in 1..SHOWS_COUNT) {
+            shows.add(getShowDomain(index = i))
         }
 
         return shows
@@ -81,20 +84,19 @@ object ShowUtils {
      */
     fun newShowDomain(id: Int?): com.github.vhromada.catalog.domain.Show {
         return com.github.vhromada.catalog.domain.Show(
-                id = id,
-                czechName = "",
-                originalName = "",
-                csfd = null,
-                imdbCode = null,
-                wikiEn = null,
-                wikiCz = null,
-                picture = id,
-                note = null,
-                position = if (id == null) null else id - 1,
-                genres = listOf(GenreUtils.newGenreDomain(id)),
-                seasons = emptyList(),
-                audit = null)
-                .updated()
+            id = id,
+            czechName = "",
+            originalName = "",
+            csfd = null,
+            imdbCode = null,
+            wikiEn = null,
+            wikiCz = null,
+            picture = id,
+            note = null,
+            position = if (id == null) null else id - 1,
+            genres = listOf(GenreUtils.newGenreDomain(id = id)),
+            seasons = mutableListOf()
+        ).updated()
     }
 
     /**
@@ -103,9 +105,9 @@ object ShowUtils {
      * @param id ID
      * @return show with seasons
      */
-    fun newShowWithSeasons(id: Int?): com.github.vhromada.catalog.domain.Show {
-        return newShowDomain(id)
-                .copy(seasons = listOf(SeasonUtils.newSeasonWithEpisodes(id)))
+    fun newShowDomainWithSeasons(id: Int?): com.github.vhromada.catalog.domain.Show {
+        return newShowDomain(id = id)
+            .copy(seasons = mutableListOf(SeasonUtils.newSeasonDomainWithEpisodes(id = id)))
     }
 
     /**
@@ -116,18 +118,18 @@ object ShowUtils {
      */
     fun newShow(id: Int?): Show {
         return Show(
-                id = id,
-                czechName = "",
-                originalName = "",
-                csfd = null,
-                imdbCode = null,
-                wikiEn = null,
-                wikiCz = null,
-                picture = id,
-                note = null,
-                position = if (id == null) null else id - 1,
-                genres = listOf(GenreUtils.newGenre(id)))
-                .updated()
+            id = id,
+            czechName = "",
+            originalName = "",
+            csfd = null,
+            imdbCode = null,
+            wikiEn = null,
+            wikiCz = null,
+            picture = id,
+            note = null,
+            position = if (id == null) null else id - 1,
+            genres = listOf(GenreUtils.newGenre(id = id))
+        ).updated()
     }
 
     /**
@@ -136,28 +138,28 @@ object ShowUtils {
      * @param index index
      * @return show for index
      */
-    fun getShow(index: Int): com.github.vhromada.catalog.domain.Show {
+    fun getShowDomain(index: Int): com.github.vhromada.catalog.domain.Show {
         val imdbMultiplier = 100
         val genres = mutableListOf<Genre>()
-        genres.add(GenreUtils.getGenreDomain(index))
+        genres.add(GenreUtils.getGenreDomain(index = index))
         if (index == 3) {
-            genres.add(GenreUtils.getGenreDomain(4))
+            genres.add(GenreUtils.getGenreDomain(index = 4))
         }
 
         return com.github.vhromada.catalog.domain.Show(
-                id = index,
-                czechName = "$SHOW$index czech name",
-                originalName = "$SHOW$index original name",
-                csfd = "$SHOW$index CSFD",
-                imdbCode = index * imdbMultiplier,
-                wikiEn = "$SHOW$index English Wikipedia",
-                wikiCz = "$SHOW$index Czech Wikipedia",
-                picture = MovieUtils.MOVIES_COUNT + index,
-                note = if (index == 2) SHOW + "2 note" else "",
-                position = index - 1,
-                genres = genres,
-                seasons = SeasonUtils.getSeasons(index),
-                audit = AuditUtils.getAudit())
+            id = index,
+            czechName = "$SHOW$index czech name",
+            originalName = "$SHOW$index original name",
+            csfd = "$SHOW$index CSFD",
+            imdbCode = index * imdbMultiplier,
+            wikiEn = "$SHOW$index English Wikipedia",
+            wikiCz = "$SHOW$index Czech Wikipedia",
+            picture = SHOWS_COUNT + index,
+            note = if (index == 2) SHOW + "2 note" else "",
+            position = index + 9,
+            genres = genres,
+            seasons = SeasonUtils.getSeasons(show = index)
+        ).fillAudit(audit = AuditUtils.getAudit())
     }
 
     /**
@@ -179,9 +181,11 @@ object ShowUtils {
      * @return show with updated fields
      */
     fun updateShow(entityManager: EntityManager, id: Int): com.github.vhromada.catalog.domain.Show {
-        return getShow(entityManager, id)!!
-                .updated()
-                .copy(position = POSITION, genres = mutableListOf(GenreUtils.getGenreDomain(1)))
+        val show = getShow(entityManager = entityManager, id = id)!!
+        return show
+            .updated()
+            .copy(position = POSITION, genres = mutableListOf(GenreUtils.getGenreDomain(index = 1)))
+            .fillAudit(audit = show)
     }
 
     /**
@@ -190,6 +194,7 @@ object ShowUtils {
      * @param entityManager entity manager
      * @return count of shows
      */
+    @Suppress("JpaQlInspection")
     fun getShowsCount(entityManager: EntityManager): Int {
         return entityManager.createQuery("SELECT COUNT(s.id) FROM Show s", java.lang.Long::class.java).singleResult.toInt()
     }
@@ -200,15 +205,11 @@ object ShowUtils {
      * @param expected expected list of shows
      * @param actual   actual list of shows
      */
-    fun assertShowsDeepEquals(expected: List<com.github.vhromada.catalog.domain.Show?>?, actual: List<com.github.vhromada.catalog.domain.Show?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertDomainShowsDeepEquals(expected: List<com.github.vhromada.catalog.domain.Show>, actual: List<com.github.vhromada.catalog.domain.Show>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertShowDeepEquals(expected[i], actual[i])
+                assertShowDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -216,16 +217,13 @@ object ShowUtils {
     /**
      * Asserts show deep equals.
      *
-     * @param expected expected show
-     * @param actual   actual show
+     * @param expected     expected show
+     * @param actual       actual show
+     * @param checkSeasons true if seasons should be checked
      */
-    fun assertShowDeepEquals(expected: com.github.vhromada.catalog.domain.Show?, actual: com.github.vhromada.catalog.domain.Show?) {
+    fun assertShowDeepEquals(expected: com.github.vhromada.catalog.domain.Show, actual: com.github.vhromada.catalog.domain.Show, checkSeasons: Boolean = true) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.czechName).isEqualTo(expected.czechName)
             it.assertThat(actual.originalName).isEqualTo(expected.originalName)
             it.assertThat(actual.csfd).isEqualTo(expected.csfd)
@@ -235,10 +233,12 @@ object ShowUtils {
             it.assertThat(actual.picture).isEqualTo(expected.picture)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
+            AuditUtils.assertAuditDeepEquals(softly = it, expected = expected, actual = actual)
         }
-        GenreUtils.assertGenresDeepEquals(expected!!.genres, actual!!.genres)
-        SeasonUtils.assertSeasonsDeepEquals(expected.seasons, actual.seasons)
-        AuditUtils.assertAuditDeepEquals(expected.audit, actual.audit)
+        GenreUtils.assertDomainGenresDeepEquals(expected = expected.genres, actual = actual.genres)
+        if (checkSeasons) {
+            SeasonUtils.assertDomainSeasonsDeepEquals(expected = expected.seasons, actual = actual.seasons)
+        }
     }
 
     /**
@@ -247,15 +247,11 @@ object ShowUtils {
      * @param expected expected list of shows
      * @param actual   actual list of shows
      */
-    fun assertShowListDeepEquals(expected: List<Show?>?, actual: List<com.github.vhromada.catalog.domain.Show?>?) {
-        assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertThat(expected!!.size).isEqualTo(actual!!.size)
+    fun assertShowsDeepEquals(expected: List<Show>, actual: List<com.github.vhromada.catalog.domain.Show>) {
+        assertThat(expected.size).isEqualTo(actual.size)
         if (expected.isNotEmpty()) {
             for (i in expected.indices) {
-                assertShowDeepEquals(expected[i], actual[i])
+                assertShowDeepEquals(expected = expected[i], actual = actual[i])
             }
         }
     }
@@ -266,13 +262,9 @@ object ShowUtils {
      * @param expected expected show
      * @param actual   actual show
      */
-    fun assertShowDeepEquals(expected: Show?, actual: com.github.vhromada.catalog.domain.Show?) {
+    fun assertShowDeepEquals(expected: Show, actual: com.github.vhromada.catalog.domain.Show) {
         assertSoftly {
-            it.assertThat(expected).isNotNull
-            it.assertThat(actual).isNotNull
-        }
-        assertSoftly {
-            it.assertThat(actual!!.id).isEqualTo(expected!!.id)
+            it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.czechName).isEqualTo(expected.czechName)
             it.assertThat(actual.originalName).isEqualTo(expected.originalName)
             it.assertThat(actual.csfd).isEqualTo(expected.csfd)
@@ -282,8 +274,53 @@ object ShowUtils {
             it.assertThat(actual.picture).isEqualTo(expected.picture)
             it.assertThat(actual.note).isEqualTo(expected.note)
             it.assertThat(actual.position).isEqualTo(expected.position)
+            it.assertThat(actual.seasons).isEmpty()
+            it.assertThat(actual.createdUser).isNull()
+            it.assertThat(actual.createdTime).isNull()
+            it.assertThat(actual.updatedUser).isNull()
+            it.assertThat(actual.updatedTime).isNull()
         }
-        GenreUtils.assertGenreListDeepEquals(expected!!.genres, actual!!.genres)
+        GenreUtils.assertGenresDeepEquals(expected = expected.genres!!.filterNotNull(), actual = actual.genres)
+    }
+
+    /**
+     * Asserts shows deep equals.
+     *
+     * @param expected expected list of shows
+     * @param actual   actual list of shows
+     */
+    fun assertShowListDeepEquals(expected: List<com.github.vhromada.catalog.domain.Show>, actual: List<Show>) {
+        assertThat(expected.size).isEqualTo(actual.size)
+        if (expected.isNotEmpty()) {
+            for (i in expected.indices) {
+                assertShowDeepEquals(expected = expected[i], actual = actual[i])
+            }
+        }
+    }
+
+    /**
+     * Asserts show deep equals.
+     *
+     * @param expected expected show
+     * @param actual   actual show
+     */
+    fun assertShowDeepEquals(expected: com.github.vhromada.catalog.domain.Show, actual: Show) {
+        assertSoftly {
+            it.assertThat(actual.id).isEqualTo(expected.id)
+            it.assertThat(actual.czechName).isEqualTo(expected.czechName)
+            it.assertThat(actual.originalName).isEqualTo(expected.originalName)
+            it.assertThat(actual.csfd).isEqualTo(expected.csfd)
+            it.assertThat(actual.imdbCode).isEqualTo(expected.imdbCode)
+            it.assertThat(actual.wikiEn).isEqualTo(expected.wikiEn)
+            it.assertThat(actual.wikiCz).isEqualTo(expected.wikiCz)
+            it.assertThat(actual.picture).isEqualTo(expected.picture)
+            it.assertThat(actual.note).isEqualTo(expected.note)
+            it.assertThat(actual.position).isEqualTo(expected.position)
+            it.assertThat(actual.genres)
+                .isNotNull
+                .doesNotContainNull()
+        }
+        GenreUtils.assertGenreListDeepEquals(expected = expected.genres, actual = actual.genres!!.filterNotNull())
     }
 
 }

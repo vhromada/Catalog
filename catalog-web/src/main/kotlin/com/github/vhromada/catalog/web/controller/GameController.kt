@@ -5,7 +5,6 @@ import com.github.vhromada.catalog.entity.Game
 import com.github.vhromada.catalog.facade.CheatFacade
 import com.github.vhromada.catalog.facade.GameFacade
 import com.github.vhromada.catalog.web.domain.GameData
-import com.github.vhromada.catalog.web.exception.IllegalRequestException
 import com.github.vhromada.catalog.web.fo.GameFO
 import com.github.vhromada.common.mapper.Mapper
 import org.springframework.stereotype.Controller
@@ -26,9 +25,10 @@ import javax.validation.Valid
 @Controller("gameController")
 @RequestMapping("/games")
 class GameController(
-        private val gameFacade: GameFacade,
-        private val cheatFacade: CheatFacade,
-        private val gameMapper: Mapper<Game, GameFO>) : AbstractResultController() {
+    private val gameFacade: GameFacade,
+    private val cheatFacade: CheatFacade,
+    private val gameMapper: Mapper<Game, GameFO>
+) : AbstractResultController() {
 
     /**
      * Process new data.
@@ -55,7 +55,7 @@ class GameController(
         processResults(gamesResult, mediaCountResult)
 
         val games = gamesResult.data?.map {
-            val cheatResult = cheatFacade.find(it)
+            val cheatResult = cheatFacade.find(parent = it.id!!)
             processResults(cheatResult)
 
             GameData(game = it, cheat = cheatResult.data?.firstOrNull())
@@ -74,25 +74,17 @@ class GameController(
      * @param model model
      * @param id    ID of showing game
      * @return view for page with detail of game
-     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/{id}/detail")
-    fun showDetail(model: Model, @PathVariable("id") id: Int?): String {
-        val result = gameFacade.get(id!!)
-        processResults(result)
+    fun showDetail(model: Model, @PathVariable("id") id: Int): String {
+        val gameResult = gameFacade.get(id = id)
+        val cheatResult = cheatFacade.find(parent = id)
+        processResults(gameResult, cheatResult)
 
-        val game = result.data
-        if (game != null) {
-            val cheatResult = cheatFacade.find(game)
-            processResults(cheatResult)
+        model.addAttribute("game", GameData(game = gameResult.data!!, cheat = cheatResult.data?.firstOrNull()))
+        model.addAttribute("title", "Game detail")
 
-            model.addAttribute("game", GameData(game = game, cheat = cheatResult.data?.firstOrNull()))
-            model.addAttribute("title", "Game detail")
-
-            return "game/detail"
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return "game/detail"
     }
 
     /**
@@ -103,23 +95,25 @@ class GameController(
      */
     @GetMapping("/add")
     fun showAdd(model: Model): String {
-        val game = GameFO(id = null,
-                name = null,
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = null,
-                format = null,
-                crack = null,
-                serialKey = null,
-                patch = null,
-                trainer = null,
-                trainerData = null,
-                editor = null,
-                saves = null,
-                otherData = null,
-                note = null,
-                position = null)
-        return createFormView(model, game, "Add game", "add")
+        val game = GameFO(
+            id = null,
+            name = null,
+            wikiEn = null,
+            wikiCz = null,
+            mediaCount = null,
+            format = null,
+            crack = null,
+            serialKey = null,
+            patch = null,
+            trainer = null,
+            trainerData = null,
+            editor = null,
+            saves = null,
+            otherData = null,
+            note = null,
+            position = null
+        )
+        return createFormView(model = model, game = game, title = "Add game", action = "add")
     }
 
     /**
@@ -136,9 +130,9 @@ class GameController(
         require(game.id == null) { "ID must be null." }
 
         if (errors.hasErrors()) {
-            return createFormView(model, game, "Add game", "add")
+            return createFormView(model = model, game = game, title = "Add game", action = "add")
         }
-        processResults(gameFacade.add(gameMapper.mapBack(game)))
+        processResults(gameFacade.add(data = gameMapper.mapBack(source = game)))
 
         return LIST_REDIRECT_URL
     }
@@ -159,19 +153,13 @@ class GameController(
      * @param model model
      * @param id    ID of editing game
      * @return view for page for editing game
-     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/edit/{id}")
     fun showEdit(model: Model, @PathVariable("id") id: Int): String {
-        val result = gameFacade.get(id)
+        val result = gameFacade.get(id = id)
         processResults(result)
 
-        val game = result.data
-        return if (game != null) {
-            createFormView(model, gameMapper.map(game), "Edit game", "edit")
-        } else {
-            throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
-        }
+        return createFormView(model = model, game = gameMapper.map(source = result.data!!), title = "Edit game", action = "edit")
     }
 
     /**
@@ -182,16 +170,15 @@ class GameController(
      * @param errors errors
      * @return view for redirect to page with list of games (no errors) or view for page for editing game (errors)
      * @throws IllegalArgumentException if ID is null
-     * @throws IllegalRequestException  if game doesn't exist
      */
     @PostMapping(value = ["/edit"], params = ["update"])
     fun processEdit(model: Model, @ModelAttribute("game") @Valid game: GameFO, errors: Errors): String {
         require(game.id != null) { "ID mustn't be null." }
 
         if (errors.hasErrors()) {
-            return createFormView(model, game, "Edit game", "edit")
+            return createFormView(model = model, game = game, title = "Edit game", action = "edit")
         }
-        processResults(gameFacade.update(processGame(gameMapper.mapBack(game))))
+        processResults(gameFacade.update(data = gameMapper.mapBack(source = game)))
 
         return LIST_REDIRECT_URL
     }
@@ -211,11 +198,10 @@ class GameController(
      *
      * @param id ID of duplicating game
      * @return view for redirect to page with list of games
-     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/duplicate/{id}")
     fun processDuplicate(@PathVariable("id") id: Int): String {
-        processResults(gameFacade.duplicate(getGame(id)))
+        processResults(gameFacade.duplicate(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -225,11 +211,10 @@ class GameController(
      *
      * @param id ID of removing game
      * @return view for redirect to page with list of games
-     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/remove/{id}")
     fun processRemove(@PathVariable("id") id: Int): String {
-        processResults(gameFacade.remove(getGame(id)))
+        processResults(gameFacade.remove(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -239,11 +224,10 @@ class GameController(
      *
      * @param id ID of moving game
      * @return view for redirect to page with list of games
-     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/moveUp/{id}")
     fun processMoveUp(@PathVariable("id") id: Int): String {
-        processResults(gameFacade.moveUp(getGame(id)))
+        processResults(gameFacade.moveUp(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -253,11 +237,10 @@ class GameController(
      *
      * @param id ID of moving game
      * @return view for redirect to page with list of games
-     * @throws IllegalRequestException if game doesn't exist
      */
     @GetMapping("/moveDown/{id}")
     fun processMoveDown(@PathVariable("id") id: Int): String {
-        processResults(gameFacade.moveDown(getGame(id)))
+        processResults(gameFacade.moveDown(id = id))
 
         return LIST_REDIRECT_URL
     }
@@ -272,52 +255,6 @@ class GameController(
         processResults(gameFacade.updatePositions())
 
         return LIST_REDIRECT_URL
-    }
-
-    /**
-     * Returns game with ID.
-     *
-     * @param id ID
-     * @return game with ID
-     * @throws IllegalRequestException if game doesn't exist
-     */
-    private fun getGame(id: Int): Game {
-        val game = Game(id = id,
-                name = null,
-                wikiEn = null,
-                wikiCz = null,
-                mediaCount = null,
-                format = null,
-                crack = null,
-                serialKey = null,
-                patch = null,
-                trainer = null,
-                trainerData = null,
-                editor = null,
-                saves = null,
-                otherData = null,
-                note = null,
-                position = null)
-
-        return processGame(game)
-    }
-
-    /**
-     * Returns processed game.
-     *
-     * @param game game for processing
-     * @return processed game
-     * @throws IllegalRequestException if game doesn't exist
-     */
-    private fun processGame(game: Game): Game {
-        val gameResult = gameFacade.get(game.id!!)
-        processResults(gameResult)
-
-        if (gameResult.data != null) {
-            return game
-        }
-
-        throw IllegalRequestException(ILLEGAL_REQUEST_MESSAGE)
     }
 
     /**
@@ -344,11 +281,6 @@ class GameController(
          * Redirect URL to list
          */
         private const val LIST_REDIRECT_URL = "redirect:/games/list"
-
-        /**
-         * Message for illegal request
-         */
-        private const val ILLEGAL_REQUEST_MESSAGE = "Game doesn't exist."
 
     }
 

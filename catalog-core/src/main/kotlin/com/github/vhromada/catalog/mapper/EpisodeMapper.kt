@@ -14,23 +14,24 @@ class EpisodeMapper : Mapper<Episode, com.github.vhromada.catalog.domain.Episode
 
     override fun map(source: Episode): com.github.vhromada.catalog.domain.Episode {
         return com.github.vhromada.catalog.domain.Episode(
-                id = source.id,
-                number = source.number!!,
-                name = source.name!!,
-                length = source.length!!,
-                note = source.note,
-                position = source.position,
-                audit = null)
+            id = source.id,
+            number = source.number!!,
+            name = source.name!!,
+            length = source.length!!,
+            note = source.note,
+            position = source.position
+        )
     }
 
     override fun mapBack(source: com.github.vhromada.catalog.domain.Episode): Episode {
         return Episode(
-                id = source.id,
-                number = source.number,
-                name = source.name,
-                length = source.length,
-                note = source.note,
-                position = source.position)
+            id = source.id,
+            number = source.number,
+            name = source.name,
+            length = source.length,
+            note = source.note,
+            position = source.position
+        )
     }
 
 }

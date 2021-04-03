@@ -4,19 +4,20 @@ import com.github.vhromada.catalog.CatalogTestConfiguration
 import com.github.vhromada.catalog.utils.AuditUtils
 import com.github.vhromada.catalog.utils.MusicUtils
 import com.github.vhromada.catalog.utils.SongUtils
+import com.github.vhromada.catalog.utils.TestConstants
+import com.github.vhromada.catalog.utils.fillAudit
 import com.github.vhromada.catalog.utils.updated
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.data.domain.Sort
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
+import javax.persistence.PersistenceContext
 
 /**
  * A class represents integration test for class [MusicRepository].
@@ -32,48 +33,46 @@ class MusicRepositoryIntegrationTest {
     /**
      * Instance of [EntityManager]
      */
-    @Autowired
-    @Qualifier("containerManagedEntityManager")
+    @PersistenceContext
     private lateinit var entityManager: EntityManager
 
     /**
      * Instance of [MusicRepository]
      */
     @Autowired
-    private lateinit var musicRepository: MusicRepository
+    private lateinit var repository: MusicRepository
 
     /**
-     * Test method for get all music.
+     * Test method for get list of music.
      */
     @Test
-    fun getMusicAll() {
-        val music = musicRepository.findAll(Sort.by("position", "id"))
+    fun getMusicList() {
+        val musicList = repository.findAll()
 
-        MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(), music)
+        MusicUtils.assertDomainMusicDeepEquals(expected = MusicUtils.getMusicList(), actual = musicList)
 
         assertSoftly {
-            it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
-            it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
+            it.assertThat(MusicUtils.getMusicCount(entityManager = entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
+            it.assertThat(SongUtils.getSongsCount(entityManager = entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
         }
     }
 
     /**
-     * Test method for get one music.
+     * Test method for get music.
      */
     @Test
-    @Suppress("UsePropertyAccessSyntax")
-    fun getMusicOne() {
+    fun getMusic() {
         for (i in 1..MusicUtils.MUSIC_COUNT) {
-            val music = musicRepository.findById(i).orElse(null)
+            val music = repository.findById(i).orElse(null)
 
-            MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(i), music)
+            MusicUtils.assertMusicDeepEquals(expected = MusicUtils.getMusicDomain(index = i), actual = music)
         }
 
-        assertThat(musicRepository.findById(Int.MAX_VALUE).isPresent).isFalse()
+        assertThat(repository.findById(Int.MAX_VALUE)).isNotPresent
 
         assertSoftly {
-            it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
-            it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
+            it.assertThat(MusicUtils.getMusicCount(entityManager = entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
+            it.assertThat(SongUtils.getSongsCount(entityManager = entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
         }
     }
 
@@ -82,75 +81,51 @@ class MusicRepositoryIntegrationTest {
      */
     @Test
     fun add() {
-        val audit = AuditUtils.getAudit()
-        val music = MusicUtils.newMusicDomain(null)
-                .copy(position = MusicUtils.MUSIC_COUNT, audit = audit)
+        val music = MusicUtils.newMusicDomain(id = null)
+            .copy(position = MusicUtils.MUSIC_COUNT)
+        val expectedMusic = MusicUtils.newMusicDomain(id = MusicUtils.MUSIC_COUNT + 1)
+            .fillAudit(audit = AuditUtils.newAudit())
 
-        musicRepository.save(music)
+        repository.save(music)
 
-        assertThat(music.id).isEqualTo(MusicUtils.MUSIC_COUNT + 1)
+        assertSoftly {
+            it.assertThat(music.id).isEqualTo(MusicUtils.MUSIC_COUNT + 1)
+            it.assertThat(music.createdUser).isEqualTo(TestConstants.ACCOUNT.uuid!!)
+            it.assertThat(music.createdTime).isEqualTo(TestConstants.TIME)
+            it.assertThat(music.updatedUser).isEqualTo(TestConstants.ACCOUNT.uuid!!)
+            it.assertThat(music.updatedTime).isEqualTo(TestConstants.TIME)
+        }
 
         val addedMusic = MusicUtils.getMusic(entityManager, MusicUtils.MUSIC_COUNT + 1)!!
-        val expectedAddMusic = MusicUtils.newMusicDomain(null)
-                .copy(id = MusicUtils.MUSIC_COUNT + 1, position = MusicUtils.MUSIC_COUNT, audit = audit)
-        MusicUtils.assertMusicDeepEquals(expectedAddMusic, addedMusic)
+        assertThat(addedMusic).isNotNull
+        MusicUtils.assertMusicDeepEquals(expected = expectedMusic, actual = addedMusic)
 
         assertSoftly {
-            it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT + 1)
-            it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
+            it.assertThat(MusicUtils.getMusicCount(entityManager = entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT + 1)
+            it.assertThat(SongUtils.getSongsCount(entityManager = entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
         }
     }
 
     /**
-     * Test method for update music with updated data.
+     * Test method for update music.
      */
     @Test
-    fun updateData() {
-        val music = MusicUtils.updateMusic(entityManager, 1)
+    fun update() {
+        val music = MusicUtils.updateMusic(entityManager = entityManager, id = 1)
+        val expectedMusic = MusicUtils.getMusicDomain(index = 1)
+            .updated()
+            .copy(position = MusicUtils.POSITION)
+            .fillAudit(audit = AuditUtils.updatedAudit())
 
-        musicRepository.save(music)
+        repository.saveAndFlush(music)
 
-        val updatedMusic = MusicUtils.getMusic(entityManager, 1)!!
-        val expectedUpdatedMusic = MusicUtils.getMusic(1)
-                .updated()
-                .copy(position = MusicUtils.POSITION)
-        MusicUtils.assertMusicDeepEquals(expectedUpdatedMusic, updatedMusic)
-
-        assertSoftly {
-            it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
-            it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
-        }
-    }
-
-    /**
-     * Test method for update music with added song.
-     */
-    @Test
-    fun updateAddedSong() {
-        val audit = AuditUtils.getAudit()
-        val song = SongUtils.newSongDomain(null)
-                .copy(position = SongUtils.SONGS_COUNT, audit = audit)
-        entityManager.persist(song)
-
-        var music = MusicUtils.getMusic(entityManager, 1)!!
-        val songs = music.songs.toMutableList()
-        songs.add(song)
-        music = music.copy(songs = songs)
-
-        musicRepository.save(music)
-
-        val updatedMusic = MusicUtils.getMusic(entityManager, 1)!!
-        val expectedSong = SongUtils.newSongDomain(null)
-                .copy(id = SongUtils.SONGS_COUNT + 1, position = SongUtils.SONGS_COUNT, audit = audit)
-        var expectedUpdatedMusic = MusicUtils.getMusic(1)
-        val expectedSongs = expectedUpdatedMusic.songs.toMutableList()
-        expectedSongs.add(expectedSong)
-        expectedUpdatedMusic = expectedUpdatedMusic.copy(songs = expectedSongs)
-        MusicUtils.assertMusicDeepEquals(expectedUpdatedMusic, updatedMusic)
+        val updatedMusic = MusicUtils.getMusic(entityManager = entityManager, id = 1)
+        assertThat(updatedMusic).isNotNull
+        MusicUtils.assertMusicDeepEquals(expected = expectedMusic, actual = updatedMusic!!)
 
         assertSoftly {
-            it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
-            it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT + 1)
+            it.assertThat(MusicUtils.getMusicCount(entityManager = entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
+            it.assertThat(SongUtils.getSongsCount(entityManager = entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
         }
     }
 
@@ -159,15 +134,13 @@ class MusicRepositoryIntegrationTest {
      */
     @Test
     fun remove() {
-        val songsCount = MusicUtils.getMusic(1).songs.size
+        repository.delete(MusicUtils.getMusic(entityManager = entityManager, id = 1)!!)
 
-        musicRepository.delete(MusicUtils.getMusic(entityManager, 1)!!)
-
-        assertThat(MusicUtils.getMusic(entityManager, 1)).isNull()
+        assertThat(MusicUtils.getMusic(entityManager = entityManager, id = 1)).isNull()
 
         assertSoftly {
-            it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT - 1)
-            it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT - songsCount)
+            it.assertThat(MusicUtils.getMusicCount(entityManager = entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT - 1)
+            it.assertThat(SongUtils.getSongsCount(entityManager = entityManager)).isEqualTo(SongUtils.SONGS_COUNT - SongUtils.SONGS_PER_MUSIC_COUNT)
         }
     }
 
@@ -176,26 +149,46 @@ class MusicRepositoryIntegrationTest {
      */
     @Test
     fun removeAll() {
-        musicRepository.deleteAll()
+        repository.deleteAll()
 
         assertSoftly {
-            it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(0)
-            it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(0)
+            it.assertThat(MusicUtils.getMusicCount(entityManager = entityManager)).isEqualTo(0)
+            it.assertThat(SongUtils.getSongsCount(entityManager = entityManager)).isEqualTo(0)
         }
     }
 
     /**
-     * Test method for get music for user.
+     * Test method for get list of music for user.
      */
     @Test
-    fun findByAuditCreatedUser() {
-        val music = musicRepository.findByAuditCreatedUser(AuditUtils.getAudit().createdUser)
+    fun findByCreatedUser() {
+        val musicList = repository.findByCreatedUser(user = AuditUtils.getAudit().createdUser!!)
 
-        MusicUtils.assertMusicDeepEquals(MusicUtils.getMusic(), music)
+        MusicUtils.assertDomainMusicDeepEquals(expected = MusicUtils.getMusicList(), actual = musicList)
 
         assertSoftly {
-            it.assertThat(MusicUtils.getMusicCount(entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
-            it.assertThat(SongUtils.getSongsCount(entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
+            it.assertThat(MusicUtils.getMusicCount(entityManager = entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
+            it.assertThat(SongUtils.getSongsCount(entityManager = entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
+        }
+    }
+
+    /**
+     * Test method for get music by id for user.
+     */
+    @Test
+    fun findByIdAndCreatedUser() {
+        val user = AuditUtils.getAudit().createdUser!!
+        for (i in 1..MusicUtils.MUSIC_COUNT) {
+            val author = repository.findByIdAndCreatedUser(id = i, user = user).orElse(null)
+
+            MusicUtils.assertMusicDeepEquals(expected = MusicUtils.getMusicDomain(index = i), actual = author)
+        }
+
+        assertThat(repository.findByIdAndCreatedUser(id = Int.MAX_VALUE, user = user)).isNotPresent
+
+        assertSoftly {
+            it.assertThat(MusicUtils.getMusicCount(entityManager = entityManager)).isEqualTo(MusicUtils.MUSIC_COUNT)
+            it.assertThat(SongUtils.getSongsCount(entityManager = entityManager)).isEqualTo(SongUtils.SONGS_COUNT)
         }
     }
 

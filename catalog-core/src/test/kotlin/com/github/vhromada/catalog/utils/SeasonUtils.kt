@@ -279,21 +279,6 @@ object SeasonUtils {
     }
 
     /**
-     * Asserts seasons deep equals.
-     *
-     * @param expected expected list of seasons
-     * @param actual   actual list of seasons
-     */
-    fun assertSeasonsDeepEquals(expected: List<Season>, actual: List<com.github.vhromada.catalog.domain.Season>) {
-        assertThat(expected.size).isEqualTo(actual.size)
-        if (expected.isNotEmpty()) {
-            for (i in expected.indices) {
-                assertSeasonDeepEquals(expected = expected[i], actual = actual[i])
-            }
-        }
-    }
-
-    /**
      * Asserts season deep equals.
      *
      * @param expected expected season

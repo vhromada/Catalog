@@ -7,8 +7,19 @@ package com.github.vhromada.catalog.common
  */
 enum class Format {
 
+    /**
+     * ISO
+     */
     ISO,
+
+    /**
+     * Binary
+     */
     BINARY,
+
+    /**
+     * Steam
+     */
     STEAM
 
 }

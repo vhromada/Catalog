@@ -295,21 +295,6 @@ object MovieUtils {
     }
 
     /**
-     * Asserts movies deep equals.
-     *
-     * @param expected expected list of movies
-     * @param actual   actual list of movies
-     */
-    fun assertMoviesDeepEquals(expected: List<Movie>, actual: List<com.github.vhromada.catalog.domain.Movie>) {
-        assertThat(expected.size).isEqualTo(actual.size)
-        if (expected.isNotEmpty()) {
-            for (i in expected.indices) {
-                assertMovieDeepEquals(expected = expected[i], actual = actual[i])
-            }
-        }
-    }
-
-    /**
      * Asserts movie deep equals.
      *
      * @param expected expected movie

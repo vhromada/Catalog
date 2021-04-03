@@ -73,6 +73,7 @@ class ShowFacadeImpl(
      * @param show show
      * @returns result with picture and validation errors
      */
+    @Suppress("DuplicatedCode")
     private fun getPicture(show: Show): Result<com.github.vhromada.catalog.domain.Picture> {
         if (show.picture == null) {
             return Result()

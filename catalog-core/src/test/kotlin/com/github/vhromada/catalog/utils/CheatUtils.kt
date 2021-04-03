@@ -183,21 +183,6 @@ object CheatUtils {
     }
 
     /**
-     * Asserts cheats deep equals.
-     *
-     * @param expected expected list of cheats
-     * @param actual   actual list of cheats
-     */
-    fun assertCheatsDeepEquals(expected: List<Cheat>, actual: List<com.github.vhromada.catalog.domain.Cheat>) {
-        assertThat(expected.size).isEqualTo(actual.size)
-        if (expected.isNotEmpty()) {
-            for (i in expected.indices) {
-                assertCheatDeepEquals(expected = expected[i], actual = actual[i])
-            }
-        }
-    }
-
-    /**
      * Asserts cheat deep equals.
      *
      * @param expected expected cheat

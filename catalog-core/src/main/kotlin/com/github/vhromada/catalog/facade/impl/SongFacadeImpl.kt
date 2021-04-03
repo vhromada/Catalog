@@ -31,6 +31,7 @@ class SongFacadeImpl(
     parentValidator = musicValidator
 ), SongFacade {
 
+    @Suppress("DuplicatedCode")
     override fun updateData(data: Song): Result<Unit> {
         val storedSong = service.get(data.id!!)
         val validationResult = validator.validateExists(storedSong)

@@ -205,21 +205,6 @@ object MusicUtils {
     /**
      * Asserts music deep equals.
      *
-     * @param expected expected list of music
-     * @param actual   actual list of music
-     */
-    fun assertMusicDeepEquals(expected: List<Music>, actual: List<com.github.vhromada.catalog.domain.Music>) {
-        assertThat(expected.size).isEqualTo(actual.size)
-        if (expected.isNotEmpty()) {
-            for (i in expected.indices) {
-                assertMusicDeepEquals(expected = expected[i], actual = actual[i])
-            }
-        }
-    }
-
-    /**
-     * Asserts music deep equals.
-     *
      * @param expected expected music
      * @param actual   actual music
      */

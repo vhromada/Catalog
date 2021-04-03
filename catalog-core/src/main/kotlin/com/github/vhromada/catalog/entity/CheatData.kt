@@ -1,6 +1,6 @@
 package com.github.vhromada.catalog.entity
 
-import java.io.Serializable
+import com.github.vhromada.common.entity.Identifiable
 import java.util.Objects
 
 /**
@@ -12,7 +12,7 @@ data class CheatData(
     /**
      * ID
      */
-    val id: Int?,
+    override var id: Int?,
 
     /**
      * Action
@@ -23,7 +23,7 @@ data class CheatData(
      * Description
      */
     val description: String?
-) : Serializable {
+) : Identifiable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

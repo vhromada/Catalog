@@ -84,19 +84,6 @@ object CheatDataUtils {
     }
 
     /**
-     * Returns cheat's data for index.
-     *
-     * @param index index
-     * @return cheat's data for index
-     */
-    fun getCheatDataDomain(index: Int): com.github.vhromada.catalog.domain.CheatData {
-        val cheatIndex = (index - 1) / CHEAT_DATA_CHEAT_COUNT + 1
-        val cheatDataIndex = (index - 1) % CHEAT_DATA_CHEAT_COUNT + 1
-
-        return getCheatDataDomain(cheatIndex = cheatIndex, cheatDataIndex = cheatDataIndex)
-    }
-
-    /**
      * Returns cheat's data for indexes.
      *
      * @param cheatIndex     cheat index
@@ -109,17 +96,6 @@ object CheatDataUtils {
             action = "Cheat $cheatIndex Data $cheatDataIndex action",
             description = "Cheat $cheatIndex Data $cheatDataIndex description"
         ).fillAudit(audit = AuditUtils.getAudit())
-    }
-
-    /**
-     * Returns cheat's data.
-     *
-     * @param entityManager entity manager
-     * @param id            cheat ID
-     * @return cheat's data
-     */
-    fun getCheatData(entityManager: EntityManager, id: Int): com.github.vhromada.catalog.domain.CheatData? {
-        return entityManager.find(com.github.vhromada.catalog.domain.CheatData::class.java, id)
     }
 
     /**
@@ -154,7 +130,7 @@ object CheatDataUtils {
      * @param expected expected cheat's data
      * @param actual   actual cheat's data
      */
-    fun assertCheatDataDeepEquals(expected: com.github.vhromada.catalog.domain.CheatData, actual: com.github.vhromada.catalog.domain.CheatData) {
+    private fun assertCheatDataDeepEquals(expected: com.github.vhromada.catalog.domain.CheatData, actual: com.github.vhromada.catalog.domain.CheatData) {
         assertSoftly {
             it.assertThat(actual.id).isEqualTo(expected.id)
             it.assertThat(actual.action).isEqualTo(expected.action)

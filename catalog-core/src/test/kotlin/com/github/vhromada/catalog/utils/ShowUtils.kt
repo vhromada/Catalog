@@ -242,21 +242,6 @@ object ShowUtils {
     }
 
     /**
-     * Asserts shows deep equals.
-     *
-     * @param expected expected list of shows
-     * @param actual   actual list of shows
-     */
-    fun assertShowsDeepEquals(expected: List<Show>, actual: List<com.github.vhromada.catalog.domain.Show>) {
-        assertThat(expected.size).isEqualTo(actual.size)
-        if (expected.isNotEmpty()) {
-            for (i in expected.indices) {
-                assertShowDeepEquals(expected = expected[i], actual = actual[i])
-            }
-        }
-    }
-
-    /**
      * Asserts show deep equals.
      *
      * @param expected expected show

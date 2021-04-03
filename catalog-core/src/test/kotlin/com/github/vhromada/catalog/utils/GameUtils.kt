@@ -119,17 +119,6 @@ object GameUtils {
     }
 
     /**
-     * Returns game with cheat.
-     *
-     * @param id ID
-     * @return game with cheat
-     */
-    fun newGameDomainWithCheat(id: Int?): com.github.vhromada.catalog.domain.Game {
-        return newGameDomain(id)
-            .copy(cheat = CheatUtils.newCheatDomainWithData(id = id))
-    }
-
-    /**
      * Returns game.
      *
      * @param id ID
@@ -281,21 +270,6 @@ object GameUtils {
             assertThat(actual.cheat).isNull()
         } else {
             CheatUtils.assertCheatDeepEquals(expected = expected.cheat!!, actual = actual.cheat!!)
-        }
-    }
-
-    /**
-     * Asserts games deep equals.
-     *
-     * @param expected expected list of games
-     * @param actual   actual list of games
-     */
-    fun assertGamesDeepEquals(expected: List<Game>, actual: List<com.github.vhromada.catalog.domain.Game>) {
-        assertThat(expected.size).isEqualTo(actual.size)
-        if (expected.isNotEmpty()) {
-            for (i in expected.indices) {
-                assertGameDeepEquals(expected = expected[i], actual = actual[i])
-            }
         }
     }
 

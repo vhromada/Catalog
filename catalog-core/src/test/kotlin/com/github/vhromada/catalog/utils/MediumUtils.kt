@@ -18,20 +18,6 @@ object MediumUtils {
     const val MEDIA_COUNT = 4
 
     /**
-     * Returns media.
-     *
-     * @return media
-     */
-    fun getMedia(): List<com.github.vhromada.catalog.domain.Medium> {
-        val media = mutableListOf<com.github.vhromada.catalog.domain.Medium>()
-        for (i in 1..MEDIA_COUNT) {
-            media.add(getMediumDomain(index = i))
-        }
-
-        return media
-    }
-
-    /**
      * Returns medium.
      *
      * @param id ID

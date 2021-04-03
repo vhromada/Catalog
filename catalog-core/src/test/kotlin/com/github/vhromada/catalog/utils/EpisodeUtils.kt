@@ -246,21 +246,6 @@ object EpisodeUtils {
     }
 
     /**
-     * Asserts episodes deep equals.
-     *
-     * @param expected expected list of episodes
-     * @param actual   actual list of episodes
-     */
-    fun assertEpisodesDeepEquals(expected: List<Episode>, actual: List<com.github.vhromada.catalog.domain.Episode>) {
-        assertThat(expected.size).isEqualTo(actual.size)
-        if (expected.isNotEmpty()) {
-            for (i in expected.indices) {
-                assertEpisodeDeepEquals(expected = expected[i], actual = actual[i])
-            }
-        }
-    }
-
-    /**
      * Asserts episode deep equals.
      *
      * @param expected expected episode

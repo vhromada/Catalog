@@ -206,21 +206,6 @@ object SongUtils {
     }
 
     /**
-     * Asserts songs deep equals.
-     *
-     * @param expected expected list of songs
-     * @param actual   actual list of songs
-     */
-    fun assertSongsDeepEquals(expected: List<Song>, actual: List<com.github.vhromada.catalog.domain.Song>) {
-        assertThat(expected.size).isEqualTo(actual.size)
-        if (expected.isNotEmpty()) {
-            for (i in expected.indices) {
-                assertSongDeepEquals(expected = expected[i], actual = actual[i])
-            }
-        }
-    }
-
-    /**
      * Asserts song deep equals.
      *
      * @param expected expected song

@@ -125,6 +125,7 @@ class MovieController(
      * @throws IllegalArgumentException if ID isn't null
      */
     @PostMapping("/add")
+    @Suppress("DuplicatedCode")
     fun processAdd(model: Model, @ModelAttribute("movie") @Valid movie: MovieFO, errors: Errors, request: HttpServletRequest): String {
         require(movie.id == null) { "ID must be null." }
 
@@ -171,6 +172,7 @@ class MovieController(
      * @throws IllegalArgumentException if ID is null
      */
     @PostMapping("/edit")
+    @Suppress("DuplicatedCode")
     fun processEdit(model: Model, @ModelAttribute("movie") @Valid movie: MovieFO, errors: Errors, request: HttpServletRequest): String {
         require(movie.id != null) { "ID mustn't be null." }
 

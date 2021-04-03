@@ -18,7 +18,9 @@ class ImdbMovieValidator : ConstraintValidator<Imdb, MovieFO> {
         }
         return if (!movie.imdb) {
             true
-        } else !movie.imdbCode.isNullOrBlank()
+        } else {
+            !movie.imdbCode.isNullOrBlank()
+        }
     }
 
 }

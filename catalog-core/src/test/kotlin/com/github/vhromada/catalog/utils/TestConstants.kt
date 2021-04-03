@@ -60,11 +60,6 @@ object TestConstants {
     val INVALID_MOVIE_YEAR_EVENT = Event(severity = Severity.ERROR, key = "MOVIE_YEAR_NOT_VALID", message = "Year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}.")
 
     /**
-     * Event for invalid movie year
-     */
-    val INVALID_SHOW_YEAR_EVENT = Event(severity = Severity.ERROR, key = "SHOW_YEAR_NOT_VALID", message = "Year must be between ${Constants.MIN_YEAR} and ${Constants.CURRENT_YEAR}.")
-
-    /**
      * Event for invalid movie IMDB code
      */
     val INVALID_MOVIE_IMDB_CODE_EVENT = Event(severity = Severity.ERROR, key = "MOVIE_IMDB_CODE_NOT_VALID", message = "IMDB code must be between 1 and 9999999 or -1.")

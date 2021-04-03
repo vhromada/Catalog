@@ -18,7 +18,9 @@ class ImdbShowValidator : ConstraintValidator<Imdb, ShowFO> {
         }
         return if (!show.imdb) {
             true
-        } else !show.imdbCode.isNullOrBlank()
+        } else {
+            !show.imdbCode.isNullOrBlank()
+        }
     }
 
 }

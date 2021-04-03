@@ -71,6 +71,7 @@ class MovieFacadeImpl(
      * @param movie movie
      * @returns result with picture and validation errors
      */
+    @Suppress("DuplicatedCode")
     private fun getPicture(movie: Movie): Result<com.github.vhromada.catalog.domain.Picture> {
         if (movie.picture == null) {
             return Result()

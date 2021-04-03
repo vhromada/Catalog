@@ -138,6 +138,7 @@ class ShowController(
      * @throws IllegalArgumentException if ID isn't null
      */
     @PostMapping("/add")
+    @Suppress("DuplicatedCode")
     fun processAdd(model: Model, @ModelAttribute("show") @Valid show: ShowFO, errors: Errors, request: HttpServletRequest): String {
         require(show.id == null) { "ID must be null." }
 
@@ -185,6 +186,7 @@ class ShowController(
      * @throws IllegalArgumentException if ID is null
      */
     @PostMapping("/edit")
+    @Suppress("DuplicatedCode")
     fun processEdit(model: Model, @ModelAttribute("show") @Valid show: ShowFO, errors: Errors, request: HttpServletRequest): String {
         require(show.id != null) { "ID mustn't be null." }
 

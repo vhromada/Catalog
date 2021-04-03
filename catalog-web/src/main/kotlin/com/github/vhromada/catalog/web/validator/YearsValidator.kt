@@ -29,7 +29,9 @@ class YearsValidator : ConstraintValidator<Years, SeasonFO> {
         val endYearValue = endYear!!.toInt()
         return if (isNotIntValid(startYearValue) || isNotIntValid(endYearValue)) {
             true
-        } else startYearValue <= endYearValue
+        } else {
+            startYearValue <= endYearValue
+        }
     }
 
     /**

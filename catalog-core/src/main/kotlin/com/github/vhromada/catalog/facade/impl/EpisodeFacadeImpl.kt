@@ -30,6 +30,7 @@ class EpisodeFacadeImpl(
     parentValidator = seasonValidator
 ), EpisodeFacade {
 
+    @Suppress("DuplicatedCode")
     override fun updateData(data: Episode): Result<Unit> {
         val storedEpisode = service.get(data.id!!)
         val validationResult = validator.validateExists(storedEpisode)

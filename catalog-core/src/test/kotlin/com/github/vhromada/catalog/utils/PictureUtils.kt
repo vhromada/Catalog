@@ -162,21 +162,6 @@ object PictureUtils {
     }
 
     /**
-     * Asserts pictures deep equals.
-     *
-     * @param expected expected list of pictures
-     * @param actual   actual list of pictures
-     */
-    fun assertPicturesDeepEquals(expected: List<Picture>, actual: List<com.github.vhromada.catalog.domain.Picture>) {
-        assertThat(expected.size).isEqualTo(actual.size)
-        if (expected.isNotEmpty()) {
-            for (i in expected.indices) {
-                assertPictureDeepEquals(expected = expected[i], actual = actual[i])
-            }
-        }
-    }
-
-    /**
      * Asserts picture deep equals.
      *
      * @param expected expected picture
